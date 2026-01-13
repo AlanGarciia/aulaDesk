@@ -1,0 +1,150 @@
+/* espaisIndex.css */
+
+.page {
+    padding: 24px 16px;
+}
+
+.container {
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.alert-success {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 10px 20px rgba(17, 24, 39, 0.06);
+}
+
+.space-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 6px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.space-row:last-child {
+    border-bottom: 0;
+}
+
+.space-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.space-desc {
+    margin-top: 6px;
+    color: #4b5563;
+    line-height: 1.4;
+}
+
+.space-meta {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+    user-select: none;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #111827;
+    border-color: #e5e7eb;
+}
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+}
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.space-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.space-actions form {
+    margin: 0;
+}
+
+.empty-state {
+    color: #4b5563;
+    margin: 8px 4px;
+}
+
+@media (max-width: 640px) {
+    .space-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .space-actions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .actions {
+        justify-content: stretch;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
