@@ -9,9 +9,20 @@ class UsuariEspai extends Model
 {
     protected $table = 'usuari_espais';
 
+    public const ROL_ADMIN = 'admin';
+    public const ROL_PROFESSOR = 'professor';
+    public const ROL_INFORMATIC = 'informatic';
+
+    public const ROLS = [
+        self::ROL_ADMIN,
+        self::ROL_PROFESSOR,
+        self::ROL_INFORMATIC,
+    ];
+
     protected $fillable = [
         'espai_id',
         'nom',
+        'rol',
         'contrasenya',
     ];
 

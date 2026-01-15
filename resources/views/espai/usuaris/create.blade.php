@@ -21,30 +21,30 @@
 
                     <div class="field">
                         <label for="nom" class="label">Nom</label>
-                        <input
-                            id="nom"
-                            name="nom"
-                            type="text"
-                            value="{{ old('nom') }}"
-                            class="input"
-                            autocomplete="off"
-                            autofocus
-                            required
-                        >
+                        <input id="nom" name="nom" type="text"
+                               value="{{ old('nom') }}"
+                               class="input" autocomplete="off" autofocus required>
                         @error('nom')
                             <div class="error">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="field">
+                        <label for="rol" class="label">Rol</label>
+                        <select id="rol" name="rol" class="input" required>
+                            <option value="admin" @selected(old('rol') === 'admin')>Administrador/a</option>
+                            <option value="professor" @selected(old('rol', 'professor') === 'professor')>Professor/a</option>
+                            <option value="informatic" @selected(old('rol') === 'informatic')>Informàtic/a</option>
+                        </select>
+                        @error('rol')
+                            <div class="error">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="field">
                         <label for="contrasenya" class="label">Contrasenya</label>
-                        <input
-                            id="contrasenya"
-                            name="contrasenya"
-                            type="password"
-                            class="input"
-                            required
-                        >
+                        <input id="contrasenya" name="contrasenya" type="password"
+                               class="input" required>
                         @error('contrasenya')
                             <div class="error">{{ $message }}</div>
                         @enderror
@@ -55,8 +55,8 @@
                             Crear usuari
                         </button>
 
-                        <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                            Tornar
+                        <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
+                            Cancel·lar
                         </a>
                     </div>
                 </form>

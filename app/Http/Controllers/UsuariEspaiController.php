@@ -6,10 +6,13 @@ use App\Models\Espai;
 use App\Models\UsuariEspai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UsuariEspaiController extends Controller
 {
-
+    /**
+     * Llista usuaris de l'espai actiu.
+     */
     public function index(Request $request)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -31,7 +34,9 @@ class UsuariEspaiController extends Controller
         ]);
     }
 
-
+    /**
+     * Formulari per crear usuari dins l'espai actiu.
+     */
     public function create(Request $request)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -48,9 +53,11 @@ class UsuariEspaiController extends Controller
         return view('espai.usuaris.create', [
             'espai' => $espai,
         ]);
-
     }
 
+    /**
+     * Desa un usuari dins l'espai actiu.
+     */
     public function store(Request $request)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -67,11 +74,13 @@ class UsuariEspaiController extends Controller
         $data = $request->validate(
             [
                 'nom' => ['required', 'string', 'max:255'],
+                'rol' => ['required', Rule::in(UsuariEspai::ROLS)],
                 'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
             ],
             [],
             [
                 'nom' => 'nom',
+                'rol' => 'rol',
                 'contrasenya' => 'contrasenya',
             ]
         );
@@ -84,6 +93,7 @@ class UsuariEspaiController extends Controller
 
         $espai->usuaris()->create([
             'nom' => $data['nom'],
+            'rol' => $data['rol'],
             'contrasenya' => Hash::make($data['contrasenya']),
         ]);
 
@@ -92,6 +102,9 @@ class UsuariEspaiController extends Controller
             ->with('status', 'Usuari creat correctament.');
     }
 
+    /**
+     * Elimina un usuari de l'espai actiu.
+     */
     public function destroy(Request $request, UsuariEspai $usuariEspai)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -101,11 +114,13 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        // Comprovació de seguretat: el registre pertany a l'espai actiu
+        // Ha de pertànyer a l'espai actiu
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
             abort(404);
         }
-        $espai = Espai::where('id', $espaiId)
+
+        // I l'espai actiu ha de ser del propietari loguejat
+        Espai::where('id', $espaiId)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
