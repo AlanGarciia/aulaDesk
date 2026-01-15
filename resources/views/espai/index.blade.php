@@ -5,7 +5,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="page-title">Espai</h2>
-    </x-slot>
+    </x-slot> 
 
     <div class="page">
         <div class="container">
