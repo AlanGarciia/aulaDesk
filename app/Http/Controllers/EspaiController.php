@@ -133,4 +133,5 @@ class EspaiController extends Controller
 
         return redirect()->route('espai.index');
     }
+
 }

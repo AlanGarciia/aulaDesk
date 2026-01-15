@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
         return view('espai.index');
     })->name('espai.index');
 
+    
+
     // USUARIS DE L'ESPAI ACTIU
     Route::get('/espai/usuaris', [UsuariEspaiController::class, 'index'])->name('espai.usuaris.index');
     Route::get('/espai/usuaris/create', [UsuariEspaiController::class, 'create'])->name('espai.usuaris.create');

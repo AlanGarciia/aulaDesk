@@ -25,11 +25,12 @@ class UsuariEspaiController extends Controller
 
         $usuaris = $espai->usuaris()->latest()->get();
 
-        return view('usuariEspai.index', [
+        return view('espai.usuaris.index', [
             'espai' => $espai,
             'usuaris' => $usuaris,
         ]);
     }
+
 
     public function create(Request $request)
     {
