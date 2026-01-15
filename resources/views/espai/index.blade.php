@@ -19,6 +19,10 @@
                 <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
                     Afegir usuaris
                 </a>
+
+                <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
+                    Veure tots els usuaris
+                </a>
             </div>
 
             <div class="card">
