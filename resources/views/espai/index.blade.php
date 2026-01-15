@@ -16,8 +16,8 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="page-title">Espai</h2>
-    </x-slot>
+        <h2 class="page-title">Espai Gonzalo</h2>
+    </x-slot> 
 
     <div class="page">
         <div class="container">
