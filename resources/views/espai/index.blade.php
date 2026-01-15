@@ -4,8 +4,8 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="page-title">Espai Alan</h2>
-    </x-slot> 
+        <h2 class="page-title">Espai</h2>
+    </x-slot>
 
     <div class="page">
         <div class="container">
@@ -16,7 +16,7 @@
             @endif
 
             <div class="actions">
-                <a href="#" class="btn btn-primary">
+                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
                     Afegir usuaris
                 </a>
             </div>
