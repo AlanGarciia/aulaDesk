@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Benvingut a l'espai</h1>
+    <h1>Pene</h1>
 </body>
 </html>
