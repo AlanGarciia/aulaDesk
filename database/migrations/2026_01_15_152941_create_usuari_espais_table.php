@@ -12,6 +12,7 @@ return new class extends Migration {
 
             $table->foreignId('espai_id')->constrained('espais')->cascadeOnDelete();
             $table->string('nom');
+            $table->string('rol')->default('professor');
             $table->string('contrasenya');
             $table->timestamps();
             $table->unique(['espai_id', 'nom']);

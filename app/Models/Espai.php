@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
 class Espai extends Model
 {
     protected $fillable = [
@@ -16,8 +15,6 @@ class Espai extends Model
 
     public function usuaris(): HasMany
     {
-        return $this->hasMany(\App\Models\UsuariEspai::class);
+        return $this->hasMany(\App\Models\UsuariEspai::class, 'espai_id', 'id');
     }
-
 }
-
