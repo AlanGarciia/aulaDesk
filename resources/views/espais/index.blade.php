@@ -37,13 +37,10 @@
                         </div>
 
                         <div class="space-actions">
-                            {{-- Botó per entrar a l'espai --}}
-                            <form method="POST" action="{{ route('espais.entrar', $espai) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">
-                                    Entrar
-                                </button>
-                            </form>
+                            {{-- ✅ Entrar: va al formulari de login de l'espai --}}
+                            <a href="{{ route('espais.entrar.form', $espai) }}" class="btn btn-primary">
+                                Entrar
+                            </a>
 
                             <a href="{{ route('espais.edit', $espai) }}" class="btn btn-secondary">
                                 Editar
