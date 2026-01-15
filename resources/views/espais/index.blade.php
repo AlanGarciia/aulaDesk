@@ -4,7 +4,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="page-title">Els meus espais</h2>
+        <h2 class="page-title">📚 Mis Institutos</h2>
     </x-slot>
 
     <div class="page">
@@ -17,51 +17,52 @@
 
             <div class="actions">
                 <a href="{{ route('espais.create') }}" class="btn btn-primary">
-                    + Crear espai
+                    + Crear Instituto
                 </a>
             </div>
 
             <div class="card">
-                @forelse ($espais as $espai)
-                    <div class="space-row">
-                        <div class="space-info">
-                            <div class="space-name">{{ $espai->nom }}</div>
+                @if ($espais->isNotEmpty())
+                    <div class="spaces-grid">
+                        @foreach ($espais as $espai)
+                            <div class="space-card">
+                                <div class="space-info">
+                                    <div class="space-name">{{ $espai->nom }}</div>
 
-                            @if ($espai->descripcio)
-                                <div class="space-desc">{{ $espai->descripcio }}</div>
-                            @endif
+                                    @if ($espai->descripcio)
+                                        <div class="space-desc">{{ $espai->descripcio }}</div>
+                                    @endif
 
-                            <div class="space-meta">
-                                Creat: {{ $espai->created_at->format('d/m/Y') }}
+                                    <div class="space-meta">
+                                        Creado: {{ $espai->created_at->format('d/m/Y') }}
+                                    </div>
+                                </div>
+
+                                <div class="space-actions">
+                                    <form method="POST" action="{{ route('espais.entrar', $espai) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm">Entrar</button>
+                                    </form>
+
+                                    <a href="{{ route('espais.edit', $espai) }}" class="btn btn-secondary btn-sm">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+
+                                    <form method="POST" action="{{ route('espais.destroy', $espai) }}"
+                                          onsubmit="return confirm('¿Seguro que quieres eliminar este instituto?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                           <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="space-actions">
-                            {{-- Botó per entrar a l'espai --}}
-                            <form method="POST" action="{{ route('espais.entrar', $espai) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">
-                                    Entrar
-                                </button>
-                            </form>
-
-                            <a href="{{ route('espais.edit', $espai) }}" class="btn btn-secondary">
-                                Editar
-                            </a>
-
-                            <form method="POST" action="{{ route('espais.destroy', $espai) }}"
-                                  onsubmit="return confirm('Segur que vols eliminar aquest espai?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </div>
+                        @endforeach
                     </div>
-                @empty
-                    <p class="empty-state">No tens cap espai encara. Crea’n un per començar.</p>
-                @endforelse
+                @else
+                    <p class="empty-state">No tienes ningún instituto aún. ¡Crea uno para empezar!</p>
+                @endif
             </div>
         </div>
     </div>
