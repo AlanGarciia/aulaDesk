@@ -31,7 +31,7 @@
                         <div class="user-info">
                             <div class="user-name">{{ $usuari->nom }}</div>
                             <div class="user-meta">
-                                Creat: {{ $usuari->created_at->format('d/m/Y') }}
+                                Rol: {{ $usuari->rol }} · Creat: {{ $usuari->created_at->format('d/m/Y') }}
                             </div>
                         </div>
 
