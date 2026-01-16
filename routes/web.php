@@ -14,15 +14,17 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('espais.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Formulari d'accés a un espai (Nom + Contrasenya) - SENSE auth
+
+//Aixo s'eliminará
 Route::get('/espais/{espai}/acces', [EspaiController::class, 'accesForm'])->name('espais.acces.form');
 Route::post('/espais/{espai}/acces', [EspaiController::class, 'acces'])->name('espais.acces');
 
 Route::middleware('auth')->group(function () {
-    // ESPAIS (CRUD)
+
+    //espais
     Route::get('/espais', [EspaiController::class, 'index'])->name('espais.index');
     Route::get('/espais/create', [EspaiController::class, 'create'])->name('espais.create');
     Route::post('/espais', [EspaiController::class, 'store'])->name('espais.store');
@@ -32,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/espais/{espai}', [EspaiController::class, 'update'])->name('espais.update');
     Route::delete('/espais/{espai}', [EspaiController::class, 'destroy'])->name('espais.destroy');
 
-    // ✅ Entrar a un espai (sempre demana usuari + contrasenya)
+    //entrar al espai demana inici de sessio
     Route::get('/espais/{espai}/entrar', [EspaiController::class, 'entrarForm'])->name('espais.entrar.form');
     Route::post('/espais/{espai}/entrar', [EspaiController::class, 'entrar'])->name('espais.entrar');
 
@@ -43,7 +45,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// ✅ DINS L'ESPAI (requereix sessió d'espai)
+//requireix iniciar sessio dins l'espai
 Route::middleware('espai.session')->group(function () {
     Route::get('/espai', function () {
         return view('espai.index');
@@ -52,6 +54,11 @@ Route::middleware('espai.session')->group(function () {
     Route::get('/espai/usuaris', [UsuariEspaiController::class, 'index'])->name('espai.usuaris.index');
     Route::get('/espai/usuaris/create', [UsuariEspaiController::class, 'create'])->name('espai.usuaris.create');
     Route::post('/espai/usuaris', [UsuariEspaiController::class, 'store'])->name('espai.usuaris.store');
+
+    //editar y actualizar usuaris
+    Route::get('/espai/usuaris/{usuariEspai}/edit', [UsuariEspaiController::class, 'edit'])->name('espai.usuaris.edit');
+    Route::put('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'update'])->name('espai.usuaris.update');
+
     Route::delete('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'destroy'])->name('espai.usuaris.destroy');
 });
 

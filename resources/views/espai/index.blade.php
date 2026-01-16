@@ -23,6 +23,10 @@
                 <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
                     Veure tots els usuaris
                 </a>
+
+                <a href="{{ route('espais.index') }}" class="btn btn-danger">
+                    Sortir de l'espai
+                </a>
             </div>
 
             <div class="card">

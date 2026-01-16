@@ -75,3 +75,18 @@
     .btn { width: 100%; }
     .user-row { flex-direction: column; align-items: stretch; }
 }
+
+/* Només el necessari per posar botons en línia */
+
+.user-actions{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* El form, en línia i sense marges */
+.inline-form{
+  display: inline-block;
+  margin: 0;
+}
