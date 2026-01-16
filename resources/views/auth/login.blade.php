@@ -48,7 +48,7 @@
 
             @if (Route::has('password.request'))
                 <a class="forgot-link" href="{{ route('password.request') }}">
-                    Has oblidat la contrasenya?
+                    Has oblidat la contrasenya??
                 </a>
             @endif
         </form>
