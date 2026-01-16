@@ -11,13 +11,10 @@ return new class extends Migration {
             $table->id();
 
             $table->foreignId('espai_id')->constrained('espais')->cascadeOnDelete();
-
             $table->string('nom');
-            $table->string('contrasenya'); // hash
-
+            $table->string('rol')->default('professor');
+            $table->string('contrasenya');
             $table->timestamps();
-
-            // Evitem repetir el mateix nom dins del mateix espai
             $table->unique(['espai_id', 'nom']);
         });
     }
