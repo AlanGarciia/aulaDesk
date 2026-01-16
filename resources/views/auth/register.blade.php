@@ -1,52 +1,51 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+    <div class="login-card">
+        <h1 class="login-title">Crear compte</h1>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text"id="name"name="name"value="{{ old('name') }}"requiredautofocus>
+                @error('name')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required >
+                @error('email')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Contrasenya</label>
+                <input type="password"id="password" name="password" required >
+                @error('password')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="password_confirmation">Confirmar contrasenya</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" required >
+                @error('password_confirmation')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <button type="submit">Registrar-se</button>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+            <a class="forgot-link" href="{{ route('login') }}">
+                Ja tens un compte? Inicia sessió
             </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+        </form>
+    </div>
 </x-guest-layout>
