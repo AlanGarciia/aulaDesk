@@ -36,10 +36,17 @@
                         </div>
 
                         <div class="user-actions">
-                            <form method="POST" action="{{ route('espai.usuaris.destroy', $usuari) }}"
+                            <a class="btn btn-secondary" href="{{ route('espai.usuaris.edit', $usuari) }}">
+                                Editar
+                            </a>
+
+                            <form class="inline-form"
+                                  method="POST"
+                                  action="{{ route('espai.usuaris.destroy', $usuari) }}"
                                   onsubmit="return confirm('Segur que vols eliminar aquest usuari?');">
                                 @csrf
                                 @method('DELETE')
+
                                 <button type="submit" class="btn btn-danger">
                                     Eliminar
                                 </button>
