@@ -53,7 +53,6 @@ class EspaiController extends Controller
             'descripcio' => $data['descripcio'] ?? null,
         ]);
 
-        // ✅ Crear usuari d'espai per defecte: admin/admin amb rol admin
         $espai->usuaris()->create([
             'nom' => 'admin',
             'rol' => 'admin',
@@ -65,10 +64,6 @@ class EspaiController extends Controller
             ->with('status', 'Espai creat correctament. Usuari per defecte: admin / admin');
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Espai $espai)
     {
         if ($espai->user_id !== $request->user()->id) {

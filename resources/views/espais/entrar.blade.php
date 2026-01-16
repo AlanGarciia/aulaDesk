@@ -39,11 +39,6 @@
                             <div class="error">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    <div class="hint">
-                        Usuari per defecte: <b>admin</b> / <b>admin</b>
-                    </div>
-
                     <div class="actions">
                         <button type="submit" class="btn btn-primary">Entrar</button>
                         <a href="{{ route('espais.index') }}" class="btn btn-secondary">Tornar</a>

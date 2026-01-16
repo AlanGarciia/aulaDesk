@@ -101,6 +101,95 @@ class UsuariEspaiController extends Controller
             ->route('espai.usuaris.index')
             ->with('status', 'Usuari creat correctament.');
     }
+    public function edit(Request $request, UsuariEspai $usuariEspai)
+    {
+        $espaiId = $request->session()->get('espai_id');
+
+        if (!$espaiId) {
+            return redirect()->route('espais.index')
+                ->with('status', 'Selecciona un espai per continuar.');
+        }
+
+        // Ha de pertànyer a l'espai actiu
+        if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
+            abort(404);
+        }
+
+        // I l'espai actiu ha de ser del propietari loguejat
+        $espai = Espai::where('id', $espaiId)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        return view('espai.usuaris.edit', [
+            'espai' => $espai,
+            'usuariEspai' => $usuariEspai,
+        ]);
+    }
+
+    public function update(Request $request, UsuariEspai $usuariEspai)
+    {
+        $espaiId = $request->session()->get('espai_id');
+
+        if (!$espaiId) {
+            return redirect()->route('espais.index')
+                ->with('status', 'Selecciona un espai per continuar.');
+        }
+
+        // Ha de pertànyer a l'espai actiu
+        if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
+            abort(404);
+        }
+
+        // I l'espai actiu ha de ser del propietari loguejat
+        $espai = Espai::where('id', $espaiId)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $data = $request->validate(
+            [
+                'nom' => ['required', 'string', 'max:255'],
+                'rol' => ['required', Rule::in(UsuariEspai::ROLS)],
+                'contrasenya' => ['nullable', 'string', 'min:6', 'max:255'],
+            ],
+            [],
+            [
+                'nom' => 'nom',
+                'rol' => 'rol',
+                'contrasenya' => 'contrasenya',
+            ]
+        );
+
+        // Evita duplicats de nom dins l'espai (excloent l'usuari actual)
+        $exists = $espai->usuaris()
+            ->where('nom', $data['nom'])
+            ->where('id', '!=', $usuariEspai->id)
+            ->exists();
+
+        if ($exists) {
+            return back()
+                ->withErrors(['nom' => 'Aquest nom ja existeix dins d’aquest espai.'])
+                ->withInput();
+        }
+
+        // (Opcional) Protegir l'admin: no canviar-li el rol
+        $isAdmin = ($usuariEspai->nom === 'admin' || $usuariEspai->rol === UsuariEspai::ROL_ADMIN);
+        if ($isAdmin) {
+            $data['rol'] = UsuariEspai::ROL_ADMIN;
+        }
+
+        $usuariEspai->nom = $data['nom'];
+        $usuariEspai->rol = $data['rol'];
+
+        if (!empty($data['contrasenya'])) {
+            $usuariEspai->contrasenya = Hash::make($data['contrasenya']);
+        }
+
+        $usuariEspai->save();
+
+        return redirect()
+            ->route('espai.usuaris.index')
+            ->with('status', 'Usuari actualitzat correctament.');
+    }
 
     /**
      * Elimina un usuari de l'espai actiu.
