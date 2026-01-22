@@ -1,12 +1,10 @@
 <x-app-layout>
-    {{-- Carga CSS (mejor aquí que dentro del header slot) --}}
     @vite(['resources/css/espai/noticies/noticies.css'])
 
     <x-slot name="header">
         <div class="page-header">
             <div class="page-header__text">
                 <h2 class="page-title">Tauló de notícies</h2>
-                <p class="page-subtitle">Les últimes novetats de l’espai, en format feed.</p>
             </div>
 
             <div class="page-header__actions">
@@ -29,6 +27,33 @@
                 </div>
             @endif
 
+            <div class="filters">
+                <form method="GET" action="{{ route('espai.noticies.index') }}" class="filters__form">
+                    <div class="filters__left">
+                        <label class="filters__label" for="tipus">Filtrar</label>
+                        <select id="tipus" name="tipus" class="filters__select" onchange="this.form.submit()">
+                            <option value="">Tots</option>
+                            @foreach($tipusDisponibles as $t)
+                                <option value="{{ $t }}" @selected(($tipusSeleccionat ?? '') === $t)>
+                                    {{ ucfirst($t) }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @if(!empty($tipusSeleccionat))
+                            <a class="filters__clear" href="{{ route('espai.noticies.index') }}">Netejar</a>
+                        @endif
+                    </div>
+
+                    <div class="filters__right">
+                        <span class="filters__count">
+                            Mostrant <strong>{{ $noticies->count() }}</strong>
+                            {{ $noticies->count() === 1 ? 'resultat' : 'resultats' }}
+                        </span>
+                    </div>
+                </form>
+            </div>
+
             <div class="feed">
                 @forelse($noticies as $n)
                     <article class="post">
@@ -41,10 +66,16 @@
                                     <span>{{ $n->created_at->format('d/m/Y') }}</span>
                                     <span class="dot">•</span>
                                     <span>Reaccions: <strong>{{ $n->reaccions_count }}</strong></span>
+
+                                    @if(!empty($n->usuari_espai_id))
+                                        <span class="dot">•</span>
+                                        <span>Autor: <strong>{{ $n->usuari_espai_id }}</strong></span>
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="post__actions">
+                                {{-- Reacció (tothom pot reaccionar) --}}
                                 <form class="inline-form" method="POST" action="{{ route('espai.noticies.reaccio', $n) }}">
                                     @csrf
                                     <input type="hidden" name="tipus" value="like">
@@ -53,12 +84,19 @@
                                     </button>
                                 </form>
 
-                                <form class="inline-form" method="POST" action="{{ route('espai.noticies.destroy', $n) }}"
-                                      onsubmit="return confirm('Eliminar la notícia?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger" type="submit">Eliminar</button>
-                                </form>
+                                {{-- Només el creador pot editar/eliminar --}}
+                                @if ((int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
+                                    <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">
+                                        Editar
+                                    </a>
+
+                                    <form class="inline-form" method="POST" action="{{ route('espai.noticies.destroy', $n) }}"
+                                          onsubmit="return confirm('Eliminar la notícia?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger" type="submit">Eliminar</button>
+                                    </form>
+                                @endif
                             </div>
                         </header>
 
