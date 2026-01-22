@@ -19,7 +19,9 @@
     <main class="wrap">
         <section class="card">
             <header class="header">
-                <div class="logo" aria-hidden="true">📚</div>
+                <div class="logo">
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo aulaDesk">
+                </div>
 
                 <div class="title">
                     <div class="kicker">Centre educatiu</div>

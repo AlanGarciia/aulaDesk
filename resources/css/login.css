@@ -8,11 +8,28 @@
 
 /* Fondo */
 .login-page {
+    position: relative; /* importante para posicionar "Tornar" */
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, #1e3a8a, #2563eb);
+}
+
+/* Botón Tornar */
+.back-link {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+.back-link:hover {
+    text-decoration: underline;
 }
 
 /* Card */
@@ -36,20 +53,21 @@
 }
 
 /* Formularios */
-.form-group {
-    margin-bottom: 1.2rem;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* sustituye margin-bottom repetido */
 }
 
 label {
-    display: block;
-    margin-bottom: 0.4rem;
     font-size: 0.9rem;
     font-weight: 500;
     color: #374151;
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
     width: 100%;
     padding: 0.75rem 1rem;
     border-radius: 10px;
@@ -69,7 +87,6 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 1rem 0;
     font-size: 0.85rem;
     color: #374151;
 }
@@ -84,8 +101,7 @@ button {
     border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 0.8rem;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out, background 0.3s ease-in-out;
 }
 
 button:hover {
@@ -97,7 +113,6 @@ button:hover {
 .forgot-link {
     display: block;
     text-align: center;
-    margin-top: 1.2rem;
     font-size: 0.85rem;
     color: #2563eb;
     text-decoration: none;
@@ -110,7 +125,6 @@ button:hover {
 /* Errores */
 .error {
     display: block;
-    margin-top: 0.3rem;
     font-size: 0.8rem;
     color: #dc2626;
 }
@@ -121,7 +135,6 @@ button:hover {
     color: #0369a1;
     padding: 0.75rem;
     border-radius: 10px;
-    margin-bottom: 1rem;
     text-align: center;
     font-size: 0.85rem;
 }
