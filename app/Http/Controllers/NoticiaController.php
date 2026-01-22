@@ -22,7 +22,7 @@ class NoticiaController extends Controller
     }
 
     /**
-     * Retorna l'usuari d'espai actiu (obligatori per crear/editar/eliminar).
+     * Usuari d'espai actiu (obligatori per crear/editar/eliminar).
      */
     private function usuariEspaiActiuId(Request $request): int
     {
@@ -38,7 +38,6 @@ class NoticiaController extends Controller
     private function assertCreador(Request $request, Noticia $noticia): void
     {
         $usuariEspaiId = $this->usuariEspaiActiuId($request);
-
         abort_unless((int) $noticia->usuari_espai_id === $usuariEspaiId, 403);
     }
 
@@ -67,14 +66,16 @@ class NoticiaController extends Controller
         ));
     }
 
+    /**
+     * ✅ IMPORTANT: el teu create.blade.php espera $tipus
+     */
     public function create(Request $request)
     {
-        // Manté el mateix control d'espai
         $this->espaiActiu($request);
 
-        $tipusDisponibles = self::TIPUS;
+        $tipus = self::TIPUS;
 
-        return view('espai.noticies.create', compact('tipusDisponibles'));
+        return view('espai.noticies.create', compact('tipus'));
     }
 
     public function store(Request $request)
@@ -83,10 +84,10 @@ class NoticiaController extends Controller
         $usuariEspaiId = $this->usuariEspaiActiuId($request);
 
         $data = $request->validate([
-            'titol' => ['required','string','max:255'],
-            'contingut' => ['nullable','string'],
-            'tipus' => ['required','in:' . implode(',', self::TIPUS)],
-            'imatge' => ['nullable','image','max:2048'],
+            'titol' => ['required', 'string', 'max:255'],
+            'contingut' => ['nullable', 'string'],
+            'tipus' => ['required', 'in:' . implode(',', self::TIPUS)],
+            'imatge' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $path = null;
@@ -113,10 +114,10 @@ class NoticiaController extends Controller
     {
         $espai = $this->espaiActiu($request);
 
-        // Ha de ser de l'espai actiu
+        // ha de ser de l'espai actiu
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
 
-        // Només creador
+        // només creador
         $this->assertCreador($request, $noticia);
 
         $tipusDisponibles = self::TIPUS;
@@ -132,22 +133,20 @@ class NoticiaController extends Controller
         $this->assertCreador($request, $noticia);
 
         $data = $request->validate([
-            'titol' => ['required','string','max:255'],
-            'contingut' => ['nullable','string'],
-            'tipus' => ['required','in:' . implode(',', self::TIPUS)],
-            // si vols permetre canviar imatge:
-            'imatge' => ['nullable','image','max:2048'],
-            // per eliminar imatge actual amb checkbox:
-            'treure_imatge' => ['nullable','boolean'],
+            'titol' => ['required', 'string', 'max:255'],
+            'contingut' => ['nullable', 'string'],
+            'tipus' => ['required', 'in:' . implode(',', self::TIPUS)],
+            'imatge' => ['nullable', 'image', 'max:2048'],
+            'treure_imatge' => ['nullable', 'boolean'],
         ]);
 
-        // Treure imatge actual
+        // Treure imatge
         if (!empty($data['treure_imatge']) && $noticia->imatge_path) {
             Storage::disk('public')->delete($noticia->imatge_path);
             $noticia->imatge_path = null;
         }
 
-        // Canviar imatge (opcional)
+        // Substituir imatge
         if ($request->hasFile('imatge')) {
             if ($noticia->imatge_path) {
                 Storage::disk('public')->delete($noticia->imatge_path);
@@ -169,9 +168,9 @@ class NoticiaController extends Controller
     {
         $espai = $this->espaiActiu($request);
 
-        abort_unless((int)$noticia->espai_id === (int)$espai->id, 404);
+        abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
 
-        // ✅ Només el creador pot eliminar
+        // ✅ només creador
         $this->assertCreador($request, $noticia);
 
         if ($noticia->imatge_path) {

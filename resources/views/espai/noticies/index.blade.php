@@ -1,5 +1,5 @@
 <x-app-layout>
-    @vite(['resources/css/espai/noticies/noticies.css'])
+    @vite(['resources/css/espai/noticies/noticiesIndex.css'])
 
     <x-slot name="header">
         <div class="page-header">
