@@ -67,7 +67,9 @@ Route::middleware('espai.session')->group(function () {
     Route::delete('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'destroy'])->name('espai.usuaris.destroy');
 
     // ✅ TAULÓ DE NOTÍCIES (CRUD)
+    // 🔥 FIX: el resource crea {noticies} por defecto, lo cambiamos a {noticia} para que el controller funcione perfecto
     Route::resource('/espai/noticies', NoticiaController::class)
+        ->parameters(['noticies' => 'noticia'])
         ->names('espai.noticies');
 
     // ✅ REACCIONS (afegir / canviar / treure)

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Espai;
@@ -48,7 +49,7 @@ class NoticiaController extends Controller
             'titol' => ['required','string','max:255'],
             'contingut' => ['nullable','string'],
             'tipus' => ['required','in:' . implode(',', self::TIPUS)],
-            'imatge' => ['nullable','image','max:2048'], // 2MB
+            'imatge' => ['nullable','image','max:2048'],
         ]);
 
         $path = null;
@@ -58,7 +59,7 @@ class NoticiaController extends Controller
 
         Noticia::create([
             'espai_id' => $espai->id,
-            'usuari_espai_id' => $request->session()->get('usuari_espai_id'), // si el tens
+            'usuari_espai_id' => $request->session()->get('usuari_espai_id'),
             'titol' => $data['titol'],
             'contingut' => $data['contingut'] ?? null,
             'tipus' => $data['tipus'],
@@ -66,7 +67,9 @@ class NoticiaController extends Controller
             'publicat_el' => now(),
         ]);
 
-        return redirect()->route('espai.noticies.index')->with('status', 'Notícia creada correctament.');
+        return redirect()
+            ->route('espai.noticies.index')
+            ->with('status', 'Notícia creada correctament.');
     }
 
     public function destroy(Request $request, Noticia $noticia)
@@ -81,6 +84,8 @@ class NoticiaController extends Controller
 
         $noticia->delete();
 
-        return back()->with('status', 'Notícia eliminada.');
+        return redirect()
+            ->route('espai.noticies.index')
+            ->with('status', 'Notícia eliminada.');
     }
 }
