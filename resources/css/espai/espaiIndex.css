@@ -1,94 +1,179 @@
-/* espaiIndex.css */
+/* espaisIndex.css */
 
+/* FONDO GENERAL DE LA PÁGINA */
 .page {
     padding: 24px 16px;
+    background: #f0f4f8; /* azul muy claro */
+    min-height: 100vh;
+    font-family: 'Figtree', sans-serif;
 }
 
+/* CONTENEDOR CENTRAL */
 .container {
-    max-width: 1050px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
+/* TITULO DE LA PÁGINA */
 .page-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: #1e3a8a; /* azul intenso */
+    margin-bottom: 24px;
+    text-align: center;
 }
 
-/* Alert */
+/* ALERTAS */
 .alert-success {
     margin-bottom: 16px;
     padding: 12px 14px;
     border-radius: 12px;
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+    background: #d1fae5; /* verde claro */
+    color: #065f46; /* verde oscuro */
+    border: 1px solid #10b981;
+    text-align: center;
+    font-weight: 600;
 }
 
-/* Actions */
+/* ACCIONES (BOTONES SUPERIORES) */
 .actions {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 16px;
+    justify-content: center;
+    margin-bottom: 24px;
 }
 
-/* Card */
+/* CARD GENERAL */
 .card {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 10px 20px rgba(17, 24, 39, 0.06);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
 }
 
-/* Text */
+/* GRID DE TARJETAS */
+.spaces-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* TARJETA INDIVIDUAL */
+.space-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 250px; /* más cuadrado */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.space-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* TEXTO TARJETA */
 .space-name {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 800;
-    color: #111827;
-    margin: 0 0 8px 0;
+    color: #1e3a8a; /* azul intenso */
+    margin-bottom: 8px;
 }
 
 .space-desc {
-    margin: 0;
-    color: #4b5563;
+    font-size: 0.95rem;
+    color: #374151; /* gris oscuro */
     line-height: 1.5;
+    margin-bottom: 10px;
 }
 
-/* Buttons */
+.space-meta {
+    font-size: 0.85rem;
+    color: #6b7280; /* gris medio */
+}
+
+/* BOTONES */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 14px;
+    gap: 6px;
+    padding: 10px 16px;
     border-radius: 12px;
     font-weight: 600;
-    border: 1px solid transparent;
+    border: none;
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
-    user-select: none;
+    transition: transform 0.1s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn:active {
     transform: translateY(1px);
 }
 
+/* BOTÓN PRIMARIO */
 .btn-primary {
-    background: #2563eb;
+    background: #3b82f6; /* azul principal */
     color: #ffffff;
+    box-shadow: 0 5px 15px rgba(59,130,246,0.3);
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
+    background: #2563eb;
 }
 
-/* Responsive */
+/* BOTÓN SECUNDARIO */
+.btn-secondary {
+    background: #e0e7ff; /* azul muy claro */
+    color: #1e3a8a;
+}
+
+.btn-secondary:hover {
+    background: #c7d2fe;
+}
+
+/* BOTÓN DE ELIMINAR */
+.btn-danger {
+    background: #ef4444; /* rojo */
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+/* ESPACIO ENTRE BOTONES DENTRO DE TARJETA */
+.space-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.space-actions .btn i {
+    margin-right: 4px;
+}
+
+/* ESTADO VACÍO */
+.empty-state {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-top: 30px;
+}
+
+/* RESPONSIVE */
 @media (max-width: 640px) {
+    .spaces-grid {
+        grid-template-columns: 1fr;
+    }
+
     .actions {
-        justify-content: stretch;
+        flex-direction: column;
+        gap: 10px;
     }
 
     .btn {
