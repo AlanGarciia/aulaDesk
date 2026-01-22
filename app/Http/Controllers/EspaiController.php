@@ -21,7 +21,15 @@ class EspaiController extends Controller
             'espais' => $espais,]);
     }
 
+    public function edit(Espai $espai)
+    {
+    // Solo dejar editar si el espai pertenece al usuario actual
+    if ($espai->user_id !== auth()->id()) {
+        abort(404);
+    }
 
+    return view('espais.edit', compact('espai'));
+    }   
     /**
      * Show the form for creating a new resource.
      */

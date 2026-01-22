@@ -1,57 +1,88 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Editar espai
-        </h2>
+        <div class="header-container">
+            <h2 class="page-title">Editar espai</h2>
+        </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <form method="POST" action="{{ route('espais.update', $espai) }}">
+    <div class="page">
+        <div class="container">
+            <div class="card">
+                <form id="editForm" method="POST" action="{{ route('espais.update', $espai) }}">
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-4">
-                        <label for="nom" class="block font-medium mb-1">Nom</label>
-                        <input id="nom" name="nom" type="text"
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" id="nom" name="nom"
                                value="{{ old('nom', $espai->nom) }}"
-                               class="w-full border rounded px-3 py-2" autofocus>
+                               required>
                         @error('nom')
-                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                            <span class="error">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <div class="mb-6">
-                        <label for="descripcio" class="block font-medium mb-1">Descripció (opcional)</label>
-                        <textarea id="descripcio" name="descripcio" rows="4"
-                                  class="w-full border rounded px-3 py-2">{{ old('descripcio', $espai->descripcio) }}</textarea>
+                    <div class="form-group">
+                        <label for="descripcio">Descripció (opcional)</label>
+                        <textarea id="descripcio" name="descripcio" rows="4">{{ old('descripcio', $espai->descripcio) }}</textarea>
                         @error('descripcio')
-                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                            <span class="error">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <div class="flex items-center justify-between gap-2">
+                    <div class="flex justify-between items-center mt-6 gap-4 flex-wrap">
                         <div class="flex gap-2">
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+                            <button type="submit" class="btn btn-primary">
                                 Guardar canvis
                             </button>
-                            <a href="{{ route('espais.index') }}" class="px-4 py-2 bg-gray-200 rounded">
+                            <a href="{{ route('espais.index') }}" class="btn btn-secondary">
                                 Tornar
                             </a>
                         </div>
 
-                        <form method="POST" action="{{ route('espais.destroy', $espai) }}"
-                              onsubmit="return confirm('Segur que vols eliminar aquest espai?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded">
-                                Eliminar
-                            </button>
-                        </form>
+                        <!-- Botón eliminar -->
+                        <button type="button" class="btn btn-danger" id="deleteBtn">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Modal Confirm Delete -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <p id="confirmText">Segur que vols eliminar aquest espai?</p>
+            <div class="modal-actions">
+                <button id="cancelBtn" class="btn btn-secondary">Cancel·lar</button>
+                <form id="deleteForm" method="POST" action="{{ route('espais.destroy', $espai) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        // ===== MODAL DELETE =====
+        const deleteBtn = document.getElementById('deleteBtn');
+        const modal = document.getElementById('confirmModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        deleteBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if(e.target === modal) modal.style.display = 'none';
+        });
+    </script>
+    @endpush
 </x-app-layout>
