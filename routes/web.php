@@ -5,6 +5,10 @@ use App\Http\Controllers\EspaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuariEspaiController;
 
+// ✅ Notícies
+use App\Http\Controllers\NoticiaController;
+use App\Http\Controllers\NoticiaReaccioController;
+
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('espais.index');
@@ -51,6 +55,7 @@ Route::middleware('espai.session')->group(function () {
         return view('espai.index');
     })->name('espai.index');
 
+    // usuaris
     Route::get('/espai/usuaris', [UsuariEspaiController::class, 'index'])->name('espai.usuaris.index');
     Route::get('/espai/usuaris/create', [UsuariEspaiController::class, 'create'])->name('espai.usuaris.create');
     Route::post('/espai/usuaris', [UsuariEspaiController::class, 'store'])->name('espai.usuaris.store');
@@ -60,6 +65,17 @@ Route::middleware('espai.session')->group(function () {
     Route::put('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'update'])->name('espai.usuaris.update');
 
     Route::delete('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'destroy'])->name('espai.usuaris.destroy');
+
+    // ✅ TAULÓ DE NOTÍCIES (CRUD)
+    Route::resource('/espai/noticies', NoticiaController::class)
+        ->names('espai.noticies');
+
+    // ✅ REACCIONS (afegir / canviar / treure)
+    Route::post('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'store'])
+        ->name('espai.noticies.reaccio');
+
+    Route::delete('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'destroy'])
+        ->name('espai.noticies.reaccio.destroy');
 });
 
 require __DIR__.'/auth.php';
