@@ -11,21 +11,17 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap Icons (opcional) -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!-- Scripts y CSS -->
+    <!-- CSS principal -->
     @vite(['resources/css/app.css', 'resources/css/espaisIndex.css', 'resources/js/app.js'])
 
-    @stack('styles')
-    
-    @stack('scripts')
-
+    @stack('styles')  <!-- solo CSS adicional -->
 </head>
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
     <div class="min-h-screen">
 
-        <!-- Page Heading -->
         @isset($header)
             <header class="bg-white shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -34,10 +30,12 @@
             </header>
         @endisset
 
-        <!-- Page Content -->
         <main>
             {{ $slot }}
         </main>
     </div>
+
+    <!-- Scripts adicionales de Blade hijos -->
+    @stack('scripts')
 </body>
 </html>

@@ -4,7 +4,28 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="page-title">Espai</h2>
+        <div class="header-container">
+            <h2 class="page-title">Espai</h2>
+
+            <!-- Navbar de acciones -->
+            <nav class="navbar">
+                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
+                    Afegir usuaris
+                </a>
+                <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
+                    Veure usuaris
+                </a>
+                <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
+                    Tauló de notícies
+                </a>
+                <a href="{{ route('espais.index') }}" class="btn btn-danger">
+                    Sortir de l'espai
+                </a>
+                <!-- Huecos reservados para futuras opciones -->
+                <span class="navbar-spacer"></span>
+                <span class="navbar-spacer"></span>
+            </nav>
+        </div>
     </x-slot>
 
     <div class="page">
@@ -14,25 +35,6 @@
                     {{ session('status') }}
                 </div>
             @endif
-
-            <div class="actions">
-                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
-                    Afegir usuaris
-                </a>
-
-                <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
-                    Veure tots els usuaris
-                </a>
-
-                <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
-                    Tauló de notícies
-                </a>
-
-                <a href="{{ route('espais.index') }}" class="btn btn-danger">
-                    Sortir de l'espai
-                </a>
-            </div>
-
 
             <div class="card">
                 <h3 class="space-name">Panell de l'espai</h3>

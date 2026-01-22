@@ -6,8 +6,6 @@
     <x-slot name="header">
         <div class="header-container">
             <h2 class="page-title">Els meus espais</h2>
-
-            <!-- Botón Surt / Logout -->
             <button type="button" class="btn btn-danger logout-btn" id="logoutBtn">
                 <i class="bi bi-box-arrow-right"></i> Surt
             </button>
@@ -16,11 +14,8 @@
 
     <div class="page">
         <div class="container">
-
             @if (session('status'))
-                <div class="alert-success">
-                    {{ session('status') }}
-                </div>
+                <div class="alert-success">{{ session('status') }}</div>
             @endif
 
             <div class="actions">
@@ -57,7 +52,6 @@
                                 <i class="bi bi-trash"></i> Eliminar
                             </button>
 
-                            <!-- Formulario DELETE oculto -->
                             <form id="deleteForm-{{ $espai->id }}" action="{{ route('espais.destroy', $espai) }}" method="POST" style="display:none;">
                                 @csrf
                                 @method('DELETE')
@@ -71,7 +65,7 @@
         </div>
     </div>
 
-    <!-- Modal Confirm Delete -->
+    <!-- Modales -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <p id="confirmText"></p>
@@ -82,7 +76,6 @@
         </div>
     </div>
 
-    <!-- Modal Confirm Logout -->
     <div id="logoutModal" class="modal">
         <div class="modal-content">
             <p>Segur que vols sortir de la web?</p>
@@ -98,48 +91,51 @@
 
     @push('scripts')
     <script>
-        // ===== MODAL DELETE =====
-        const deleteBtns = document.querySelectorAll('.delete-btn');
-        const modal = document.getElementById('confirmModal');
-        const confirmText = document.getElementById('confirmText');
-        const confirmBtn = document.getElementById('confirmBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
+        document.addEventListener('DOMContentLoaded', function() {
 
-        let formToSubmit = null;
+            // ===== MODAL DELETE =====
+            const deleteBtns = document.querySelectorAll('.delete-btn');
+            const modal = document.getElementById('confirmModal');
+            const confirmText = document.getElementById('confirmText');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
 
-        deleteBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                formToSubmit = document.getElementById(btn.dataset.formId);
-                confirmText.textContent = `Segur que vols eliminar l'espai "${btn.dataset.espaiName}"?`;
-                modal.style.display = 'flex';
+            let formToSubmit = null;
+
+            deleteBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    formToSubmit = document.getElementById(btn.dataset.formId);
+                    confirmText.textContent = `Segur que vols eliminar l'espai "${btn.dataset.espaiName}"?`;
+                    modal.style.display = 'flex';
+                });
             });
-        });
 
-        confirmBtn.addEventListener('click', () => {
-            if(formToSubmit) formToSubmit.submit();
-        });
+            confirmBtn.addEventListener('click', () => {
+                if(formToSubmit) formToSubmit.submit();
+            });
 
-        cancelBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
+            cancelBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
 
-        // ===== MODAL LOGOUT =====
-        const logoutBtn = document.getElementById('logoutBtn');
-        const logoutModal = document.getElementById('logoutModal');
-        const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+            // ===== MODAL LOGOUT =====
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutModal = document.getElementById('logoutModal');
+            const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
 
-        logoutBtn.addEventListener('click', () => {
-            logoutModal.style.display = 'flex';
-        });
+            logoutBtn.addEventListener('click', () => {
+                logoutModal.style.display = 'flex';
+            });
 
-        cancelLogoutBtn.addEventListener('click', () => {
-            logoutModal.style.display = 'none';
-        });
+            cancelLogoutBtn.addEventListener('click', () => {
+                logoutModal.style.display = 'none';
+            });
 
-        // Cerrar modales clicando fuera
-        window.addEventListener('click', (e) => {
-            if(e.target === modal) modal.style.display = 'none';
-            if(e.target === logoutModal) logoutModal.style.display = 'none';
+            // Cerrar modales clicando fuera
+            window.addEventListener('click', (e) => {
+                if(e.target === modal) modal.style.display = 'none';
+                if(e.target === logoutModal) logoutModal.style.display = 'none';
+            });
         });
     </script>
     @endpush

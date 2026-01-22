@@ -1,182 +1,118 @@
-/* espaisIndex.css */
-
-/* FONDO GENERAL DE LA PÁGINA */
 .page {
-    padding: 24px 16px;
-    background: #f0f4f8; /* azul muy claro */
-    min-height: 100vh;
-    font-family: 'Figtree', sans-serif;
+    padding: 32px 16px;
+    background: #f3f4f6;
+    min-height: calc(100vh - 80px);
 }
 
-/* CONTENEDOR CENTRAL */
 .container {
-    max-width: 1200px;
+    max-width: 1050px;
     margin: 0 auto;
 }
 
-/* TITULO DE LA PÁGINA */
-.page-title {
-    font-size: 28px;
-    font-weight: 800;
-    color: #1e3a8a; /* azul intenso */
-    margin-bottom: 24px;
-    text-align: center;
-}
-
-/* ALERTAS */
-.alert-success {
-    margin-bottom: 16px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    background: #d1fae5; /* verde claro */
-    color: #065f46; /* verde oscuro */
-    border: 1px solid #10b981;
-    text-align: center;
-    font-weight: 600;
-}
-
-/* ACCIONES (BOTONES SUPERIORES) */
-.actions {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 24px;
-}
-
-/* CARD GENERAL */
-.card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
-}
-
-/* GRID DE TARJETAS */
-.spaces-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-/* TARJETA INDIVIDUAL */
-.space-card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 20px;
+/* Header y navbar */
+.header-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 250px; /* más cuadrado */
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    gap: 16px;
 }
 
-.space-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
 }
 
-/* TEXTO TARJETA */
+/* Navbar horizontal */
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Separadores para huecos reservados */
+.navbar-spacer {
+    flex: 1; /* Ocupa espacio libre */
+}
+
+/* Cards */
+.card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(17,24,39,0.06);
+    margin-top: 16px;
+}
+
 .space-name {
-    font-size: 18px;
-    font-weight: 800;
-    color: #1e3a8a; /* azul intenso */
-    margin-bottom: 8px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
 }
 
 .space-desc {
-    font-size: 0.95rem;
-    color: #374151; /* gris oscuro */
+    margin-top: 8px;
+    color: #4b5563;
     line-height: 1.5;
-    margin-bottom: 10px;
 }
 
-.space-meta {
-    font-size: 0.85rem;
-    color: #6b7280; /* gris medio */
-}
-
-/* BOTONES */
+/* Botones */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: 12px;
     font-weight: 600;
-    border: none;
+    border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.1s ease, background 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+    font-size: 0.95rem;
 }
 
 .btn:active {
     transform: translateY(1px);
 }
 
-/* BOTÓN PRIMARIO */
 .btn-primary {
-    background: #3b82f6; /* azul principal */
-    color: #ffffff;
-    box-shadow: 0 5px 15px rgba(59,130,246,0.3);
-}
-
-.btn-primary:hover {
     background: #2563eb;
-}
-
-/* BOTÓN SECUNDARIO */
-.btn-secondary {
-    background: #e0e7ff; /* azul muy claro */
-    color: #1e3a8a;
-}
-
-.btn-secondary:hover {
-    background: #c7d2fe;
-}
-
-/* BOTÓN DE ELIMINAR */
-.btn-danger {
-    background: #ef4444; /* rojo */
     color: #ffffff;
 }
+.btn-primary:hover {
+    background: #1e40af;
+}
 
-.btn-danger:hover {
+.btn-secondary {
+    background: #f3f4f6;
+    color: #111827;
+    border-color: #e5e7eb;
+}
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.btn-danger {
     background: #dc2626;
+    color: #ffffff;
+}
+.btn-danger:hover {
+    background: #b91c1c;
 }
 
-/* ESPACIO ENTRE BOTONES DENTRO DE TARJETA */
-.space-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: auto;
+/* Alertas */
+.alert-success {
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
 }
 
-.space-actions .btn i {
-    margin-right: 4px;
-}
-
-/* ESTADO VACÍO */
-.empty-state {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #6b7280;
-    margin-top: 30px;
-}
-
-/* RESPONSIVE */
+/* Responsive */
 @media (max-width: 640px) {
-    .spaces-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .actions {
+    .navbar {
         flex-direction: column;
-        gap: 10px;
-    }
-
-    .btn {
-        width: 100%;
     }
 }
