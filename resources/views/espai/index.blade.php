@@ -24,10 +24,15 @@
                     Veure tots els usuaris
                 </a>
 
+                <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
+                    Tauló de notícies
+                </a>
+
                 <a href="{{ route('espais.index') }}" class="btn btn-danger">
                     Sortir de l'espai
                 </a>
             </div>
+
 
             <div class="card">
                 <h3 class="space-name">Panell de l'espai</h3>
