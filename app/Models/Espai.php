@@ -17,4 +17,10 @@ class Espai extends Model
     {
         return $this->hasMany(\App\Models\UsuariEspai::class, 'espai_id', 'id');
     }
+
+    public function aules(): HasMany
+    {
+        return $this->hasMany(Aula::class);
+    }
+
 }
