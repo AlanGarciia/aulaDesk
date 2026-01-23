@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EspaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuariEspaiController;
-
-// ✅ Notícies
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\NoticiaReaccioController;
+use App\Http\Controllers\AulaController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -70,12 +69,16 @@ Route::middleware('espai.session')->group(function () {
     Route::resource('/espai/noticies', NoticiaController::class)
         ->parameters(['noticies' => 'noticia'])
         ->names('espai.noticies');
-    // ✅ REACCIONS (afegir / canviar / treure)
     Route::post('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'store'])
         ->name('espai.noticies.reaccio');
 
     Route::delete('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'destroy'])
         ->name('espai.noticies.reaccio.destroy');
+
+        //Aules
+    Route::resource('/espai/aules', AulaController::class)
+        ->parameters(['aules' => 'aula'])
+        ->names('espai.aules');
 });
 
 require __DIR__.'/auth.php';

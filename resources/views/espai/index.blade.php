@@ -6,8 +6,6 @@
     <x-slot name="header">
         <div class="header-container">
             <h2 class="page-title">Espai</h2>
-
-            <!-- Navbar de acciones -->
             <nav class="navbar">
                 <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
                     Afegir usuaris
@@ -18,10 +16,12 @@
                 <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
                     Tauló de notícies
                 </a>
+                <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">
+                    Aules
+                </a>
                 <a href="{{ route('espais.index') }}" class="btn btn-danger">
                     Sortir de l'espai
                 </a>
-                <!-- Huecos reservados para futuras opciones -->
                 <span class="navbar-spacer"></span>
                 <span class="navbar-spacer"></span>
             </nav>
