@@ -20,7 +20,7 @@
         <section class="card">
             <header class="header">
                 <div class="logo">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo aulaDesk">
+                    <img src="{{ asset('img/logo_solo.png') }}" alt="Logo aulaDesk">
                 </div>
 
                 <div class="title">
