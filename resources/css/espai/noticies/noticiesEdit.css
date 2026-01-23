@@ -1,0 +1,101 @@
+/* 
+   noticiesEdit.css
+   Replica el estilo del create SIN tocar noticies.css
+*/
+
+/* Página de periódico aislada del layout */
+.news-paper-clean {
+    max-width: 720px;
+    margin: 3rem auto;
+    padding: 2.5rem 2rem;
+    background: #fff;
+    color: #111;
+    border-radius: 6px;
+}
+
+/* Titular */
+.news-paper-clean .title {
+    width: 100%;
+    font-size: 2.2rem;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    margin-bottom: 1rem;
+}
+
+.news-paper-clean .title::placeholder {
+    color: #999;
+}
+
+/* Meta */
+.news-paper-clean .meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: .85rem;
+}
+
+.news-paper-clean .meta select,
+.news-paper-clean .meta input[type="file"] {
+    border: 1px solid #ddd;
+    padding: .3rem .5rem;
+    font-size: .8rem;
+}
+
+/* Imagen actual integrada */
+.news-paper-clean .current-image {
+    margin: 1.5rem 0;
+}
+
+.news-paper-clean .current-image img {
+    max-width: 100%;
+    display: block;
+    margin-bottom: .5rem;
+}
+
+/* Checkbox discreto */
+.news-paper-clean .remove-image {
+    font-size: .8rem;
+    color: #666;
+    display: flex;
+    gap: .4rem;
+    align-items: center;
+}
+
+/* Texto */
+.news-paper-clean textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    line-height: 1.65;
+    resize: none;
+}
+
+/* Acciones */
+.news-paper-clean .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.news-paper-clean .actions a {
+    color: #666;
+    text-decoration: none;
+}
+
+.news-paper-clean .actions button {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: .5rem 1.2rem;
+    cursor: pointer;
+}
+
+/* Errores */
+.news-paper-clean .error {
+    font-size: .75rem;
+    color: #b91c1c;
+    margin-top: .3rem;
+}
