@@ -8,6 +8,9 @@ use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\NoticiaReaccioController;
 use App\Http\Controllers\AulaController;
 
+// ✅ Admin Aula (horario por horas con profesores)
+use App\Http\Controllers\AulaAdminController;
+
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('espais.index');
@@ -69,16 +72,24 @@ Route::middleware('espai.session')->group(function () {
     Route::resource('/espai/noticies', NoticiaController::class)
         ->parameters(['noticies' => 'noticia'])
         ->names('espai.noticies');
+
     Route::post('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'store'])
         ->name('espai.noticies.reaccio');
 
     Route::delete('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'destroy'])
         ->name('espai.noticies.reaccio.destroy');
 
-        //Aules
+    // ✅ Aules (CRUD)
     Route::resource('/espai/aules', AulaController::class)
         ->parameters(['aules' => 'aula'])
         ->names('espai.aules');
+
+    // ✅ Administrar aula (horario por horas)
+    Route::get('/espai/aules/{aula}/admin', [AulaAdminController::class, 'show'])
+        ->name('espai.aules.admin');
+
+    Route::post('/espai/aules/{aula}/admin', [AulaAdminController::class, 'update'])
+        ->name('espai.aules.admin.update');
 });
 
 require __DIR__.'/auth.php';
