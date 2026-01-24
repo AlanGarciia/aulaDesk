@@ -13,7 +13,7 @@ class AulaHorario extends Model
         'aula_id',
         'usuari_espai_id',
         'dia_setmana',
-        'hora',
+        'franja_horaria_id',
     ];
 
     public function aula(): BelongsTo
@@ -24,5 +24,10 @@ class AulaHorario extends Model
     public function professor(): BelongsTo
     {
         return $this->belongsTo(UsuariEspai::class, 'usuari_espai_id');
+    }
+
+    public function franja(): BelongsTo
+    {
+        return $this->belongsTo(FranjaHoraria::class, 'franja_horaria_id');
     }
 }
