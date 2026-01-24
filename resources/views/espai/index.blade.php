@@ -22,6 +22,7 @@
                 <a href="{{ route('espais.index') }}" class="btn btn-danger">
                     Sortir de l'espai
                 </a>
+
                 <span class="navbar-spacer"></span>
                 <span class="navbar-spacer"></span>
             </nav>

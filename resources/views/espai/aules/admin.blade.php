@@ -21,25 +21,33 @@
                     <table border="1" cellpadding="8" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Hora</th>
-                                @foreach($dies as $diaNum => $diaNom)
+                                <th>Franja</th>
+                                @foreach($dies as $diaNom)
                                     <th>{{ $diaNom }}</th>
                                 @endforeach
                             </tr>
                         </thead>
 
                         <tbody>
-                            @foreach($hores as $hora)
+                            @foreach($franges as $franja)
                                 <tr>
-                                    <td>{{ sprintf('%02d:00', $hora) }}</td>
+                                    <td>
+                                        @if($franja->nom)
+                                            <strong>{{ $franja->nom }}</strong><br>
+                                        @endif
+                                        {{ substr($franja->inici, 0, 5) }} - {{ substr($franja->fi, 0, 5) }}
+                                    </td>
 
                                     @foreach($dies as $diaNum => $diaNom)
                                         @php
-                                            $valor = $assignacions[$diaNum][$hora] ?? '';
+                                            $valor = '';
+                                            if (isset($assignacions[$diaNum]) && isset($assignacions[$diaNum][$franja->id])) {
+                                                $valor = $assignacions[$diaNum][$franja->id];
+                                            }
                                         @endphp
 
                                         <td>
-                                            <select name="assignacions[{{ $diaNum }}][{{ $hora }}]">
+                                            <select name="assignacions[{{ $diaNum }}][{{ $franja->id }}]">
                                                 <option value="">-- lliure --</option>
                                                 @foreach($professors as $p)
                                                     <option value="{{ $p->id }}" {{ (string)$valor === (string)$p->id ? 'selected' : '' }}>

@@ -1,13 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="page-title">Aulas</h2>
+        <h2 class="page-title">Aules</h2>
     </x-slot>
 
     <div class="page">
         <div class="container">
             <p>
-                <a class="btn btn-secondary" href="{{ route('espai.index') }}">← Tornar a l'espai</a>
+                <a class="btn btn-secondary" href="{{ route('espai.index') }}">Tornar a l'espai</a>
                 <a class="btn" href="{{ route('espai.aules.create') }}">Nova aula</a>
+                <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">
+                    Veure franges
+                </a>
             </p>
 
             @if(session('ok'))
@@ -31,35 +34,25 @@
                         @forelse($aules as $aula)
                             <tr>
                                 <td>{{ $aula->nom }}</td>
-                                <td>{{ $aula->codi ?? '-' }}</td>
-                                <td>{{ $aula->capacitat ?? '-' }}</td>
-                                <td>{{ $aula->planta ?? '-' }}</td>
+                                <td>{{ $aula->codi }}</td>
+                                <td>{{ $aula->capacitat }}</td>
+                                <td>{{ $aula->planta }}</td>
                                 <td>{{ $aula->activa ? 'Sí' : 'No' }}</td>
                                 <td>
-                                    <a class="btn" href="{{ route('espai.aules.admin', $aula) }}">
-                                        Administrar aula
-                                    </a>
+                                    <a class="btn" href="{{ route('espai.aules.admin', $aula) }}">Administrar aula</a>
+                                    <a class="btn" href="{{ route('espai.aules.edit', $aula) }}">Editar</a>
 
-                                    <a class="btn" href="{{ route('espai.aules.edit', $aula) }}">
-                                        Editar
-                                    </a>
-
-                                    <form method="POST"
-                                          action="{{ route('espai.aules.destroy', $aula) }}"
-                                          style="display:inline;">
+                                    <form method="POST" action="{{ route('espai.aules.destroy', $aula) }}" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn danger" type="submit"
-                                                onclick="return confirm('Eliminar aquesta aula?')">
+                                        <button class="btn danger" type="submit" onclick="return confirm('Eliminar aquesta aula?')">
                                             Eliminar
                                         </button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6">No hi ha aules.</td>
-                            </tr>
+                            <tr><td colspan="6">No hi ha aules.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
