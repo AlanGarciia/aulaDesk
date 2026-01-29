@@ -6,6 +6,7 @@ use App\Models\Aula;
 use App\Models\AulaHorario;
 use App\Models\UsuariEspai;
 use App\Models\FranjaHoraria;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 
 class AulaAdminController extends Controller
@@ -70,22 +71,40 @@ class AulaAdminController extends Controller
             ->orderBy('ordre')
             ->get();
 
-        if ($franges->count() === 0) {
-            abort(422, "No hi ha franges horàries creades per aquest espai.");
-        }
-
-        $slots = AulaHorario::where('aula_id', $aula->id)->get();
+        // ✅ IMPORTANT: no abortar si no hi ha franges, la vista ho mostra
+        // if ($franges->count() === 0) {
+        //     abort(422, "No hi ha franges horàries creades per aquest espai.");
+        // }
 
         // [dia][franja_id] => usuari_espai_id
         $assignacions = [];
-        foreach ($slots as $s) {
-            if (!isset($assignacions[$s->dia_setmana])) {
-                $assignacions[$s->dia_setmana] = [];
+
+        // Només calculem slots si hi ha franges (sinó no cal)
+        if ($franges->isNotEmpty()) {
+            $slots = AulaHorario::where('aula_id', $aula->id)->get();
+
+            foreach ($slots as $s) {
+                if (!isset($assignacions[$s->dia_setmana])) {
+                    $assignacions[$s->dia_setmana] = [];
+                }
+                $assignacions[$s->dia_setmana][$s->franja_horaria_id] = $s->usuari_espai_id;
             }
-            $assignacions[$s->dia_setmana][$s->franja_horaria_id] = $s->usuari_espai_id;
         }
 
-        return view('espai.aules.admin', compact('aula', 'professors', 'assignacions', 'dies', 'franges'));
+        $tickets = Ticket::where('espai_id', $espaiId)
+            ->where('aula_id', $aula->id)
+            ->with('creador')
+            ->latest()
+            ->get();
+
+        return view('espai.aules.admin', compact(
+            'aula',
+            'professors',
+            'assignacions',
+            'dies',
+            'franges',
+            'tickets'
+        ));
     }
 
     public function update(Request $request, Aula $aula)
