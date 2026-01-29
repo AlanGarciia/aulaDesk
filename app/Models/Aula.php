@@ -27,4 +27,10 @@ class Aula extends Model
     {
         return $this->belongsTo(Espai::class);
     }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class)->latest();
+    }
+
 }

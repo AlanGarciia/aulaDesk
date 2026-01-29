@@ -8,6 +8,8 @@ use App\Http\Controllers\UsuariEspaiController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\NoticiaReaccioController;
 use App\Http\Controllers\AulaController;
+use App\Http\Controllers\AulaTicketController;
+
 
 // ✅ Admin Aula (assignar professors per franges)
 use App\Http\Controllers\AulaAdminController;
@@ -98,6 +100,17 @@ Route::middleware('espai.session')->group(function () {
     Route::resource('/espai/franges', FranjaHorariaController::class)
         ->parameters(['franges' => 'franja'])
         ->names('espai.franges');
+
+    //Tickets
+    Route::post('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'store'])
+        ->name('espai.aules.tickets.store');
+
+    Route::patch('/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'update'])
+        ->name('espai.aules.tickets.update');
+
+    Route::delete('/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'destroy'])
+        ->name('espai.aules.tickets.destroy');
+
 });
 
 require __DIR__ . '/auth.php';
