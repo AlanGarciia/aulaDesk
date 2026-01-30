@@ -75,7 +75,6 @@
                             </div>
 
                             <div class="post__actions">
-                                {{-- Reacció (tothom pot reaccionar) --}}
                                 <form class="inline-form" method="POST" action="{{ route('espai.noticies.reaccio', $n) }}">
                                     @csrf
                                     <input type="hidden" name="tipus" value="like">
@@ -84,29 +83,22 @@
                                     </button>
                                 </form>
 
-                                {{-- Només el creador pot editar/eliminar --}}
                                 @if ((int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
-                                    <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">
-                                        Editar
-                                    </a>
+                                    <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">Editar</a>
 
-                                    <form class="inline-form" method="POST" action="{{ route('espai.noticies.destroy', $n) }}"
-                                          onsubmit="return confirm('Eliminar la notícia?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger" type="submit">Eliminar</button>
-                                    </form>
+                                    {{-- Botón para modal --}}
+                                    <button type="button"
+                                        class="btn btn-danger btn-delete"
+                                        data-action="{{ route('espai.noticies.destroy', $n) }}">
+                                        Eliminar
+                                    </button>
                                 @endif
                             </div>
                         </header>
 
                         @if($n->imatge_path)
                             <div class="post__media">
-                                <img
-                                    src="{{ asset('storage/'.$n->imatge_path) }}"
-                                    alt="imatge"
-                                    loading="lazy"
-                                >
+                                <img src="{{ asset('storage/'.$n->imatge_path) }}" alt="imatge" loading="lazy">
                             </div>
                         @endif
 
