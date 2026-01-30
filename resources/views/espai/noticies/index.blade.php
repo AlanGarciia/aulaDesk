@@ -56,10 +56,18 @@
 
             <div class="feed">
                 @forelse($noticies as $n)
+                    @php
+                    //esto no lo borres gonza que me la lias
+                    //es para poner un limite de letras
+                        $limit = 320;
+                        $isLong = !empty($n->contingut) && mb_strlen($n->contingut) > $limit;
+                    @endphp
+
                     <article class="post">
                         <header class="post__header">
                             <div class="post__title-wrap">
                                 <h3 class="post__title">{{ $n->titol }}</h3>
+
                                 <div class="post__meta">
                                     <span class="pill">{{ $n->tipus }}</span>
                                     <span class="dot">•</span>
@@ -73,27 +81,6 @@
                                     @endif
                                 </div>
                             </div>
-
-                            <div class="post__actions">
-                                <form class="inline-form" method="POST" action="{{ route('espai.noticies.reaccio', $n) }}">
-                                    @csrf
-                                    <input type="hidden" name="tipus" value="like">
-                                    <button class="icon-btn" type="submit" title="M'agrada">
-                                        👍 <span class="sr-only">M'agrada</span>
-                                    </button>
-                                </form>
-
-                                @if ((int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
-                                    <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">Editar</a>
-
-                                    {{-- Botón para modal --}}
-                                    <button type="button"
-                                        class="btn btn-danger btn-delete"
-                                        data-action="{{ route('espai.noticies.destroy', $n) }}">
-                                        Eliminar
-                                    </button>
-                                @endif
-                            </div>
                         </header>
 
                         @if($n->imatge_path)
@@ -101,12 +88,51 @@
                                 <img src="{{ asset('storage/'.$n->imatge_path) }}" alt="imatge" loading="lazy">
                             </div>
                         @endif
-
                         @if($n->contingut)
                             <div class="post__content">
-                                <p>{{ $n->contingut }}</p>
+                                <p
+                                    style="
+                                        display:-webkit-box;
+                                        -webkit-box-orient:vertical;
+                                        -webkit-line-clamp:4;
+                                        overflow:hidden;
+                                        margin:0;
+                                    "
+                                >
+                                    {{ $n->contingut }}
+                                </p>
+
+                                @if($isLong)
+                                    <div style="margin-top:12px;">
+                                        <a class="btn btn-secondary" href="{{ route('espai.noticies.show', $n) }}">
+                                            Veure més
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         @endif
+
+                        <div class="post__actions">
+                            <form class="inline-form" method="POST" action="{{ route('espai.noticies.reaccio', $n) }}">
+                                @csrf
+                                <input type="hidden" name="tipus" value="like">
+                                <button class="icon-btn" type="submit" title="M'agrada">
+                                    👍 <span class="sr-only">M'agrada</span>
+                                </button>
+                            </form>
+
+                            @if ((int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
+                                <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">
+                                    Editar
+                                </a>
+
+                                <button type="button"
+                                    class="btn btn-danger btn-delete"
+                                    data-action="{{ route('espai.noticies.destroy', $n) }}">
+                                    Eliminar
+                                </button>
+                            @endif
+                        </div>
                     </article>
                 @empty
                     <div class="empty">

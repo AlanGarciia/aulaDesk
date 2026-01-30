@@ -21,9 +21,6 @@ class NoticiaController extends Controller
             ->firstOrFail();
     }
 
-    /**
-     * Usuari d'espai actiu (obligatori per crear/editar/eliminar).
-     */
     private function usuariEspaiActiuId(Request $request): int
     {
         $id = $request->session()->get('usuari_espai_id');
@@ -32,9 +29,6 @@ class NoticiaController extends Controller
         return (int) $id;
     }
 
-    /**
-     * Només el creador pot modificar/eliminar.
-     */
     private function assertCreador(Request $request, Noticia $noticia): void
     {
         $usuariEspaiId = $this->usuariEspaiActiuId($request);
@@ -66,9 +60,6 @@ class NoticiaController extends Controller
         ));
     }
 
-    /**
-     * ✅ IMPORTANT: el teu create.blade.php espera $tipus
-     */
     public function create(Request $request)
     {
         $this->espaiActiu($request);
@@ -114,16 +105,24 @@ class NoticiaController extends Controller
     {
         $espai = $this->espaiActiu($request);
 
-        // ha de ser de l'espai actiu
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
-
-        // només creador
         $this->assertCreador($request, $noticia);
 
         $tipusDisponibles = self::TIPUS;
 
         return view('espai.noticies.edit', compact('noticia', 'tipusDisponibles'));
     }
+
+    public function show(Request $request, Noticia $noticia)
+    {
+        $espai = $this->espaiActiu($request);
+
+        abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
+        $noticia->loadCount('reaccions');
+
+        return view('espai.noticies.show', compact('espai', 'noticia'));
+    }
+
 
     public function update(Request $request, Noticia $noticia)
     {
@@ -140,13 +139,11 @@ class NoticiaController extends Controller
             'treure_imatge' => ['nullable', 'boolean'],
         ]);
 
-        // Treure imatge
         if (!empty($data['treure_imatge']) && $noticia->imatge_path) {
             Storage::disk('public')->delete($noticia->imatge_path);
             $noticia->imatge_path = null;
         }
 
-        // Substituir imatge
         if ($request->hasFile('imatge')) {
             if ($noticia->imatge_path) {
                 Storage::disk('public')->delete($noticia->imatge_path);
@@ -169,8 +166,6 @@ class NoticiaController extends Controller
         $espai = $this->espaiActiu($request);
 
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
-
-        // ✅ només creador
         $this->assertCreador($request, $noticia);
 
         if ($noticia->imatge_path) {
