@@ -7,14 +7,13 @@
         <div class="container">
 
             <p>
-                <a class="btn" href="{{ route('espai.aules.index') }}">← Tornar</a>
+                <a class="btn" href="{{ route('espai.aules.index') }}">Tornar</a>
             </p>
 
             @if(session('ok'))
                 <div class="alert success">{{ session('ok') }}</div>
             @endif
 
-            {{-- ✅ HORARI: si no hi ha franges, només missatge --}}
             @if($franges->isEmpty())
                 <div class="card">
                     <div class="alert" style="margin:0;">
@@ -77,7 +76,6 @@
                 </div>
             @endif
 
-            {{-- ✅ TICKETS: SIEMPRE --}}
             <div class="card" style="margin-top:16px;">
                 <h3 style="margin-top:0;">Tickets de l’aula</h3>
 
@@ -147,7 +145,6 @@
                                     <td>{{ $t->creador?->nom ?? '-' }}</td>
                                     <td>{{ $t->created_at->format('d/m/Y H:i') }}</td>
                                     <td style="white-space:nowrap;">
-                                        {{-- Cambiar estado --}}
                                         <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $t]) }}" style="display:inline;">
                                             @csrf
                                             @method('PATCH')
@@ -158,7 +155,6 @@
                                             </select>
                                         </form>
 
-                                        {{-- Eliminar --}}
                                         <form method="POST" action="{{ route('espai.aules.tickets.destroy', [$aula, $t]) }}" style="display:inline;" onsubmit="return confirm('Eliminar ticket?')">
                                             @csrf
                                             @method('DELETE')
