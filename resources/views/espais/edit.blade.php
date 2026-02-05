@@ -1,4 +1,9 @@
 <x-app-layout>
+
+     @push('styles')
+        @vite('resources/css/espais/espaisIndex.css')
+    @endpush
+
     <x-slot name="header">
         <div class="header-container">
             <h2 class="page-title">Editar espai</h2>
