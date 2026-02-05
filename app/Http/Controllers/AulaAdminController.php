@@ -71,23 +71,60 @@ class AulaAdminController extends Controller
             ->orderBy('ordre')
             ->get();
 
-        // ✅ IMPORTANT: no abortar si no hi ha franges, la vista ho mostra
-        // if ($franges->count() === 0) {
-        //     abort(422, "No hi ha franges horàries creades per aquest espai.");
-        // }
-
-        // [dia][franja_id] => usuari_espai_id
+        // [dia][franja_id] => usuari_espai_id (assignacions d'aquesta aula)
         $assignacions = [];
 
-        // Només calculem slots si hi ha franges (sinó no cal)
         if ($franges->isNotEmpty()) {
             $slots = AulaHorario::where('aula_id', $aula->id)->get();
 
             foreach ($slots as $s) {
                 if (!isset($assignacions[$s->dia_setmana])) {
+                    $assignacions[$s->dia_setwana] = []; // (ojo) typo? lo corregimos abajo
+                }
+            }
+        }
+
+        // (corrección del bloque anterior, tal como lo tenías pero bien)
+        $assignacions = [];
+        if ($franges->isNotEmpty()) {
+            $slots = AulaHorario::where('aula_id', $aula->id)->get();
+            foreach ($slots as $s) {
+                if (!isset($assignacions[$s->dia_setmana])) {
                     $assignacions[$s->dia_setmana] = [];
                 }
                 $assignacions[$s->dia_setmana][$s->franja_horaria_id] = $s->usuari_espai_id;
+            }
+        }
+
+        /**
+         * ✅ OCUPATS: professors ocupats en ALTRES aules en cada slot.
+         * Format: $ocupats[dia][franja_id][prof_id] = "NomAula"
+         * (per pintar en vermell / deshabilitar a la vista)
+         */
+        $ocupats = [];
+        if ($franges->isNotEmpty()) {
+            $ocupacions = AulaHorario::query()
+                ->where('usuari_espai_id', '!=', null)
+                ->whereIn('dia_setmana', array_keys($dies))
+                ->whereIn('franja_horaria_id', $franges->pluck('id')->all())
+                ->where('aula_id', '!=', $aula->id)
+                ->with('aula')
+                ->get();
+
+            foreach ($ocupacions as $o) {
+                $dia = (int) $o->dia_setmana;
+                $franjaId = (int) $o->franja_horaria_id;
+                $profId = (int) $o->usuari_espai_id;
+
+                if (!isset($ocupats[$dia])) $ocupats[$dia] = [];
+                if (!isset($ocupats[$dia][$franjaId])) $ocupats[$dia][$franjaId] = [];
+
+                $nomAula = 'Altra aula';
+                if ($o->aula && isset($o->aula->nom) && $o->aula->nom !== '') {
+                    $nomAula = $o->aula->nom;
+                }
+
+                $ocupats[$dia][$franjaId][$profId] = $nomAula;
             }
         }
 
@@ -103,7 +140,8 @@ class AulaAdminController extends Controller
             'assignacions',
             'dies',
             'franges',
-            'tickets'
+            'tickets',
+            'ocupats'
         ));
     }
 
@@ -123,27 +161,101 @@ class AulaAdminController extends Controller
 
         $rolProfessor = $this->professorRolValue();
 
-        $profIds = UsuariEspai::where('espai_id', $espaiId)
+        $professors = UsuariEspai::where('espai_id', $espaiId)
             ->where('rol', $rolProfessor)
-            ->pluck('id')
-            ->all();
+            ->orderBy('nom')
+            ->get();
+
+        $profIds = $professors->pluck('id')->map(function ($v) { return (int) $v; })->all();
+        $profNoms = [];
+        foreach ($professors as $p) {
+            $profNoms[(int) $p->id] = (string) $p->nom;
+        }
 
         $franges = FranjaHoraria::where('espai_id', $espaiId)
             ->orderBy('ordre')
             ->get();
 
         $franjaIds = [];
+        $franjaLabels = [];
         foreach ($franges as $f) {
-            $franjaIds[] = (int) $f->id;
+            $fid = (int) $f->id;
+            $franjaIds[] = $fid;
+
+            $label = substr((string) $f->inici, 0, 5) . ' - ' . substr((string) $f->fi, 0, 5);
+            if (isset($f->nom) && $f->nom) {
+                $label = (string) $f->nom . ' (' . $label . ')';
+            }
+            $franjaLabels[$fid] = $label;
         }
 
         $dies = [1, 2, 3, 4, 5];
+        $diesLabels = [
+            1 => 'Dilluns',
+            2 => 'Dimarts',
+            3 => 'Dimecres',
+            4 => 'Dijous',
+            5 => 'Divendres',
+        ];
+
+        // ✅ 1) Detectar conflictes detallats
+        $conflicts = [];
 
         foreach ($dies as $dia) {
             foreach ($franjaIds as $franjaId) {
 
                 $profId = null;
+                if (isset($data['assignacions'][$dia]) && isset($data['assignacions'][$dia][$franjaId])) {
+                    $profId = $data['assignacions'][$dia][$franjaId];
+                }
 
+                if ($profId === '' || $profId === null) {
+                    continue;
+                }
+
+                $profId = (int) $profId;
+                abort_if(!in_array($profId, $profIds, true), 422, 'Professor invàlid.');
+
+                $ocupacio = AulaHorario::query()
+                    ->where('usuari_espai_id', $profId)
+                    ->where('dia_setmana', $dia)
+                    ->where('franja_horaria_id', $franjaId)
+                    ->where('aula_id', '!=', $aula->id)
+                    ->with('aula')
+                    ->first();
+
+                if ($ocupacio) {
+                    $aulaOcupadaNom = 'Altra aula';
+                    if ($ocupacio->aula && isset($ocupacio->aula->nom) && $ocupacio->aula->nom !== '') {
+                        $aulaOcupadaNom = (string) $ocupacio->aula->nom;
+                    }
+
+                    $diaNom = isset($diesLabels[$dia]) ? $diesLabels[$dia] : ('Dia ' . $dia);
+                    $franjaTxt = isset($franjaLabels[$franjaId]) ? $franjaLabels[$franjaId] : ('Franja ' . $franjaId);
+                    $profNom = isset($profNoms[$profId]) ? $profNoms[$profId] : ('Professor #' . $profId);
+
+                    $conflicts[] = [
+                        'dia' => $diaNom,
+                        'franja' => $franjaTxt,
+                        'professor' => $profNom,
+                        'aula' => $aulaOcupadaNom,
+                    ];
+                }
+            }
+        }
+
+        if (!empty($conflicts)) {
+            return redirect()
+                ->route('espai.aules.admin', $aula)
+                ->withInput()
+                ->with('conflicts', $conflicts);
+        }
+
+        // ✅ 2) Guardar (tu lógica original)
+        foreach ($dies as $dia) {
+            foreach ($franjaIds as $franjaId) {
+
+                $profId = null;
                 if (isset($data['assignacions'][$dia]) && isset($data['assignacions'][$dia][$franjaId])) {
                     $profId = $data['assignacions'][$dia][$franjaId];
                 }
@@ -163,7 +275,6 @@ class AulaAdminController extends Controller
                 }
 
                 $profId = (int) $profId;
-
                 abort_if(!in_array($profId, $profIds, true), 422, 'Professor invàlid.');
 
                 AulaHorario::updateOrCreate(

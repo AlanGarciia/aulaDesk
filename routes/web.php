@@ -10,12 +10,14 @@ use App\Http\Controllers\NoticiaReaccioController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\AulaTicketController;
 
-
 // ✅ Admin Aula (assignar professors per franges)
 use App\Http\Controllers\AulaAdminController;
 
 // ✅ CRUD Franges horàries
 use App\Http\Controllers\FranjaHorariaController;
+
+// ✅ Guardies
+use App\Http\Controllers\GuardiaController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -86,8 +88,10 @@ Route::middleware('espai.session')->group(function () {
     Route::delete('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'destroy'])
         ->name('espai.noticies.reaccio.destroy');
 
-    //aules
-    Route::resource('/espai/aules', AulaController::class)->parameters(['aules' => 'aula'])->names('espai.aules');
+    // aules
+    Route::resource('/espai/aules', AulaController::class)
+        ->parameters(['aules' => 'aula'])
+        ->names('espai.aules');
 
     // ✅ Administrar aula (assignar professors per franges)
     Route::get('/espai/aules/{aula}/admin', [AulaAdminController::class, 'show'])
@@ -96,12 +100,12 @@ Route::middleware('espai.session')->group(function () {
     Route::post('/espai/aules/{aula}/admin', [AulaAdminController::class, 'update'])
         ->name('espai.aules.admin.update');
 
-    //franjas
+    // franjas
     Route::resource('/espai/franges', FranjaHorariaController::class)
         ->parameters(['franges' => 'franja'])
         ->names('espai.franges');
 
-    //Tickets
+    // Tickets
     Route::post('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'store'])
         ->name('espai.aules.tickets.store');
 
@@ -111,6 +115,9 @@ Route::middleware('espai.session')->group(function () {
     Route::delete('/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'destroy'])
         ->name('espai.aules.tickets.destroy');
 
+    //guardies
+    Route::get('/espai/guardies', [GuardiaController::class, 'index'])
+        ->name('espai.guardies.index');
 });
 
 require __DIR__ . '/auth.php';
