@@ -65,7 +65,6 @@ class FranjaHorariaController extends Controller
                 'fi'    => ['required', 'date_format:H:i'],
                 'nom'   => ['nullable', 'string', 'max:50'],
             ],
-            [],
             [
                 'ordre' => 'ordre',
                 'inici' => 'inici',

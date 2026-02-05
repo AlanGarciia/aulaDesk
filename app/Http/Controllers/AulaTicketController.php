@@ -10,10 +10,9 @@ class AulaTicketController extends Controller
 {
     public function store(Request $request, Aula $aula)
     {
+
         $espaiId = session('espai_id');
         if (!$espaiId) abort(403, 'No hi ha cap espai actiu a la sessió.');
-
-        // seguridad: el aula debe ser del espai actual
         if ((int)$aula->espai_id !== (int)$espaiId) abort(403);
 
         $data = $request->validate([
@@ -22,8 +21,6 @@ class AulaTicketController extends Controller
             'prioritat' => ['required', 'in:baixa,mitja,alta'],
         ]);
 
-        // ⚠️ Ajusta esta parte según cómo guardas el usuari_espai logueado del espacio
-        // Muy típico: en sesión también guardas usuari_espai_id
         $usuariEspaiId = session('usuari_espai_id');
         if (!$usuariEspaiId) abort(403, 'No hi ha usuari d’espai a la sessió.');
 
@@ -46,7 +43,7 @@ class AulaTicketController extends Controller
         $espaiId = session('espai_id');
         if (!$espaiId) abort(403, 'No hi ha cap espai actiu a la sessió.');
 
-        // seguridad: aula y ticket deben ser del espai actual y coincidir
+        //seguridad: aula y ticket deben ser del espai actual y coincidir
         if ((int)$aula->espai_id !== (int)$espaiId) abort(403);
         if ((int)$ticket->espai_id !== (int)$espaiId) abort(403);
         if ((int)$ticket->aula_id !== (int)$aula->id) abort(404);

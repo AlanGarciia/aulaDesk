@@ -71,7 +71,6 @@ class AulaAdminController extends Controller
             ->orderBy('ordre')
             ->get();
 
-        // [dia][franja_id] => usuari_espai_id (assignacions d'aquesta aula)
         $assignacions = [];
 
         if ($franges->isNotEmpty()) {
@@ -79,12 +78,11 @@ class AulaAdminController extends Controller
 
             foreach ($slots as $s) {
                 if (!isset($assignacions[$s->dia_setmana])) {
-                    $assignacions[$s->dia_setwana] = []; // (ojo) typo? lo corregimos abajo
+                    $assignacions[$s->dia_setwana] = [];
                 }
             }
         }
 
-        // (corrección del bloque anterior, tal como lo tenías pero bien)
         $assignacions = [];
         if ($franges->isNotEmpty()) {
             $slots = AulaHorario::where('aula_id', $aula->id)->get();
@@ -96,11 +94,6 @@ class AulaAdminController extends Controller
             }
         }
 
-        /**
-         * ✅ OCUPATS: professors ocupats en ALTRES aules en cada slot.
-         * Format: $ocupats[dia][franja_id][prof_id] = "NomAula"
-         * (per pintar en vermell / deshabilitar a la vista)
-         */
         $ocupats = [];
         if ($franges->isNotEmpty()) {
             $ocupacions = AulaHorario::query()
@@ -198,7 +191,7 @@ class AulaAdminController extends Controller
             5 => 'Divendres',
         ];
 
-        // ✅ 1) Detectar conflictes detallats
+        //Nota ALan: Guarda los conflictos de los usuarios con rol profesor para que no puedas poner dos cosas a la vez
         $conflicts = [];
 
         foreach ($dies as $dia) {
@@ -251,7 +244,6 @@ class AulaAdminController extends Controller
                 ->with('conflicts', $conflicts);
         }
 
-        // ✅ 2) Guardar (tu lógica original)
         foreach ($dies as $dia) {
             foreach ($franjaIds as $franjaId) {
 

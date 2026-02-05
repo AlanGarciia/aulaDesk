@@ -45,15 +45,7 @@ class EspaiController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'descripcio' => ['nullable', 'string'],
-            ],
-            [],
-            [
-                'nom' => 'nom',
-                'descripcio' => 'descripció',
-            ]
+            ['nom' => ['required', 'string', 'max:255'],'descripcio' => ['nullable', 'string']], ['nom' => 'nom','descripcio' => 'descripció']
         );
 
         $espai = $request->user()->espais()->create([
@@ -147,7 +139,6 @@ class EspaiController extends Controller
                 ->withInput();
         }
 
-        // ✅ Sessió d'espai
         $request->session()->put('espai_id', $espai->id);
         $request->session()->put('usuari_espai_id', $usuari->id);
         $request->session()->put('rol_espai', $usuari->rol);
@@ -187,15 +178,11 @@ class EspaiController extends Controller
                 ->withInput();
         }
 
-        // Sessió d'espai + rol
         $request->session()->put('espai_id', $espai->id);
         $request->session()->put('usuari_espai_id', $usuari->id);
         $request->session()->put('rol_espai', $usuari->rol);
 
         return redirect()->route('espai.index');
     }
-
-
-
 
 }
