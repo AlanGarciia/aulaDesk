@@ -7,23 +7,17 @@ use Illuminate\Http\Request;
 
 class AulaController extends Controller
 {
-    /**
-     * Intenta obtener el ID del espai actual desde la sesión, sea cual sea el formato.
-     */
+    
     private function currentEspaiId(): ?int
     {
-        // Caso típico: session(['espai_id' => X])
         $espaiId = session('espai_id');
         if ($espaiId) return (int) $espaiId;
 
-        // A veces se guarda como array: session(['espai' => ['id' => X, ...]])
         $espai = session('espai');
         if (is_array($espai) && isset($espai['id'])) return (int) $espai['id'];
 
-        // A veces se guarda como model: session(['espai' => $espaiModel])
         if (is_object($espai) && isset($espai->id)) return (int) $espai->id;
 
-        // Otros nombres posibles (por si lo guardaste diferente)
         $espaiIdAlt = session('espai_actual_id') ?? session('espaiId');
         if ($espaiIdAlt) return (int) $espaiIdAlt;
 
@@ -39,7 +33,6 @@ class AulaController extends Controller
             ->latest()
             ->paginate(15);
 
-        // Tu index es aules.blade.php
         return view('espai.aules.aules', compact('aules'));
     }
 
