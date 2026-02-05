@@ -19,6 +19,10 @@
                 <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">
                     Aules
                 </a>
+                <a href="{{ route('espai.guardies.index') }}" class="btn btn-secondary">
+                    Guardies
+                </a>
+
                 <a href="{{ route('espais.index') }}" class="btn btn-danger">
                     Sortir de l'espai
                 </a>
