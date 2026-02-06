@@ -1,5 +1,3 @@
-{{-- resources/views/espai/guardies/index.blade.php --}}
-
 @push('styles')
 <style>
     .guardies-wrap { max-width: 1100px; margin: 0 auto; }
@@ -17,9 +15,52 @@
 
     .timecell { white-space: nowrap; font-weight: 600; font-size: .9rem; color: rgba(0,0,0,.75); background: rgba(0,0,0,.02); }
     .slot-empty { color: rgba(0,0,0,.35); font-size: .9rem; }
-    .slot { display:flex; flex-direction: column; gap:4px; }
+    .slot { display:flex; flex-direction: column; gap:6px; }
     .slot-aula { font-weight: 700; }
+
+    .slot-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+
+    .btn-guardia {
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: .85rem;
+        font-weight: 700;
+        border: 1px solid rgba(0,0,0,.12);
+        background: rgba(0,0,0,.03);
+        text-decoration:none;
+        color: rgba(0,0,0,.85);
+        white-space: nowrap;
+    }
+    .btn-guardia:hover { background: rgba(0,0,0,.06); }
+
     .slot-meta { font-size: .85rem; color: rgba(0,0,0,.6); }
+
+    .badge-guardia {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: .82rem;
+        font-weight: 800;
+        border: 1px solid rgba(0,0,0,.10);
+        width: fit-content;
+    }
+    .badge-guardia--pendent {
+        background: rgba(245,158,11,.14);
+        color: #92400e;
+        border-color: rgba(245,158,11,.28);
+    }
+    .badge-guardia--acceptada {
+        background: rgba(16,185,129,.14);
+        color: #065f46;
+        border-color: rgba(16,185,129,.28);
+    }
+    .badge-guardia--cobridor {
+        background: rgba(59,130,246,.12);
+        color: #1e3a8a;
+        border-color: rgba(59,130,246,.26);
+    }
 
     .legend { display:flex; gap:10px; flex-wrap:wrap; padding: 12px 18px; background: rgba(0,0,0,.015); border-top: 1px solid rgba(0,0,0,.06); }
     .badge-soft { display:inline-flex; align-items:center; gap:6px; padding: 6px 10px; border-radius: 999px; font-size: .85rem; border: 1px solid rgba(0,0,0,.08); background: #fff; }
@@ -28,6 +69,8 @@
     @media (max-width: 768px) {
         .timetable th, .timetable td { padding: 8px; }
         .guardies-head { flex-direction: column; align-items: flex-start; }
+        .slot-row { flex-direction: column; align-items:flex-start; }
+        .btn-guardia { width: 100%; text-align: center; }
     }
 </style>
 @endpush
@@ -68,7 +111,6 @@
                     </p>
                 </div>
 
-                {{-- Botó: Tornar a l'Espai --}}
                 <a href="{{ route('espai.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Tornar a l'Espai
                 </a>
@@ -120,6 +162,26 @@
                                             if (isset($slots) && isset($slots[$dia]) && isset($slots[$dia][$franja->id])) {
                                                 $cell = $slots[$dia][$franja->id];
                                             }
+
+                                            $sol = null;
+                                            if (isset($solSlots) && isset($solSlots[$dia]) && isset($solSlots[$dia][$franja->id])) {
+                                                $sol = $solSlots[$dia][$franja->id];
+                                            }
+
+                                            $solEstat = '';
+                                            $solEsMeva = false;
+                                            $solSocCobridor = false;
+
+                                            if (is_array($sol)) {
+                                                if (isset($sol['estat']) && $sol['estat'] !== '') $solEstat = (string) $sol['estat'];
+                                                if (isset($sol['es_meva'])) $solEsMeva = (bool) $sol['es_meva'];
+                                                if (isset($sol['soc_cobridor'])) $solSocCobridor = (bool) $sol['soc_cobridor'];
+                                            }
+
+                                            $amagarBoto = false;
+                                            if ($sol && ($solEsMeva || $solSocCobridor)) {
+                                                $amagarBoto = true;
+                                            }
                                         @endphp
 
                                         <td>
@@ -134,10 +196,34 @@
                                                 @endphp
 
                                                 <div class="slot">
-                                                    <div class="slot-aula">
-                                                        <i class="bi bi-door-open"></i>
-                                                        {{ $aulaNom }}
+                                                    <div class="slot-row">
+                                                        <div class="slot-aula">
+                                                            <i class="bi bi-door-open"></i>
+                                                            {{ $aulaNom }}
+                                                        </div>
+
+                                                        @if(!$amagarBoto)
+                                                            <a class="btn-guardia"
+                                                               href="{{ route('espai.guardia.solicitaGuardia', ['dia' => $dia, 'franja' => $franja->id]) }}">
+                                                                Solicitar guàrdia
+                                                            </a>
+                                                        @endif
                                                     </div>
+
+                                                    {{-- ✅ Overlay guardia --}}
+                                                    @if($sol && $solEsMeva)
+                                                        @if($solEstat === 'pendent')
+                                                            <span class="badge-guardia badge-guardia--pendent">Guàrdia pendent</span>
+                                                        @elseif($solEstat === 'acceptada')
+                                                            <span class="badge-guardia badge-guardia--acceptada">Guàrdia acceptada</span>
+                                                        @else
+                                                            <span class="badge-guardia badge-guardia--pendent">Guàrdia: {{ $solEstat }}</span>
+                                                        @endif
+                                                    @endif
+
+                                                    @if($sol && $solSocCobridor)
+                                                        <span class="badge-guardia badge-guardia--cobridor">Cobreixes tu</span>
+                                                    @endif
 
                                                     @if(isset($cell['meta']) && $cell['meta'])
                                                         <div class="slot-meta">{{ $cell['meta'] }}</div>
@@ -155,6 +241,9 @@
                 <div class="legend">
                     <span class="badge-soft"><span class="dot"></span> Cela buida = sense aula assignada</span>
                     <span class="badge-soft"><i class="bi bi-door-open"></i> Aula assignada en aquella franja</span>
+                    <span class="badge-soft">🟠 Guàrdia pendent</span>
+                    <span class="badge-soft">🟢 Guàrdia acceptada</span>
+                    <span class="badge-soft">🔵 Cobreixes tu</span>
                 </div>
             @endif
         </div>

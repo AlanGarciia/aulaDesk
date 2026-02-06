@@ -1,10 +1,11 @@
+{{-- resources/views/espai/aules/admin.blade.php --}}
+
+@vite('resources/css/espai/aules/admin.css')
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="page-title">Administrar aula: {{ $aula->nom }}</h2>
     </x-slot>
-    @push('styles')
-        @vite('resources/css/espai/aules/admin.css')
-    @endpush
 
     <div class="page">
         <div class="container">
@@ -27,58 +28,6 @@
             @endphp
 
             @if($hasConflicts)
-                <style>
-                    .modal-backdrop {
-                        position: fixed;
-                        inset: 0;
-                        background: rgba(0,0,0,.55);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        z-index: 9999;
-                    }
-                    .modal-card {
-                        width: min(720px, calc(100% - 24px));
-                        background: #fff;
-                        border-radius: 14px;
-                        border: 1px solid rgba(0,0,0,.12);
-                        overflow: hidden;
-                        box-shadow: 0 18px 50px rgba(0,0,0,.22);
-                    }
-                    .modal-head {
-                        padding: 14px 16px;
-                        display:flex;
-                        align-items:center;
-                        justify-content:space-between;
-                        border-bottom: 1px solid rgba(0,0,0,.08);
-                    }
-                    .modal-title {
-                        margin:0;
-                        font-size: 1.05rem;
-                        font-weight: 800;
-                    }
-                    .modal-body { padding: 14px 16px; }
-                    .modal-body p { margin-top:0; color: rgba(0,0,0,.7); }
-                    .conf-list { margin: 0; padding-left: 18px; }
-                    .conf-list li { margin: 8px 0; }
-                    .conf-tag { color: #b42318; font-weight: 800; }
-                    .modal-foot {
-                        padding: 12px 16px;
-                        border-top: 1px solid rgba(0,0,0,.08);
-                        display:flex;
-                        justify-content:flex-end;
-                        gap:10px;
-                    }
-                    .btn-close-modal {
-                        background:#111827;
-                        color:#fff;
-                        border:0;
-                        padding:8px 12px;
-                        border-radius:10px;
-                        cursor:pointer;
-                    }
-                </style>
-
                 <div class="modal-backdrop" id="conflictModal">
                     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="conflictTitle">
                         <div class="modal-head">
@@ -147,7 +96,6 @@
                     })();
                 </script>
             @endif
-            {{-- ✅ FIN MODAL --}}
 
             @if($franges->isEmpty())
                 <div class="card">
@@ -160,7 +108,7 @@
                     <form method="POST" action="{{ route('espai.aules.admin.update', $aula) }}">
                         @csrf
 
-                        <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                        <table class="table" width="100%">
                             <thead>
                                 <tr>
                                     <th>Franja</th>
@@ -173,7 +121,7 @@
                             <tbody>
                                 @foreach($franges as $franja)
                                     <tr>
-                                        <td>
+                                        <td class="cell-franja">
                                             @if($franja->nom)
                                                 <strong>{{ $franja->nom }}</strong><br>
                                             @endif
@@ -187,7 +135,6 @@
                                                     $valor = $assignacions[$diaNum][$franja->id];
                                                 }
 
-                                                // si vuelve con withInput(), prioriza old()
                                                 $oldVal = old('assignacions.' . $diaNum . '.' . $franja->id);
                                                 if ($oldVal !== null) {
                                                     $valor = $oldVal;
@@ -195,7 +142,7 @@
                                             @endphp
 
                                             <td>
-                                                <select name="assignacions[{{ $diaNum }}][{{ $franja->id }}]">
+                                                <select class="select" name="assignacions[{{ $diaNum }}][{{ $franja->id }}]">
                                                     <option value="">-- lliure --</option>
                                                     @foreach($professors as $p)
                                                         <option value="{{ $p->id }}" {{ (string)$valor === (string)$p->id ? 'selected' : '' }}>
@@ -210,29 +157,29 @@
                             </tbody>
                         </table>
 
-                        <div style="margin-top:12px;">
+                        <div class="actions">
                             <button class="btn btn-primary" type="submit">Desar horari</button>
                         </div>
                     </form>
                 </div>
             @endif
 
-            <div class="card" style="margin-top:16px;">
-                <h3 style="margin-top:0;">Tickets de l’aula</h3>
+            <div class="card card-tickets">
+                <h3 class="card-title">Tickets de l’aula</h3>
 
                 <form method="POST" action="{{ route('espai.aules.tickets.store', $aula) }}">
                     @csrf
 
-                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                        <div style="flex:1; min-width:220px;">
+                    <div class="form-row">
+                        <div class="field">
                             <label>Títol</label>
-                            <input name="titol" value="{{ old('titol') }}" required style="width:100%;">
+                            <input class="input" name="titol" value="{{ old('titol') }}" required>
                             @error('titol') <div class="error">{{ $message }}</div> @enderror
                         </div>
 
-                        <div style="width:180px;">
+                        <div class="field field-small">
                             <label>Prioritat</label>
-                            <select name="prioritat" style="width:100%;">
+                            <select class="select" name="prioritat">
                                 @foreach(['baixa'=>'Baixa','mitja'=>'Mitja','alta'=>'Alta'] as $k => $v)
                                     <option value="{{ $k }}" {{ old('prioritat','mitja')===$k ? 'selected' : '' }}>{{ $v }}</option>
                                 @endforeach
@@ -241,18 +188,18 @@
                         </div>
                     </div>
 
-                    <div style="margin-top:10px;">
+                    <div class="field">
                         <label>Descripció</label>
-                        <textarea name="descripcio" rows="3" style="width:100%;">{{ old('descripcio') }}</textarea>
+                        <textarea class="textarea" name="descripcio" rows="3">{{ old('descripcio') }}</textarea>
                         @error('descripcio') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
-                    <div style="margin-top:12px;">
+                    <div class="actions">
                         <button class="btn btn-primary" type="submit">Crear ticket</button>
                     </div>
                 </form>
 
-                <hr style="margin:16px 0;">
+                <hr class="divider">
 
                 @php
                     if (!isset($tickets) || $tickets === null) {
@@ -261,9 +208,9 @@
                 @endphp
 
                 @if($tickets->isEmpty())
-                    <p style="margin:0;">No hi ha tickets.</p>
+                    <p class="muted">No hi ha tickets.</p>
                 @else
-                    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                    <table class="table" width="100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -289,25 +236,25 @@
                                     <td>
                                         <strong>{{ $t->titol }}</strong>
                                         @if($t->descripcio)
-                                            <div style="margin-top:6px;">{{ $t->descripcio }}</div>
+                                            <div class="ticket-desc">{{ $t->descripcio }}</div>
                                         @endif
                                     </td>
                                     <td>{{ $t->prioritat }}</td>
                                     <td>{{ $t->estat }}</td>
                                     <td>{{ $creadorNom }}</td>
                                     <td>{{ $t->created_at->format('d/m/Y H:i') }}</td>
-                                    <td style="white-space:nowrap;">
-                                        <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $t]) }}" style="display:inline;">
+                                    <td class="nowrap">
+                                        <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $t]) }}" class="inline">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="estat" onchange="this.form.submit()">
+                                            <select class="select select-small" name="estat" onchange="this.form.submit()">
                                                 @foreach(['obert'=>'Obert','en_proces'=>'En procés','tancat'=>'Tancat'] as $k => $v)
                                                     <option value="{{ $k }}" {{ $t->estat===$k ? 'selected' : '' }}>{{ $v }}</option>
                                                 @endforeach
                                             </select>
                                         </form>
 
-                                        <form method="POST" action="{{ route('espai.aules.tickets.destroy', [$aula, $t]) }}" style="display:inline;" onsubmit="return confirm('Eliminar ticket?')">
+                                        <form method="POST" action="{{ route('espai.aules.tickets.destroy', [$aula, $t]) }}" class="inline" onsubmit="return confirm('Eliminar ticket?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn" type="submit">🗑️</button>

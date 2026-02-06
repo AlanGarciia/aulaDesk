@@ -9,14 +9,8 @@ use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\NoticiaReaccioController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\AulaTicketController;
-
-// ✅ Admin Aula (assignar professors per franges)
 use App\Http\Controllers\AulaAdminController;
-
-// ✅ CRUD Franges horàries
 use App\Http\Controllers\FranjaHorariaController;
-
-// ✅ Guardies
 use App\Http\Controllers\GuardiaController;
 
 Route::get('/', function () {
@@ -30,7 +24,6 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return redirect()->route('espais.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
 
 //Aixo s'eliminará
 Route::get('/espais/{espai}/acces', [EspaiController::class, 'accesForm'])->name('espais.acces.form');
@@ -58,7 +51,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 // requireix iniciar sessio dins l'espai
 Route::middleware('espai.session')->group(function () {
 
@@ -71,17 +63,16 @@ Route::middleware('espai.session')->group(function () {
     Route::get('/espai/usuaris/create', [UsuariEspaiController::class, 'create'])->name('espai.usuaris.create');
     Route::post('/espai/usuaris', [UsuariEspaiController::class, 'store'])->name('espai.usuaris.store');
 
-    // editar y actualizar usuaris
     Route::get('/espai/usuaris/{usuariEspai}/edit', [UsuariEspaiController::class, 'edit'])->name('espai.usuaris.edit');
     Route::put('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'update'])->name('espai.usuaris.update');
     Route::delete('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'destroy'])->name('espai.usuaris.destroy');
 
-    // ✅ TAULÓ DE NOTÍCIES (CRUD)
+    // noticies (incluye index con filtro ?tipus=guardia dentro del controller)
     Route::resource('/espai/noticies', NoticiaController::class)
         ->parameters(['noticies' => 'noticia'])
         ->names('espai.noticies');
 
-    // ✅ REACCIONS
+    // reaccionar
     Route::post('/espai/noticies/{noticia}/reaccio', [NoticiaReaccioController::class, 'store'])
         ->name('espai.noticies.reaccio');
 
@@ -93,7 +84,6 @@ Route::middleware('espai.session')->group(function () {
         ->parameters(['aules' => 'aula'])
         ->names('espai.aules');
 
-    // ✅ Administrar aula (assignar professors per franges)
     Route::get('/espai/aules/{aula}/admin', [AulaAdminController::class, 'show'])
         ->name('espai.aules.admin');
 
@@ -115,9 +105,20 @@ Route::middleware('espai.session')->group(function () {
     Route::delete('/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'destroy'])
         ->name('espai.aules.tickets.destroy');
 
-    //guardies
+    // Guardies
     Route::get('/espai/guardies', [GuardiaController::class, 'index'])
         ->name('espai.guardies.index');
+
+    Route::get('/espai/guardies/solicitar', [GuardiaController::class, 'solicitaGuardia'])
+        ->name('espai.guardia.solicitaGuardia');
+
+    Route::post('/espai/guardies/solicitar', [GuardiaController::class, 'guardarSolicitud'])
+        ->name('espai.guardia.solicitaGuardia.post');
+
+    // Acceptar guardia (desde noticia)
+    Route::post('/espai/guardies/{solicitud}/acceptar', [GuardiaController::class, 'acceptar'])
+        ->name('espai.guardies.acceptar');
 });
+
 
 require __DIR__ . '/auth.php';
