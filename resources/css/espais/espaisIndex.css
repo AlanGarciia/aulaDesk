@@ -260,3 +260,35 @@
     display: flex;
     justify-content: space-around;
 }
+/* Estado vacío como post-it centrado */
+.empty-state {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #333;
+    padding: 1rem 2rem;
+    background-color: #fff176; /* amarillo post-it */
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    max-width: 400px;
+    margin: 2rem auto; /* centrado horizontalmente */
+    font-style: italic;
+    transform: rotate(-1deg); /* pequeño giro aleatorio estilo post-it */
+}
+
+/* Chincheta del post-it */
+.empty-state::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #f44336; /* rojo chincheta */
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}

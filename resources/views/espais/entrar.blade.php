@@ -1,17 +1,15 @@
 @push('styles')
-    @vite('resources/css/espais/entrarEspai.css')
+    @vite('resources/css/espais/espaisEntrar.css')
 @endpush
 
 <x-app-layout>
-    <x-slot name="header">
-        <div class="header-container">
-            <h2 class="page-title">Entrar a l'espai</h2>
-        </div>
-    </x-slot>
-
     <div class="page">
         <div class="container">
             <div class="card">
+
+                {{-- Título tipo post-it dentro de la tarjeta --}}
+                <h2 class="page-title">Entrar a l'espai</h2>
+
                 <p class="subtitle">Introdueix el teu usuari d'espai per continuar.</p>
 
                 <form method="POST" action="{{ route('espais.entrar', $espai) }}">

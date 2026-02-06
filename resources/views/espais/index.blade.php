@@ -7,7 +7,6 @@
     <div class="page">
         <div class="container">
 
-            {{-- 🔹 Título y botón Surt dentro de la página --}}
             <div class="page-header">
                 <h2 class="page-title">Els meus espais</h2>
                 <button type="button" class="btn btn-danger logout-btn" id="logoutBtn">
@@ -15,14 +14,12 @@
                 </button>
             </div>
 
-            {{-- 🔹 Botón Crear Espai --}}
             <div class="actions">
                 <button class="btn btn-primary" onclick="window.location='{{ route('espais.create') }}'">
                     <i class="bi bi-plus"></i> Crear espai
                 </button>
             </div>
 
-            {{-- 🔹 Grid de posits --}}
             <div class="card">
                 @forelse ($espais as $espai)
                     <div class="space-row">
@@ -60,14 +57,17 @@
                         </div>
                     </div>
                 @empty
-                    <p class="empty-state">No tens cap espai encara. Crea’n un per començar.</p>
+                   @forelse ($espais as $espai)
+                        @empty
+                            <div class="empty-state-container">
+                                <p class="empty-state">No tens cap espai encara. Crea’n un per començar.</p>
+                            </div>
+                        @endforelse
                 @endforelse
             </div>
         </div>
     </div>
 
-    {{-- 🔹 MODALES --}}
-    {{-- Modal eliminar --}}
     <div id="confirmModal" class="modal">
         <div class="modal-content modal-delete">
             <p id="confirmText"></p>
@@ -78,7 +78,6 @@
         </div>
     </div>
 
-    {{-- Modal logout --}}
     <div id="logoutModal" class="modal">
         <div class="modal-content modal-logout">
             <p>Segur que vols sortir de la web?</p>
@@ -92,7 +91,6 @@
         </div>
     </div>
 
-    {{-- Modal éxito --}}
     <div id="successModal" class="modal">
         <div class="modal-content modal-success">
             <p id="successText"></p>
@@ -102,7 +100,6 @@
         </div>
     </div>
 
-    {{-- 🔹 JS específico --}}
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -110,7 +107,6 @@
                 postit.style.setProperty('--random', Math.random());
             });
 
-            // ===== MODAL DELETE =====
             const deleteBtns = document.querySelectorAll('.delete-btn');
             const modal = document.getElementById('confirmModal');
             const confirmText = document.getElementById('confirmText');
@@ -134,7 +130,6 @@
                 modal.style.display = 'none';
             });
 
-            // ===== MODAL LOGOUT =====
             const logoutBtn = document.getElementById('logoutBtn');
             const logoutModal = document.getElementById('logoutModal');
             const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
@@ -147,7 +142,6 @@
                 logoutModal.style.display = 'none';
             });
 
-            // ===== MODAL SUCCESS =====
             const successModal = document.getElementById('successModal');
             const successText = document.getElementById('successText');
             const successCloseBtn = document.getElementById('successCloseBtn');
@@ -161,7 +155,6 @@
                 successModal.style.display = 'none';
             });
 
-            // Cerrar modales clicando fuera
             window.addEventListener('click', (e) => {
                 if(e.target === modal) modal.style.display = 'none';
                 if(e.target === logoutModal) logoutModal.style.display = 'none';
