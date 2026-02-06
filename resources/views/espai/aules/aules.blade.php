@@ -3,6 +3,11 @@
         <h2 class="page-title">Aules</h2>
     </x-slot>
 
+    @push('styles')
+        @vite('resources/css/espai/aules/aula.css')
+    @endpush
+
+
     <div class="page">
         <div class="container">
             <p>
