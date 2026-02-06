@@ -2,6 +2,9 @@
     <x-slot name="header">
         <h2 class="page-title">Administrar aula: {{ $aula->nom }}</h2>
     </x-slot>
+    @push('styles')
+        @vite('resources/css/espai/aules/admin.css')
+    @endpush
 
     <div class="page">
         <div class="container">
@@ -14,7 +17,6 @@
                 <div class="alert success">{{ session('ok') }}</div>
             @endif
 
-            {{-- ✅ MODAL DE CONFLICTES (si ve de session('conflicts')) --}}
             @php
                 $conflicts = session('conflicts');
                 $hasConflicts = false;

@@ -3,6 +3,10 @@
         <h2 class="page-title">Franges horàries</h2>
     </x-slot>
 
+    @push('styles')
+        @vite('resources/css/espai/franges/frangesIndex.css')
+    @endpush
+
     <div class="page">
         <div class="container">
             <p>
