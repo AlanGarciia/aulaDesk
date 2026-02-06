@@ -12,10 +12,10 @@ return new class extends Migration {
 
             $table->foreignId('espai_id')->constrained('espais')->cascadeOnDelete();
 
-            $table->string('nom');                 // Ej: "Aula 2.1"
-            $table->string('codi')->nullable();    // Ej: "A21"
+            $table->string('nom');
+            $table->string('codi')->nullable();
             $table->unsignedInteger('capacitat')->nullable();
-            $table->string('planta')->nullable();  // Ej: "2", "Baja", etc
+            $table->string('planta')->nullable();
             $table->boolean('activa')->default(true);
 
             $table->timestamps();

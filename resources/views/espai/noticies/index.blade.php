@@ -28,6 +28,13 @@
                 </div>
             @endif
 
+            @if (session('ok'))
+                <div class="alert alert-success">
+                    <span class="alert-dot"></span>
+                    <div>{{ session('ok') }}</div>
+                </div>
+            @endif
+
             <div class="filters">
                 <form method="GET" action="{{ route('espai.noticies.index') }}" class="filters__form">
                     <div class="filters__left">
@@ -59,6 +66,39 @@
 
             <div class="feed">
                 @forelse($noticies as $n)
+                    @php
+                        $isGuardia = ((string)$n->tipus === 'guardia');
+
+                        $sol = null;
+                        if (isset($solByNoticiaId) && isset($solByNoticiaId[$n->id])) {
+                            $sol = $solByNoticiaId[$n->id];
+                        }
+
+                        $estatSol = '';
+                        $solPendent = false;
+                        $solAcceptada = false;
+
+                        if ($sol) {
+                            if (isset($sol->estat) && $sol->estat) {
+                                $estatSol = (string) $sol->estat;
+                            }
+                            if ($estatSol === 'pendent') $solPendent = true;
+                            if ($estatSol === 'acceptada') $solAcceptada = true;
+                        }
+
+                        $meuUsuariEspaiId = (int) session('usuari_espai_id');
+
+                        $esMeva = false;
+                        if ($sol && isset($sol->solicitant_usuari_espai_id)) {
+                            $esMeva = ((int)$sol->solicitant_usuari_espai_id === $meuUsuariEspaiId);
+                        }
+
+                        $cobridorId = null;
+                        if ($sol && isset($sol->cobridor_usuari_espai_id) && $sol->cobridor_usuari_espai_id) {
+                            $cobridorId = (int) $sol->cobridor_usuari_espai_id;
+                        }
+                    @endphp
+
                     <article class="post">
                         <header class="post__header">
                             <div class="post__title-wrap">
@@ -66,6 +106,29 @@
 
                                 <div class="post__meta">
                                     <span class="pill">{{ $n->tipus }}</span>
+
+                                    @if($isGuardia)
+                                        <span class="dot">•</span>
+
+                                        @if($solPendent)
+                                            <span class="pill" style="background: rgba(245,158,11,.15); color:#92400e; border:1px solid rgba(245,158,11,.35);">
+                                                Pendent
+                                            </span>
+                                        @elseif($solAcceptada)
+                                            <span class="pill" style="background: rgba(16,185,129,.12); color:#065f46; border:1px solid rgba(16,185,129,.30);">
+                                                Acceptada
+                                            </span>
+                                            @if($cobridorId)
+                                                <span class="dot">•</span>
+                                                <span>Cobridor: <strong>{{ $cobridorId }}</strong></span>
+                                            @endif
+                                        @else
+                                            <span class="pill" style="background: rgba(239,68,68,.10); color:#7f1d1d; border:1px solid rgba(239,68,68,.25);">
+                                                {{ $estatSol !== '' ? $estatSol : '—' }}
+                                            </span>
+                                        @endif
+                                    @endif
+
                                     <span class="dot">•</span>
                                     <span>{{ $n->created_at->format('d/m/Y') }}</span>
                                     <span class="dot">•</span>
@@ -85,6 +148,7 @@
                             </div>
 
                             <div class="post__actions">
+                                {{-- Reacció like --}}
                                 <form method="POST"
                                       action="{{ route('espai.noticies.reaccio', $n) }}"
                                       class="inline-form">
@@ -95,7 +159,25 @@
                                     </button>
                                 </form>
 
-                                @if ((int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
+                                {{-- Botó acceptar guardia (només si és guardia + pendent + no és meva) --}}
+                                @if($isGuardia && $sol && $solPendent && !$esMeva)
+                                    <form method="POST" action="{{ route('espai.guardies.acceptar', $sol) }}" class="inline-form">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary">
+                                            Acceptar guàrdia
+                                        </button>
+                                    </form>
+                                @endif
+
+                                {{-- Si és guardia i és meva i pendent --}}
+                                @if($isGuardia && $sol && $solPendent && $esMeva)
+                                    <span class="pill" style="background: rgba(59,130,246,.10); color:#1e3a8a; border:1px solid rgba(59,130,246,.25);">
+                                        Pendent (teua)
+                                    </span>
+                                @endif
+
+                                {{-- Edit/Delete només per noticies normals creades per mi --}}
+                                @if(!$isGuardia && (int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
                                     <a class="btn btn-secondary"
                                        href="{{ route('espai.noticies.edit', $n) }}">
                                         Editar
