@@ -1,52 +1,49 @@
 @push('styles')
     @vite('resources/css/espai/espaiIndex.css')
 @endpush
-
 <x-app-layout>
-    <x-slot name="header">
-        <div class="header-container">
-            <h2 class="page-title">Espai</h2>
-            <nav class="navbar">
-                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
-                    Afegir usuaris
-                </a>
-                <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
-                    Veure usuaris
-                </a>
-                <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
-                    Tauló de notícies
-                </a>
-                <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">
-                    Aules
-                </a>
-                <a href="{{ route('espai.guardies.index') }}" class="btn btn-secondary">
-                    Guardies
-                </a>
-
-                <a href="{{ route('espais.index') }}" class="btn btn-danger">
-                    Sortir de l'espai
-                </a>
-
-                <span class="navbar-spacer"></span>
-                <span class="navbar-spacer"></span>
-            </nav>
-        </div>
-    </x-slot>
-
     <div class="page">
         <div class="container">
+
             @if (session('status'))
                 <div class="alert-success">
                     {{ session('status') }}
                 </div>
             @endif
 
-            <div class="card">
-                <h3 class="space-name">Panell de l'espai</h3>
-                <p class="space-desc">
-                    Aquí aniran totes les opcions del teu espai (usuaris, assignatures, classes, etc.).
-                </p>
-            </div>
+            <!-- Botón de salir arriba derecha -->
+            <a href="{{ route('espais.index') }}" class="btn-exit">
+                <i class="bi bi-box-arrow-right icon"></i>
+                Sortir
+            </a>
+
+            <!-- Título del panel -->
+            <h2 class="page-title">Espai</h2>
+            <p class="page-subtitle">Selecciona una opció per gestionar el teu espai</p>
+
+            <!-- GRID DE BOTONES -->
+            <nav class="navbar">
+                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
+                    <i class="bi bi-person-plus icon"></i>
+                    Afegir usuaris
+                </a>
+                <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-people icon"></i>
+                    Veure usuaris
+                </a>
+                <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-journal-text icon"></i>
+                    Tauló de notícies
+                </a>
+                <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-building icon"></i>
+                    Aules
+                </a>
+                <a href="{{ route('espai.guardies.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-calendar-check icon"></i>
+                    Guardies
+                </a>
+            </nav>
         </div>
     </div>
 </x-app-layout>

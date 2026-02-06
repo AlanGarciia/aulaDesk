@@ -1,0 +1,187 @@
+/* =========================================================
+   BASE
+========================================================= */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+/* =========================================================
+   FONDO CORCHO
+========================================================= */
+.page {
+    min-height: 100vh;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('/resources/images/fondo_corcho.jpg') center / cover no-repeat fixed;
+}
+
+/* =========================================================
+   HEADER (TÍTULO POST-IT)
+========================================================= */
+.header-container {
+    padding: 1.5rem 2rem;
+}
+
+/* Título estilo post-it */
+.page-title {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    padding: 0.5rem 1.2rem;
+    background-color: #ffeb3b;
+    border-radius: 8px;
+    border: 2px solid #fbc02d;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    position: relative;
+    transform: rotate(-2deg);
+
+    /* 🔹 Añadido margen inferior */
+    margin-bottom: 1.5rem;
+}
+
+/* Chincheta */
+.page-title::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #017d7b;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* =========================================================
+   CONTENEDOR CENTRADO
+========================================================= */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 3rem;
+}
+
+/* =========================================================
+   CARD → POST-IT GRANDE
+========================================================= */
+.card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+    background-color: #fff176;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transform: rotate(-1.5deg);
+}
+
+/* Chincheta del post-it */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #017d7b;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* =========================================================
+   TEXTO
+========================================================= */
+.subtitle {
+    text-align: center;
+    font-style: italic;
+    color: #444;
+    margin-bottom: 1.5rem;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: #fffde7;
+    border: 2px solid #fbc02d;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(251,192,45,0.4);
+}
+
+/* Errores */
+.error {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    color: #c62828;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Entrar */
+.btn-primary {
+    background-color: #ffeb3b;
+    color: #333;
+    border: 2px solid #fbc02d;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Tornar */
+.btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
