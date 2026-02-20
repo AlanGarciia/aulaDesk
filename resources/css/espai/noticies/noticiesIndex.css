@@ -253,6 +253,19 @@ html, body{
     gap: 12px;
 }
 
+.post__text--clamp{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.post__more{
+  display: inline-block;
+  margin-top: 12px;
+}
+
+
 /* Animaciones */
 @keyframes fadeIn {
     from {opacity: 0;}

@@ -67,7 +67,7 @@
             <div class="feed">
                 @forelse($noticies as $n)
                     @php
-                        $isGuardia = ((string)$n->tipus === 'guardia');
+                        $isGuardia = ((string) $n->tipus === 'guardia');
 
                         $sol = null;
                         if (isset($solByNoticiaId) && isset($solByNoticiaId[$n->id])) {
@@ -90,7 +90,7 @@
 
                         $esMeva = false;
                         if ($sol && isset($sol->solicitant_usuari_espai_id)) {
-                            $esMeva = ((int)$sol->solicitant_usuari_espai_id === $meuUsuariEspaiId);
+                            $esMeva = ((int) $sol->solicitant_usuari_espai_id === $meuUsuariEspaiId);
                         }
 
                         $cobridorId = null;
@@ -201,8 +201,20 @@
                         @endif
 
                         @if($n->contingut)
+                            @php
+                                $limit = 260; // ajusta a gust
+                                $text = trim((string) $n->contingut);
+                                $isLong = mb_strlen($text) > $limit;
+                            @endphp
+
                             <div class="post__content">
-                                <p>{{ $n->contingut }}</p>
+                                <p class="post__text post__text--clamp">{{ $text }}</p>
+
+                                @if($isLong)
+                                    <a class="btn btn-secondary post__more" href="{{ route('espai.noticies.show', $n) }}">
+                                        Veure més
+                                    </a>
+                                @endif
                             </div>
                         @endif
                     </article>
@@ -275,9 +287,7 @@
         }
 
         document.querySelectorAll('.btn-delete').forEach(btn => {
-            btn.addEventListener('click', () => {
-                openModal(btn.dataset.action);
-            });
+            btn.addEventListener('click', () => openModal(btn.dataset.action));
         });
 
         closeBtn.addEventListener('click', closeModal);

@@ -10,8 +10,7 @@ return new class extends Migration {
         Schema::create('noticias', function (Blueprint $table) {
             $table->id();
             $table->foreignId('espai_id')->constrained('espais')->cascadeOnDelete();
-            $table->foreignId('usuari_espai_id')->nullable()
-                ->constrained('usuari_espais')->nullOnDelete();
+            $table->foreignId('usuari_espai_id')->nullable()->constrained('usuari_espais')->nullOnDelete();
             $table->string('titol');
             $table->text('contingut')->nullable();
             $table->string('tipus')->default('noticia');
