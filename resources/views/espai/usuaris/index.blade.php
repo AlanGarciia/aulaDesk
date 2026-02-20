@@ -1,13 +1,27 @@
 @push('styles')
-    @vite('resources/css/espai/usuarisIndex.css')
+    @vite('resources/css/espai/usuaris/usuarisIndex.css')
 @endpush
 
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="page-title">Usuaris de l'espai</h2>
-    </x-slot>
-
     <div class="page">
+        <!-- Título con fondo -->
+        <div class="page-title-container">
+            <h2 class="page-title">Usuaris de l'espai</h2>
+        </div>
+
+        <!-- Botones fuera del container -->
+        <div class="actions">
+            <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
+                + Afegir usuari
+            </a>
+
+            <a href="{{ route('espai.index') }}" class="btn btn-secondary">
+            <i class="bi bi-box-arrow-right"></i>
+                Sortir
+                
+            </a>
+        </div>
+
         <div class="container">
             @if (session('status'))
                 <div class="alert-success">
@@ -15,23 +29,13 @@
                 </div>
             @endif
 
-            <div class="actions">
-                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
-                    + Afegir usuari
-                </a>
-
-                <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                    Tornar a l'espai
-                </a>
-            </div>
-
             <div class="card">
                 @forelse ($usuaris as $usuari)
                     <div class="user-row">
                         <div class="user-info">
                             <div class="user-name">{{ $usuari->nom }}</div>
                             <div class="user-meta">
-                                Rol: {{ $usuari->rol }} · Creat: {{ $usuari->created_at->format('d/m/Y') }}
+                                Rol: {{ $usuari->rol }}
                             </div>
                         </div>
 

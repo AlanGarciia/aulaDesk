@@ -1,14 +1,12 @@
 @push('styles')
-    @vite('resources/css/espai/usuarisCreate.css')
+    @vite('resources/css/espai/usuaris/usuarisCreate.css')
 @endpush
 
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="page-title">Afegir usuari</h2>
-    </x-slot>
 
     <div class="page">
         <div class="container">
+
             @if ($errors->any())
                 <div class="alert-danger">
                     Revisa els camps, hi ha errors.
@@ -16,6 +14,10 @@
             @endif
 
             <div class="card">
+
+                <!-- TÍTULO DENTRO DEL CARNET -->
+                <h2 class="inside-title">Afegir usuari</h2>
+
                 <form method="POST" action="{{ route('espai.usuaris.store') }}">
                     @csrf
 
@@ -60,7 +62,9 @@
                         </a>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
+
 </x-app-layout>

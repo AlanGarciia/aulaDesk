@@ -1,0 +1,198 @@
+/* =========================
+   FONDO GENERAL
+========================= */
+
+.page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+
+    background-image: url('/resources/images/fondo_users.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    display: flex;              /* centra contenido */
+    justify-content: center;    /* horizontal */
+    align-items: center;        /* vertical */
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;    /* centra el card */
+}
+
+/* =========================
+   ALERTA ERROR
+========================= */
+
+.alert-danger {
+    background: #f8d7da;
+    color: #842029;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border: 1px solid #f5c2c7;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =========================
+   TARJETA FORMULARIO
+========================= */
+
+.card {
+    max-width: 420px;
+    width: 100%;               /* flexible en pantallas pequeñas */
+    background: #ffffff;
+    border-left: 6px solid #1f6f54;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    margin: 0 auto;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+
+/* Cabecera institucional superior */
+.card::before {
+    content: "ESPAI INSTITUTIONAL USER REGISTRATION";
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #1f6f54;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* =========================
+   TÍTULO INTERNO
+========================= */
+
+.inside-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f6f54;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 10px;
+}
+
+/* =========================
+   CAMPOS
+========================= */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #1f6f54;
+    margin-bottom: 6px;
+}
+
+.input {
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #f9f9f9;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #1f6f54;
+    box-shadow: 0 0 0 2px rgba(31,111,84,0.15);
+    background: #ffffff;
+}
+
+.error {
+    font-size: 11px;
+    color: #c94b4b;
+    margin-top: 4px;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.actions .btn {
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Crear usuario */
+.actions .btn-primary {
+    background: #1f6f54;
+    color: white;
+}
+
+.actions .btn-primary:hover {
+    background: #175843;
+}
+
+/* Cancelar */
+.actions .btn-secondary {
+    background: rgba(255, 255, 255, 0.8);
+    color: #1f6f54;
+    border: 2px solid #1f6f54;
+}
+
+.actions .btn-secondary:hover {
+    background: #1f6f54;
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+    .card {
+        padding: 20px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions .btn {
+        width: 100%;
+    }
+}

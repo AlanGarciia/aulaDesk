@@ -1,0 +1,223 @@
+/* =========================
+   FONDO GENERAL
+========================= */
+
+.page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+
+    background-image: url('/resources/images/fondo_users.jpg'); /* imagen de fondo */
+    background-size: cover;       /* cubre toda la página */
+    background-position: center;  /* centrada */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* efecto parallax sutil */
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f6f54;
+    margin-bottom: 25px;
+}
+
+/* =========================
+   ALERTAS
+========================= */
+
+.alert-success {
+    background: #d8f3e3;
+    color: #1f6f54;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border: 1px solid #a3dec5;
+}
+
+/* =========================
+   BOTONES SUPERIORES (DERECHA)
+========================= */
+
+.actions {
+    display: flex;
+    justify-content: flex-end; /* botones a la derecha del contenedor */
+    gap: 14px;
+    margin-bottom: 40px;
+    width: 100%; /* ocupa todo el ancho del contenedor */
+    height: auto;
+}
+
+.actions .btn {
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+/* Agregar usuario */
+.actions .btn-primary {
+    background: #1f6f54;
+    color: white;
+}
+
+.actions .btn-primary:hover {
+    background: #175843;
+}
+
+/* Volver */
+.actions .btn-secondary {
+    background: rgb(255, 255, 255, 0.8);
+    color: #1f6f54;
+    border: 2px solid #1f6f54;
+    transition: all 0.25s ease;
+}
+
+.actions .btn-secondary:hover {
+    background: #1f6f54;
+    color: white;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* carnets a la izquierda */
+    align-items: flex-start;
+}
+
+/* =========================
+   CARNETS DE USUARIO (GRANDES)
+========================= */
+
+.user-row {
+    background: #ffffff;
+    border-left: 6px solid #1f6f54; /* borde institucional */
+    border-radius: 12px;
+    padding: 25px 30px;             /* más espacio interno */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    max-width: 500px;               /* ancho más grande */
+    width: 100%;                     /* flexible en móviles */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+
+/* Cabecera institucional */
+.user-row::before {
+    content: "\00a0\00a0\00a0 ACREDITACIÓ";
+    display: block;
+    font-size: 12px;   /* un poco más grande */
+    letter-spacing: 2px;
+    color: #1f6f54;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Nombre del usuario */
+.user-name {
+    font-size: 22px;  /* más grande */
+    font-weight: 700;
+    color: #1f6f54;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* Información adicional */
+.user-meta {
+    font-size: 14px;  /* más legible */
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Número de tarjeta (si se usa) */
+.user-info::after {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #888;
+}
+
+/* Botones dentro del carnet */
+.user-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 6px;
+}
+
+.user-actions .btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+/* Editar */
+.user-actions .btn-secondary {
+    background: #e9f2ef;
+    color: #1f6f54;
+}
+
+.user-actions .btn-secondary:hover {
+    background: #d8e8e2;
+}
+
+/* Eliminar */
+.user-actions .btn-danger {
+    background: #c94b4b;
+    color: white;
+}
+
+.user-actions .btn-danger:hover {
+    background: #a83b3b;
+}
+
+/* =========================
+   ESTADO VACÍO
+========================= */
+
+.empty-state {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: 40px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+    .card {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-name {
+        font-size: 18px;
+    }
+
+    .user-meta {
+        font-size: 13px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+}

@@ -1,0 +1,129 @@
+/* =========================================================
+   FONDO CORCHO
+========================================================= */
+.create-page {
+    min-height: 100vh;
+    padding: 3rem 1rem;
+    background: url('/resources/images/fondo_corcho.jpg') center / cover no-repeat fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* =========================================================
+   POST-IT GRANDE
+========================================================= */
+.create-postit {
+    position: relative;
+    max-width: 650px;
+    width: 100%;
+    padding: 2rem;
+    background-color: #fff176;
+    border-radius: 8px;
+    border: 2px solid #fbc02d;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transform: rotate(-1.5deg);
+}
+
+/* Chincheta */
+.create-postit::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #f44336;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+.create-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.create-subtitle {
+    margin-bottom: 1.5rem;
+    color: #444;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: #fffde7;
+    border: 2px solid #fbc02d;
+    border-radius: 6px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(251,192,45,0.4);
+}
+
+/* =========================================================
+   ERRORES
+========================================================= */
+.error {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    flex: 1;
+    padding: 0.7rem;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #fbc02d;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary {
+    background-color: #ffeb3b;
+    color: #333;
+}
+
+.btn-secondary {
+    background-color: #ffe082;
+    color: #333;
+    text-decoration: none;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
