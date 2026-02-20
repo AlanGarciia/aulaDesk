@@ -27,7 +27,10 @@
                         <span class="dot">•</span>
                         <span>{{ $noticia->created_at->format('d/m/Y') }}</span>
                         <span class="dot">•</span>
-                        <span>Reaccions: <strong>{{ $noticia->reaccions_count ?? $noticia->reaccions()->count() }}</strong></span>
+                        <span>
+                            Reaccions:
+                            <strong>{{ $noticia->reaccions_count ?? $noticia->reaccions()->count() }}</strong>
+                        </span>
 
                         @if(!empty($noticia->usuari_espai_id))
                             <span class="dot">•</span>
@@ -36,31 +39,66 @@
                     </div>
                 </header>
 
-                {{-- Layout: imatge a l'esquerra (si hi ha) i text a la dreta --}}
+                <style>
+                    /* ✅ només per aquesta vista */
+                    .show-grid{
+                        display: grid;
+                        grid-template-columns: 340px 1fr;
+                        gap: 18px;
+                        align-items: start;
+                    }
+
+                    @media (max-width: 900px){
+                        .show-grid{
+                            grid-template-columns: 1fr;
+                        }
+                    }
+
+                    .show-media img{
+                        width: 100%;
+                        display: block;
+                        border: 2px solid #000;
+                    }
+
+                    /* ✅ lectura bona i respecta salts de línia */
+                    .show-content{
+                        white-space: pre-wrap;
+                        word-break: break-word;
+                        overflow-wrap: anywhere;
+                    }
+
+                    /* ✅ desactiva el dropcap del teu CSS només en show */
+                    .show-content:first-letter{
+                        float: none !important;
+                        font-size: inherit !important;
+                        line-height: inherit !important;
+                        padding: 0 !important;
+                        font-weight: inherit !important;
+                    }
+                </style>
+
                 <div style="padding:16px 18px;">
-                    <div style="display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;">
+                    <div class="show-grid">
                         @if($noticia->imatge_path)
-                            <div style="flex:0 0 340px; max-width:340px;">
+                            <div class="show-media">
                                 <img
                                     src="{{ asset('storage/'.$noticia->imatge_path) }}"
                                     alt="imatge"
                                     loading="lazy"
-                                    style="width:100%; display:block; border:2px solid #000;"
                                 >
                             </div>
                         @endif
 
-                        <div style="flex:1 1 320px; min-width:280px;">
-                            {{-- Títol sobre el text --}}
+                        <div>
                             <h3 class="post__title" style="margin:0 0 10px 0;">
                                 {{ $noticia->titol }}
                             </h3>
 
                             <div class="post__content" style="padding:0;">
                                 @if($noticia->contingut)
-                                    <p style="margin:0;">{{ $noticia->contingut }}</p>
+                                    <div class="show-content">{{ $noticia->contingut }}</div>
                                 @else
-                                    <p style="margin:0; color:var(--muted);">Sense contingut.</p>
+                                    <div style="color:var(--muted);">Sense contingut.</div>
                                 @endif
                             </div>
                         </div>
