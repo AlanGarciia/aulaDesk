@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>aulaDesk · Benvingut/da</title>
-
-    {{-- CSS propi (sense Tailwind) --}}
     @vite(['resources/css/welcome.css'])
 </head>
 
