@@ -12,6 +12,7 @@ use App\Http\Controllers\AulaTicketController;
 use App\Http\Controllers\AulaAdminController;
 use App\Http\Controllers\FranjaHorariaController;
 use App\Http\Controllers\GuardiaController;
+use App\Http\Controllers\EspaiShareController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/espais/{espai}', [EspaiController::class, 'update'])->name('espais.update');
     Route::patch('/espais/{espai}', [EspaiController::class, 'update'])->name('espais.update');
     Route::delete('/espais/{espai}', [EspaiController::class, 'destroy'])->name('espais.destroy');
+
+    // compartir espai
+    Route::post('/espais/{espai}/compartir', [EspaiShareController::class, 'store'])
+        ->name('espais.compartir');
 
     // entrar al espai demana inici de sessio
     Route::get('/espais/{espai}/entrar', [EspaiController::class, 'entrarForm'])->name('espais.entrar.form');
@@ -119,6 +124,5 @@ Route::middleware('espai.session')->group(function () {
     Route::post('/espai/guardies/{solicitud}/acceptar', [GuardiaController::class, 'acceptar'])
         ->name('espai.guardies.acceptar');
 });
-
 
 require __DIR__ . '/auth.php';

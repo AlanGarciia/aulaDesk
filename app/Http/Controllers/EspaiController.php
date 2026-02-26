@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Espai;
 use Illuminate\Http\Request;
 use App\Models\UsuariEspai;
+use App\Models\UsuariExternEspai;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -15,10 +16,21 @@ class EspaiController extends Controller
      */
     public function index(Request $request)
     {
-        $espais = $request->user()->espais()->latest()->get();
+        $userId = $request->user()->id;
+
+        $idsCompartits = UsuariExternEspai::where('user_id', $userId)
+            ->pluck('espai_id')
+            ->toArray();
+
+        $espais = Espai::query()
+            ->where('user_id', $userId)
+            ->orWhereIn('id', $idsCompartits)
+            ->orderByDesc('created_at')
+            ->get();
 
         return view('espais.index', [
-            'espais' => $espais,]);
+            'espais' => $espais,
+        ]);
     }
 
     public function edit(Espai $espai)
