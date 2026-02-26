@@ -1,0 +1,200 @@
+/* =========================
+   FONDO GENERAL - PIZARRA
+========================= */
+.page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+
+    /* Fondo tipo pizarra con textura */
+    background-color: #2e3b2f;
+    background-image: url('/resources/images/fondo_pizarra.avif'); /* textura realista */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* =========================
+   BOTONES SUPERIORES
+========================= */
+.page > .container > p {
+    margin-bottom: 30px;
+    padding-left: 40px; /* mover botones más a la derecha */
+}
+
+.page > .container > p a.btn,
+.page > .container > p a.btn-secondary {
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    display: inline-block;
+    margin-right: 10px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+}
+
+/* Botón principal */
+.page > .container > p a.btn {
+    background-color: #1f6f54;
+    color: white;
+    border: 2px solid #1f6f54;
+}
+
+.page > .container > p a.btn:hover {
+    background-color: #175843;
+}
+
+/* Botón secundario */
+.page > .container > p a.btn-secondary {
+    background-color: rgba(255,255,255,0.8);
+    color: #1f6f54;
+    border: 2px solid #1f6f54;
+}
+
+.page > .container > p a.btn-secondary:hover {
+    background-color: #1f6f54;
+    color: white;
+}
+
+/* =========================
+   GRID DE AULAS
+========================= */
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    margin-top: 10px;
+    padding-left: 40px; /* mover todo el grid más a la derecha */
+}
+
+/* =========================
+   TARJETAS DE AULA - TRANSPARENTES
+========================= */
+.aula-card {
+    background-color: rgba(0,0,0,0); /* totalmente transparente */
+    color: #f9f9f9;
+    padding: 25px 30px;
+    border: 2px dashed #f9f9f9; /* borde tipo tiza */
+    border-radius: 10px;
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    font-family: 'Patrick Hand', 'Chalkboard', 'Segoe Print', sans-serif;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2);
+}
+.aula-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Cabecera tipo etiqueta “AULA” */
+.aula-card::before {
+    content: "AULA";
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #f9f9f9;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 0 #000, 1px 0 0 #000;
+}
+
+/* Nombre de aula grande */
+.aula-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Información secundaria */
+.aula-meta {
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+/* Estado activa/inactiva */
+.aula-activa {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   BOTONES DE ACCIÓN - ALINEADOS
+========================= */
+.aula-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 6px;
+}
+
+/* Forzar alineación homogénea de botones */
+.aula-actions .btn,
+.aula-actions form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    line-height: normal;
+    transition: 0.2s ease;
+}
+
+/* Editar */
+.aula-actions .btn-secondary {
+    background: #e9f2ef;
+    color: #1f6f54;
+}
+
+.aula-actions .btn-secondary:hover {
+    background: #d8e8e2;
+}
+
+/* Eliminar */
+.aula-actions .btn-danger {
+    background: #c94b4b;
+    color: white;
+}
+
+.aula-actions .btn-danger:hover {
+    background: #a83b3b;
+}
+
+/* Estado vacío */
+.empty-state {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+    .card {
+        flex-direction: column;
+        align-items: center;
+        padding-left: 0; /* quitar desplazamiento en móvil */
+    }
+
+    .aula-name {
+        font-size: 16px;
+    }
+
+    .aula-meta {
+        font-size: 12px;
+    }
+
+    .aula-actions .btn {
+        width: 100%;
+    }
+}

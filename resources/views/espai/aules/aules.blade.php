@@ -4,67 +4,52 @@
     </x-slot>
 
     @push('styles')
-        @vite('resources/css/espai/aules/aula.css')
+        @vite('resources/css/espai/aules/aulaIndex.css')
     @endpush
-
 
     <div class="page">
         <div class="container">
             <p>
                 <a class="btn btn-secondary" href="{{ route('espai.index') }}">Tornar a l'espai</a>
                 <a class="btn" href="{{ route('espai.aules.create') }}">Nova aula</a>
-                <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">
-                    Veure franges
-                </a>
+                <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">Veure franges</a>
             </p>
 
             @if(session('ok'))
                 <div class="alert success">{{ session('ok') }}</div>
             @endif
 
+            <!-- GRID DE TARJETAS -->
             <div class="card">
-                <table border="1" cellpadding="8" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th align="left">Nom</th>
-                            <th align="left">Codi</th>
-                            <th align="left">Capacitat</th>
-                            <th align="left">Planta</th>
-                            <th align="left">Activa</th>
-                            <th align="left">Accions</th>
-                        </tr>
-                    </thead>
+                @forelse($aules as $aula)
+                    <div class="aula-card">
+                        <div class="aula-name">{{ $aula->nom }}</div>
+                        <div class="aula-meta">Codi: {{ $aula->codi }}</div>
+                        <div class="aula-meta">Capacitat: {{ $aula->capacitat }}</div>
+                        <div class="aula-meta">Planta: {{ $aula->planta }}</div>
+                        <div class="aula-activa">Activa: {{ $aula->activa ? 'Sí' : 'No' }}</div>
 
-                    <tbody>
-                        @forelse($aules as $aula)
-                            <tr>
-                                <td>{{ $aula->nom }}</td>
-                                <td>{{ $aula->codi }}</td>
-                                <td>{{ $aula->capacitat }}</td>
-                                <td>{{ $aula->planta }}</td>
-                                <td>{{ $aula->activa ? 'Sí' : 'No' }}</td>
-                                <td>
-                                    <a class="btn" href="{{ route('espai.aules.admin', $aula) }}">Administrar aula</a>
-                                    <a class="btn" href="{{ route('espai.aules.edit', $aula) }}">Editar</a>
+                        <div class="aula-actions">
+                            <a class="btn btn-secondary" href="{{ route('espai.aules.admin', $aula) }}">Administrar</a>
+                            <a class="btn btn-secondary" href="{{ route('espai.aules.edit', $aula) }}">Editar</a>
 
-                                    <form method="POST" action="{{ route('espai.aules.destroy', $aula) }}" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn danger" type="submit" onclick="return confirm('Eliminar aquesta aula?')">
-                                            Eliminar
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr><td colspan="6">No hi ha aules.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                            <form method="POST" action="{{ route('espai.aules.destroy', $aula) }}" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" type="submit" onclick="return confirm('Eliminar aquesta aula?')">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @empty
+                    <p class="empty-state">No hi ha aules.</p>
+                @endforelse
+            </div>
 
-                <div style="margin-top: 12px;">
-                    {{ $aules->links() }}
-                </div>
+            <!-- Paginación -->
+            <div style="margin-top: 12px;">
+                {{ $aules->links() }}
             </div>
         </div>
     </div>
