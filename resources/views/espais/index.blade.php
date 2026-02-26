@@ -4,53 +4,44 @@
         @vite('resources/css/espais/espaisIndex.css')
     @endpush
 
-    {{-- NAV tipus Breeze (perfil + logout) --}}
-    <nav class="breeze-nav" style="padding:12px 0;">
-        <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span style="font-weight:700;">aulaDesk</span>
-            </div>
+    <nav class="breeze-nav">
+    <div class="breeze-container">
+        <div class="breeze-logo">
+            aulaDesk
+        </div>
 
-            <div style="position:relative;">
-                <button type="button" class="btn btn-secondary" id="userMenuBtn">
-                    <i class="bi bi-person-circle"></i>
-                    {{ auth()->user()->name }}
-                    <i class="bi bi-caret-down-fill" style="margin-left:6px;"></i>
-                </button>
+        <div class="breeze-user-wrapper">
+            <button type="button" class="btn btn-secondary breeze-user-btn" id="userMenuBtn">
+                <i class="bi bi-person-circle"></i>
+                {{ auth()->user()->name }}
+                <i class="bi bi-caret-down-fill caret-icon"></i>
+            </button>
 
-                <div id="userMenu"
-                     style="display:none; position:absolute; right:0; top:calc(100% + 8px); min-width:220px; background:#fff; border:1px solid #eee; border-radius:12px; padding:8px; box-shadow:0 10px 30px rgba(0,0,0,.08); z-index:999;">
-                    <a href="{{ route('profile.edit') }}"
-                       style="display:flex; gap:10px; align-items:center; padding:10px 12px; border-radius:10px; text-decoration:none; color:inherit;">
-                        <i class="bi bi-gear"></i>
-                        <span>Perfil</span>
-                    </a>
+            <div id="userMenu" class="breeze-dropdown">
+                <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Perfil</span>
+                </a>
 
-                    <div style="height:1px; background:#f0f0f0; margin:6px 0;"></div>
+                <div class="dropdown-divider"></div>
 
-                    <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                        @csrf
-                        <button type="submit"
-                                style="width:100%; display:flex; gap:10px; align-items:center; padding:10px 12px; border-radius:10px; border:0; background:transparent; cursor:pointer; text-align:left;">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Surt</span>
-                        </button>
-                    </form>
-                </div>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item logout-item">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Surt</span>
+                    </button>
+                </form>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <div class="page">
         <div class="container">
 
             <div class="page-header">
                 <h2 class="page-title">Els meus espais</h2>
-
-                {{-- obre el menú breeze --}}
-                <button type="button" class="btn btn-danger logout-btn" id="logoutBtn">
-                    <i class="bi bi-list"></i> Compte
-                </button>
             </div>
 
             <div class="actions">
