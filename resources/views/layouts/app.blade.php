@@ -21,18 +21,8 @@
     <!-- CSS específico de cada vista -->
     @stack('styles')
 </head>
-<body class="font-sans antialiased">
-
-<div class="min-h-screen">
-
-    {{-- HEADER --}}
-    @isset($header)
-        <header class="bg-white/80 backdrop-blur shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                {{ $header }}
-            </div>
-        </header>
-    @endisset
+<body class="font-sans antialiased bg-transparent">
+<div class="min-h-screen bg-transparent">
 
     {{-- CONTENIDO --}}
     <main>

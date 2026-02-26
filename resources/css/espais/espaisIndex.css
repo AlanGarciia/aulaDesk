@@ -1,22 +1,133 @@
-/* ===== Contenedor de la página ===== */
+/* ===================== Reset básico ===================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Wrapper de Breeze */
+.min-h-screen {
+    background: transparent !important;
+}
+
+/* ===================== Fondo de la página ===================== */
 .page {
     padding: 2rem;
     min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: url('/resources/images/fondo_corcho.jpg') center / cover no-repeat fixed;
 }
 
-/* ===== Page Header ===== */
-.page-header {
+/* ===================== Navbar ===================== */
+.breeze-nav {
+    width: 100%;
+    background-color: #ffeb3b;
+    padding: 0.6rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    border-bottom: 2px solid #fbc02d;
+}
+
+.breeze-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.breeze-logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.breeze-user-wrapper {
     position: relative;
 }
 
-/* Título estilo mini post-it */
-.page-header .page-title {
+.breeze-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff176;
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.breeze-user-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.caret-icon {
+    margin-left: 4px;
+}
+
+/* Dropdown usuario */
+.breeze-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 8px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #fff9c4;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 6px 0;
+}
+
+.logout-item {
+    background: transparent;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+}
+
+/* ===================== Page Header (Mini post-it) ===================== */
+.page-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
     font-size: 2rem;
     font-weight: bold;
     color: #333;
@@ -30,8 +141,7 @@
     transform: rotate(-2deg);
 }
 
-/* Chincheta en el título */
-.page-header .page-title::before {
+.page-title::before {
     content: '';
     position: absolute;
     top: -8px;
@@ -44,26 +154,7 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Botón Surt */
-.page-header .logout-btn {
-    background-color: #f44336;
-    color: #fff;
-    font-weight: bold;
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-left: auto;
-    margin-right: -140px;
-}
-
-.page-header .logout-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-}
-
-/* ===== Botón Crear Espai ===== */
+/* ===================== Botón Crear Espai ===================== */
 .actions {
     margin-bottom: 2rem;
 }
@@ -84,7 +175,7 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* ===== Grid de posits ===== */
+/* ===================== Post-its ===================== */
 .card {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -92,7 +183,6 @@
     padding-left: 1rem;
 }
 
-/* Cada post-it */
 .space-row {
     position: relative;
     width: 100%;
@@ -105,12 +195,10 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
     transition: transform 0.2s, box-shadow 0.2s;
     transform: rotate(calc(-2deg + (4deg * var(--random))));
 }
 
-/* Chincheta en cada post-it */
 .space-row::before {
     content: '';
     position: absolute;
@@ -124,13 +212,11 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Hover efecto */
 .space-row:hover {
     transform: translateY(-3px) rotate(0deg);
     box-shadow: 0 12px 20px rgba(0,0,0,0.35);
 }
 
-/* Contenido del post-it */
 .space-info {
     flex: 1;
     width: 100%;
@@ -139,7 +225,6 @@
 .space-name {
     font-size: 1.3rem;
     font-weight: bold;
-    color: #333;
     margin-bottom: 0.5rem;
 }
 
@@ -154,7 +239,6 @@
     color: #666;
 }
 
-/* Botones dentro de cada post-it */
 .space-actions {
     display: flex;
     gap: 0.3rem;
@@ -166,15 +250,39 @@
     padding: 0.3rem 0.5rem;
 }
 
-/* Estado vacío */
+/* ===================== Estado vacío ===================== */
 .empty-state {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: 1.2rem;
     color: #333;
-    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background-color: #fff176;
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    max-width: 400px;
+    margin: 2rem auto;
+    font-style: italic;
+    transform: rotate(-1deg);
 }
 
-/* ===== Modales ===== */
+.empty-state::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #f44336;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* ===================== Modales ===================== */
 .modal {
     display: none;
     position: fixed;
@@ -198,7 +306,6 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
-/* Estilos del modal eliminar */
 .modal-delete .btn-delete {
     background-color: #f44336;
     color: #fff;
@@ -206,7 +313,6 @@
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .modal-delete .btn-cancel {
@@ -216,30 +322,10 @@
     border: 2px solid #fbc02d;
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.modal-delete .btn-delete:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.35);
-}
-
-.modal-delete .btn-cancel:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-/* Estilos modal logout */
-.modal-logout .btn-delete,
-.modal-logout .btn-cancel {
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-}
-
-/* Estilos modal success */
 .modal-success {
-    background-color: #dcedc8; /* verde claro */
+    background-color: #dcedc8;
 }
 
 .modal-success .btn-primary {
@@ -249,48 +335,10 @@
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.modal-success .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .modal-actions {
     margin-top: 1rem;
     display: flex;
     justify-content: space-around;
-}
-/* Estado vacío como post-it centrado */
-.empty-state {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1.2rem;
-    color: #333;
-    padding: 1rem 2rem;
-    background-color: #fff176; /* amarillo post-it */
-    border-radius: 8px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    max-width: 400px;
-    margin: 2rem auto; /* centrado horizontalmente */
-    font-style: italic;
-    transform: rotate(-1deg); /* pequeño giro aleatorio estilo post-it */
-}
-
-/* Chincheta del post-it */
-.empty-state::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 16px;
-    height: 16px;
-    background-color: #f44336; /* rojo chincheta */
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
