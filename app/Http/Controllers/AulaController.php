@@ -64,7 +64,8 @@ class AulaController extends Controller
 
         Aula::create($data);
 
-        return redirect()->route('espai.aules.index')->with('ok', 'Aula creada.');
+        return redirect()->route('espai.aules.index');
+        //->with('ok', 'Aula creada.');
     }
 
     public function edit(Aula $aula)
