@@ -71,7 +71,6 @@
 
 /* Cabecera institucional superior */
 .card::before {
-    content: "ESPAI INSTITUTIONAL USER REGISTRATION";
     display: block;
     font-size: 10px;
     letter-spacing: 2px;

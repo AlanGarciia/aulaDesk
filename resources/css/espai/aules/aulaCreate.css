@@ -1,0 +1,151 @@
+/* =========================
+   FONDO GENERAL - PIZARRA
+========================= */
+.page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+
+    background-color: #2e3b2f;
+    background-image: url('/resources/images/fondo_pizarra.avif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* =========================
+   TARJETA FORMULARIO
+========================= */
+.card form {
+    background-color: rgba(0,0,0,0.3);
+    border: 2px dashed #f9f9f9;
+    border-radius: 12px;
+    padding: 30px 25px;
+    max-width: 500px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    font-family: 'Patrick Hand', 'Chalkboard', 'Segoe Print', sans-serif;
+    color: #f9f9f9; /* SOLO afecta a labels */
+}
+
+/* =========================
+   CAMPOS
+========================= */
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #f9f9f9;
+}
+
+/* 🔥 INPUTS FORZADOS EN NEGRO */
+.field input[type="text"],
+.field input[type="number"],
+.field input:not([type="checkbox"]) {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    outline: none;
+    transition: 0.2s ease;
+
+    background-color: #ffffff !important;
+    color: #111 !important;              /* TEXTO NEGRO */
+    -webkit-text-fill-color: #111 !important; /* fuerza en Chrome */
+}
+
+/* Placeholder */
+.field input::placeholder {
+    color: #666 !important;
+}
+
+/* Focus */
+.field input[type="text"]:focus,
+.field input[type="number"]:focus {
+    border-color: #1f6f54;
+    box-shadow: 0 0 5px rgba(31,111,84,0.5);
+}
+
+/* Checkbox */
+.field input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #1f6f54;
+}
+
+/* =========================
+   ERRORES
+========================= */
+.error {
+    color: #ffb3b3;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+/* =========================
+   BOTONES
+========================= */
+.btn {
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button.btn {
+    background-color: #1f6f54;
+    color: white;
+    border: 2px solid #1f6f54;
+}
+
+button.btn:hover {
+    background-color: #175843;
+}
+
+a.btn.secondary {
+    background-color: rgba(255,255,255,0.8);
+    color: #1f6f54;
+    border: 2px solid #1f6f54;
+}
+
+a.btn.secondary:hover {
+    background-color: #1f6f54;
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+
+    .card form {
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    form > div:last-child {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -9,18 +9,24 @@
 
     <div class="page">
         <div class="container">
+            <!-- Botones superiores -->
             <p>
                 <a class="btn btn-secondary" href="{{ route('espai.index') }}">Tornar a l'espai</a>
                 <a class="btn" href="{{ route('espai.aules.create') }}">Nova aula</a>
                 <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">Veure franges</a>
             </p>
 
-            @if(session('ok'))
-                <div class="alert success">{{ session('ok') }}</div>
-            @endif
+            <!-- Mensaje de éxito -->
+                        @if(session('ok'))
+            <div id="successModal" class="modal-overlay">
+                <div class="modal-box">
+                    {{ session('ok') }}
+                    </div>
+                    </div>
+                        @endif
 
             <!-- GRID DE TARJETAS -->
-            <div class="card">
+            <div class="card {{ $aules->isEmpty() ? 'card-empty' : '' }}">
                 @forelse($aules as $aula)
                     <div class="aula-card">
                         <div class="aula-name">{{ $aula->nom }}</div>
@@ -43,7 +49,10 @@
                         </div>
                     </div>
                 @empty
-                    <p class="empty-state">No hi ha aules.</p>
+                    <div class="empty-state">
+                        No hi ha aules disponibles.
+                        <a href="{{ route('espai.aules.create') }}">Crear primera aula</a>
+                    </div>
                 @endforelse
             </div>
 

@@ -21,8 +21,8 @@
     <!-- CSS específico de cada vista -->
     @stack('styles')
 </head>
-<body class="font-sans antialiased bg-transparent">
-<div class="min-h-screen bg-transparent">
+<body class="font-sans antialiased bg-[var(--color-bg)]">
+<div class="min-h-screen">
 
     {{-- CONTENIDO --}}
     <main>
