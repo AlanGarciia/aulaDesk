@@ -4,11 +4,11 @@
         @vite('resources/css/espais/espaisIndex.css')
     @endpush
 
-    <nav class="breeze-nav">
-    <div class="breeze-container">
-        <div class="breeze-logo">
-            aulaDesk
-        </div>
+    <nav class="breeze-nav" style="padding:12px 0;">
+        <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-weight:700;">aulaDesk</span>
+            </div>
 
         <div class="breeze-user-wrapper">
             <button type="button" class="btn btn-secondary breeze-user-btn" id="userMenuBtn">
@@ -50,54 +50,78 @@
                 </button>
             </div>
 
-            <div class="card">
+            <div class="tilt-grid">
                 @forelse ($espais as $espai)
-                    {{-- CLICK a la fila => entrar --}}
-                    <div class="space-row js-enter-row"
-                         data-enter-url="{{ route('espais.entrar.form', $espai) }}"
-                         style="cursor:pointer;">
-                        <div class="space-info">
-                            <div class="space-name">{{ $espai->nom }}</div>
+                    <div
+                        class="tilt-card js-enter-card"
+                        data-enter-url="{{ route('espais.entrar.form', $espai) }}"
+                        data-tilt
+                        data-tilt-amplitude="12"
+                        data-tilt-scale="1.05"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Entrar a {{ $espai->nom }}"
+                    >
+                        <div class="tilt-card__inner">
+                            <div class="tilt-card__bg"></div>
 
-                            @if ($espai->descripcio)
-                                <div class="space-desc">{{ $espai->descripcio }}</div>
-                            @endif
+                            <div class="tilt-card__content">
+                                <div class="tilt-card__title">{{ $espai->nom }}</div>
 
-                            <div class="space-meta">
-                                Creat: {{ $espai->created_at->format('d/m/Y') }}
+                                @if ($espai->descripcio)
+                                    <div class="tilt-card__desc">{{ $espai->descripcio }}</div>
+                                @endif
+
+                                <div class="tilt-card__meta">
+                                    Creat: {{ $espai->created_at->format('d/m/Y') }}
+                                </div>
+
+                                @if ((int) $espai->user_id !== (int) auth()->id())
+                                    <div class="tilt-card__badge">Compartit amb tu</div>
+                                @endif
                             </div>
 
-                            @if ((int) $espai->user_id !== (int) auth()->id())
-                                <div class="space-meta">Compartit amb tu</div>
+                            @if ((int) $espai->user_id === (int) auth()->id())
+                                <div class="tilt-card__actions" data-no-enter="1">
+                                    <button
+                                        type="button"
+                                        class="tilt-action tilt-action--neutral js-no-enter"
+                                        onclick="window.location='{{ route('espais.edit', $espai) }}'"
+                                        aria-label="Editar {{ $espai->nom }}"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="tilt-action tilt-action--neutral share-btn js-no-enter"
+                                        data-espai-name="{{ $espai->nom }}"
+                                        data-action="{{ route('espais.compartir', $espai) }}"
+                                        aria-label="Compartir {{ $espai->nom }}"
+                                    >
+                                        <i class="bi bi-share"></i>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="tilt-action tilt-action--danger delete-btn js-no-enter"
+                                        data-espai-name="{{ $espai->nom }}"
+                                        data-form-id="deleteForm-{{ $espai->id }}"
+                                        aria-label="Eliminar {{ $espai->nom }}"
+                                    >
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+
+                                    <form id="deleteForm-{{ $espai->id }}" action="{{ route('espais.destroy', $espai) }}" method="POST" style="display:none;">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </div>
                             @endif
                         </div>
 
-                        {{-- Accions: NO han de disparar l'entrar --}}
-                        <div class="space-actions" data-no-enter="1">
-                            @if ((int) $espai->user_id === (int) auth()->id())
-                                <button type="button" class="btn btn-secondary js-no-enter"
-                                        onclick="window.location='{{ route('espais.edit', $espai) }}'">
-                                    <i class="bi bi-pencil"></i> Editar
-                                </button>
-
-                                <button type="button"
-                                        class="btn btn-secondary share-btn js-no-enter"
-                                        data-espai-name="{{ $espai->nom }}"
-                                        data-action="{{ route('espais.compartir', $espai) }}">
-                                    <i class="bi bi-share"></i> Compartir
-                                </button>
-
-                                <button type="button" class="btn btn-danger delete-btn js-no-enter"
-                                        data-espai-name="{{ $espai->nom }}"
-                                        data-form-id="deleteForm-{{ $espai->id }}">
-                                    <i class="bi bi-trash"></i> Eliminar
-                                </button>
-
-                                <form id="deleteForm-{{ $espai->id }}" action="{{ route('espais.destroy', $espai) }}" method="POST" style="display:none;">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            @endif
+                        <div class="tilt-card__tooltip" role="tooltip">
+                            {{ $espai->nom }}
                         </div>
                     </div>
                 @empty
@@ -106,31 +130,31 @@
                     </div>
                 @endforelse
             </div>
+
         </div>
     </div>
 
-    <div id="confirmModal" class="modal">
-        <div class="modal-content modal-delete">
+    <div id="confirmModal" class="modal" aria-hidden="true">
+        <div class="modal-content modal-delete" role="dialog" aria-modal="true" aria-labelledby="confirmText">
             <p id="confirmText"></p>
             <div class="modal-actions">
-                <button id="cancelBtn" class="btn btn-cancel">Cancel·lar</button>
-                <button id="confirmBtn" class="btn btn-delete">Eliminar</button>
+                <button id="cancelBtn" class="btn btn-cancel" type="button">Cancel·lar</button>
+                <button id="confirmBtn" class="btn btn-delete" type="button">Eliminar</button>
             </div>
         </div>
     </div>
 
-    <div id="successModal" class="modal">
-        <div class="modal-content modal-success">
+    <div id="successModal" class="modal" aria-hidden="true">
+        <div class="modal-content modal-success" role="dialog" aria-modal="true" aria-labelledby="successText">
             <p id="successText"></p>
             <div class="modal-actions">
-                <button id="successCloseBtn" class="btn btn-primary">Tancar</button>
+                <button id="successCloseBtn" class="btn btn-primary" type="button">Tancar</button>
             </div>
         </div>
     </div>
 
-    {{-- MODAL COMPARTIR --}}
-    <div id="shareModal" class="modal">
-        <div class="modal-content modal-success">
+    <div id="shareModal" class="modal" aria-hidden="true">
+        <div class="modal-content modal-success" role="dialog" aria-modal="true">
             <p id="shareTitle" style="margin-bottom:10px;"></p>
 
             <form id="shareForm" method="POST" action="">
@@ -155,58 +179,80 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.space-row').forEach((postit) => {
-                postit.style.setProperty('--random', Math.random());
+            // --------------------
+            // Tilt effect
+            // --------------------
+            const cards = document.querySelectorAll('[data-tilt]');
+            cards.forEach((card) => {
+                const inner = card.querySelector('.tilt-card__inner');
+                const tooltip = card.querySelector('.tilt-card__tooltip');
+
+                const amplitude = Number(card.dataset.tiltAmplitude || 12);
+                const scaleOnHover = Number(card.dataset.tiltScale || 1.05);
+
+                function onMove(e) {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const ox = x - rect.width / 2;
+                    const oy = y - rect.height / 2;
+
+                    const rx = (oy / (rect.height / 2)) * -amplitude;
+                    const ry = (ox / (rect.width / 2)) * amplitude;
+
+                    inner.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(${scaleOnHover})`;
+
+                    if (tooltip) {
+                        tooltip.style.transform = `translate3d(${x + 10}px, ${y + 10}px, 0)`;
+                    }
+                }
+
+                function onEnter() {
+                    if (tooltip) tooltip.style.opacity = '1';
+                }
+
+                function onLeave() {
+                    inner.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+                    if (tooltip) tooltip.style.opacity = '0';
+                }
+
+                card.addEventListener('mousemove', onMove);
+                card.addEventListener('mouseenter', onEnter);
+                card.addEventListener('mouseleave', onLeave);
+
+                card.addEventListener('focus', () => {
+                    inner.style.transform = `rotateX(0deg) rotateY(0deg) scale(${scaleOnHover})`;
+                    if (tooltip) {
+                        tooltip.style.opacity = '1';
+                        tooltip.style.transform = `translate3d(12px, 12px, 0)`;
+                    }
+                });
+                card.addEventListener('blur', onLeave);
             });
 
-            // CLICK FILA => ENTRAR (excepte si cliques un botó/acció)
-            document.querySelectorAll('.js-enter-row').forEach((row) => {
-                row.addEventListener('click', (e) => {
-                    if (e.target.closest('.js-no-enter')) return;
-                    const url = row.dataset.enterUrl;
+            // --------------------
+            // Click tarjeta => entrar (excepto botones de acciones)
+            // --------------------
+            document.querySelectorAll('.js-enter-card').forEach((card) => {
+                const url = card.dataset.enterUrl;
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.js-no-enter') || e.target.closest('[data-no-enter]')) return;
+                    if (url) window.location = url;
+                });
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.target.closest('.js-no-enter') || e.target.closest('[data-no-enter]')) return;
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
                     if (url) window.location = url;
                 });
             });
 
-            // DELETE
-            const deleteBtns = document.querySelectorAll('.delete-btn');
-            const modal = document.getElementById('confirmModal');
-            const confirmText = document.getElementById('confirmText');
-            const confirmBtn = document.getElementById('confirmBtn');
-            const cancelBtn = document.getElementById('cancelBtn');
-            let formToSubmit = null;
-
-            deleteBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    formToSubmit = document.getElementById(btn.dataset.formId);
-                    confirmText.textContent = `Segur que vols eliminar l'espai "${btn.dataset.espaiName}"?`;
-                    modal.style.display = 'flex';
-                });
-            });
-
-            confirmBtn.addEventListener('click', () => {
-                if (formToSubmit) formToSubmit.submit();
-            });
-
-            cancelBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
-
-            // SUCCESS
-            const successModal = document.getElementById('successModal');
-            const successText = document.getElementById('successText');
-            const successCloseBtn = document.getElementById('successCloseBtn');
-
-            @if(session('status'))
-                successText.textContent = "{{ session('status') }}";
-                successModal.style.display = 'flex';
-            @endif
-
-            successCloseBtn.addEventListener('click', () => {
-                successModal.style.display = 'none';
-            });
-
-            // COMPARTIR
+            // --------------------
+            // SHARE modal
+            // --------------------
             const shareBtns = document.querySelectorAll('.share-btn');
             const shareModal = document.getElementById('shareModal');
             const shareTitle = document.getElementById('shareTitle');
@@ -224,14 +270,62 @@
                 });
             });
 
-            shareCancelBtn.addEventListener('click', () => {
+            shareCancelBtn?.addEventListener('click', () => {
                 shareModal.style.display = 'none';
             });
 
+            // --------------------
+            // DELETE confirm modal
+            // --------------------
+            const deleteBtns = document.querySelectorAll('.delete-btn');
+            const modal = document.getElementById('confirmModal');
+            const confirmText = document.getElementById('confirmText');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            let formToSubmit = null;
+
+            deleteBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    formToSubmit = document.getElementById(btn.dataset.formId);
+                    confirmText.textContent = `Segur que vols eliminar l'espai "${btn.dataset.espaiName}"?`;
+                    modal.style.display = 'flex';
+                });
+            });
+
+            confirmBtn?.addEventListener('click', () => {
+                if (formToSubmit) formToSubmit.submit();
+            });
+
+            cancelBtn?.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // SUCCESS modal (si hay status)
+            const successModal = document.getElementById('successModal');
+            const successText = document.getElementById('successText');
+            const successCloseBtn = document.getElementById('successCloseBtn');
+
+            @if(session('status'))
+                successText.textContent = "{{ session('status') }}";
+                successModal.style.display = 'flex';
+            @endif
+
+            successCloseBtn?.addEventListener('click', () => {
+                successModal.style.display = 'none';
+            });
+
+            // Close modals clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) modal.style.display = 'none';
+                if (e.target === successModal) successModal.style.display = 'none';
+                if (e.target === shareModal) shareModal.style.display = 'none';
+            });
+
+            // --------------------
             // MENU BREEZE
+            // --------------------
             const userMenuBtn = document.getElementById('userMenuBtn');
             const userMenu = document.getElementById('userMenu');
-            const logoutBtn = document.getElementById('logoutBtn');
 
             function toggleUserMenu(forceOpen = null) {
                 if (!userMenu) return;
@@ -247,19 +341,7 @@
                 });
             }
 
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleUserMenu(true);
-                });
-            }
-
-            // CLICK FORA
             window.addEventListener('click', (e) => {
-                if (e.target === modal) modal.style.display = 'none';
-                if (e.target === successModal) successModal.style.display = 'none';
-                if (e.target === shareModal) shareModal.style.display = 'none';
-
                 if (userMenu && !userMenu.contains(e.target) && e.target !== userMenuBtn) {
                     userMenu.style.display = 'none';
                 }

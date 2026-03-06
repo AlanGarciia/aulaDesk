@@ -1,7 +1,8 @@
+@push('styles')
+    @vite('resources/css/espai/usuaris/usuarisEdit.css')
+@endpush
+
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="page-title">Editar usuari</h2>
-    </x-slot>
 
     <div class="page">
         <div class="container">

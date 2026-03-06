@@ -1,11 +1,6 @@
-/* =========================
-   FONDO GENERAL - PIZARRA
-========================= */
-.page {
-    min-height: 100vh;
-    padding: 40px 20px;
-    font-family: 'Arial', sans-serif;
+/* resources/css/espai/aules/aulaIndex.css */
 
+<<<<<<< HEAD
     background-color: #2e3b2f;
     background-image: url('/resources/images/fondo_pizarra.avif');
     background-size: cover;
@@ -35,31 +30,91 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+=======
+.page{
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, hsla(155, 90%, 45%, 0.20), transparent 55%),
+    radial-gradient(900px 700px at 80% 20%, hsla(170, 90%, 45%, 0.14), transparent 55%),
+    radial-gradient(900px 700px at 60% 90%, hsla(140, 90%, 40%, 0.10), transparent 55%),
+    linear-gradient(180deg, hsl(160, 22%, 8%), hsl(160, 24%, 6%));
+  color: hsl(0, 0%, 96%);
 }
 
-/* Botón principal */
-.page > .container > p a.btn {
-    background-color: #1f6f54;
-    color: white;
-    border: 2px solid #1f6f54;
+.container{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+  position: relative;
 }
 
-.page > .container > p a.btn:hover {
-    background-color: #175843;
+.page-header{
+  position: relative;
+  padding: 1rem 1.25rem 1.25rem;
+  border-radius: 1rem;
+
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.08), hsla(0,0%,100%,0.03));
+  border: 1px solid hsla(0,0%,100%,0.10);
+  box-shadow: 0 24px 70px hsla(0,0%,0%,0.45);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  margin-top: 0.25rem;
+  margin-bottom: 1.5rem;
+>>>>>>> fb1925c (Nuevooo)
 }
 
-/* Botón secundario */
-.page > .container > p a.btn-secondary {
-    background-color: rgba(255,255,255,0.8);
-    color: #1f6f54;
-    border: 2px solid #1f6f54;
+.page-title{
+  margin: 0;
+  font-size: 2.4rem;
+  letter-spacing: 0.2px;
 }
 
-.page > .container > p a.btn-secondary:hover {
-    background-color: #1f6f54;
-    color: white;
+.top-actions{
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
+.alert-success{
+  width: 100%;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, hsla(140, 70%, 45%, 0.18), hsla(140, 70%, 45%, 0.08));
+  border: 1px solid hsla(140, 60%, 55%, 0.22);
+  color: hsla(0, 0%, 100%, 0.92);
+  box-shadow: 0 14px 38px hsla(0, 0%, 0%, 0.30);
+}
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+
+  padding: 0.85rem 1.1rem;
+  border-radius: 1rem;
+
+  text-decoration: none;
+  color: hsla(0, 0%, 100%, 0.92);
+
+  background: hsla(0, 0%, 100%, 0.06);
+  border: 1px solid hsla(0, 0%, 100%, 0.12);
+  box-shadow: 0 18px 45px hsla(0, 0%, 0%, 0.32);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    background 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    border-color 0.2s cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+<<<<<<< HEAD
 /* =========================
    GRID DE TARJETAS
 ========================= */
@@ -154,24 +209,82 @@
     cursor: pointer;
     line-height: normal;
     transition: 0.2s ease;
+=======
+.btn:hover{
+  transform: translateY(-1px);
+  background: hsla(0, 0%, 100%, 0.09);
+  border-color: hsla(0, 0%, 100%, 0.18);
 }
 
-/* Editar */
-.aula-actions .btn-secondary {
-    background: #e9f2ef;
-    color: #1f6f54;
+.btn:focus-visible{
+  outline: none;
+  box-shadow:
+    0 18px 45px hsla(0, 0%, 0%, 0.32),
+    0 0 0 3px hsla(155, 80%, 60%, 0.22);
 }
 
-.aula-actions .btn-secondary:hover {
-    background: #d8e8e2;
+.btn-primary{
+  color: hsl(160, 24%, 8%);
+  background: linear-gradient(180deg, hsla(155, 80%, 70%, 0.95), hsla(155, 80%, 62%, 0.78));
+  border: 1px solid hsla(155, 80%, 60%, 0.28);
+  box-shadow: 0 18px 45px hsla(0, 0%, 0%, 0.25);
 }
 
-/* Eliminar */
-.aula-actions .btn-danger {
-    background: #c94b4b;
-    color: white;
+.btn-primary:hover{
+  background: linear-gradient(180deg, hsla(155, 80%, 72%, 0.98), hsla(155, 80%, 64%, 0.82));
 }
 
+.btn-secondary{
+  background: hsla(0, 0%, 100%, 0.06);
+}
+
+.btn-danger{
+  background: linear-gradient(180deg, hsla(0, 85%, 60%, 0.22), hsla(0, 85%, 55%, 0.12));
+  border: 1px solid hsla(0, 85%, 70%, 0.22);
+}
+
+.aules-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.aula-card{
+  padding: 1rem 1rem 1.1rem;
+  border-radius: 1rem;
+
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.08), hsla(0,0%,100%,0.03));
+  border: 1px solid hsla(0,0%,100%,0.10);
+  box-shadow: 0 18px 45px hsla(0,0%,0%,0.32);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  transition:
+    transform 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    border-color 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    background 0.2s cubic-bezier(0.83, 0, 0.17, 1);
+>>>>>>> fb1925c (Nuevooo)
+}
+
+.aula-card:hover{
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.10), hsla(0,0%,100%,0.04));
+  border-color: hsla(0,0%,100%,0.16);
+}
+
+.aula-name{
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.2px;
+}
+
+.aula-meta{
+  margin-top: 0.35rem;
+  color: hsla(0,0%,100%,0.72);
+}
+
+<<<<<<< HEAD
 .aula-actions .btn-danger:hover {
     background-color: #a83b3b;
 }
@@ -225,15 +338,40 @@
         align-items: center;
         padding-left: 0;
     }
+=======
+.aula-activa{
+  margin-top: 0.65rem;
+  font-weight: 650;
+  color: hsla(155, 80%, 70%, 0.9);
+}
 
-    .aula-name {
-        font-size: 16px;
-    }
+.aula-actions{
+  margin-top: 0.95rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
 
-    .aula-meta {
-        font-size: 12px;
-    }
+.inline-form{
+  display: inline;
+}
+>>>>>>> fb1925c (Nuevooo)
 
+.empty-state{
+  grid-column: 1 / -1;
+  padding: 1.25rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.07), hsla(0,0%,100%,0.03));
+  border: 1px dashed hsla(0,0%,100%,0.14);
+  color: hsla(0,0%,100%,0.75);
+  text-align: center;
+}
+
+.pagination{
+  margin-top: 1rem;
+}
+
+<<<<<<< HEAD
     .aula-actions .btn {
         width: 100%;
     }
@@ -293,4 +431,24 @@
 @keyframes popIn {
     from { transform: scale(0.8); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
+=======
+@media (max-width: 980px){
+  .aules-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px){
+  .page-title{
+    font-size: 2rem;
+  }
+
+  .top-actions .btn{
+    flex: 1;
+  }
+
+  .aules-grid{
+    grid-template-columns: 1fr;
+  }
+>>>>>>> fb1925c (Nuevooo)
 }

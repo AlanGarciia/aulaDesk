@@ -1,0 +1,192 @@
+/* resources/css/espai/aules/aulaForm.css */
+
+h1{
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(235,255,248,.92);
+    margin-bottom: 20px;
+}
+
+.page{
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+
+  background:
+    radial-gradient(1200px 600px at 15% 10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(180,255,220,.10), transparent 55%),
+    radial-gradient(1000px 700px at 50% 90%, rgba(120,255,190,.08), transparent 55%),
+    linear-gradient(135deg, #061513 0%, #0a241f 40%, #04110f 100%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.card{
+  width: min(560px, 100%);
+  background: rgba(70, 255, 190, 0.10);
+  border: 1px solid rgba(170, 255, 220, 0.18);
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.10);
+  position: relative;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter .18s ease;
+}
+
+.card:hover{
+  transform: translateY(-3px);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.10);
+  filter: brightness(1.02);
+}
+
+.card::before{
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(235,255,248,.72);
+  margin-bottom: 15px;
+  font-weight: 650;
+}
+
+.card::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(210,255,235,.35),
+    rgba(210,255,235,.08),
+    rgba(210,255,235,.20)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: .65;
+}
+
+.field{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.field label{
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 1px;
+  color: rgba(235,255,248,.82);
+  margin-bottom: 6px;
+}
+
+.field input{
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(210,255,235,.14);
+  font-size: 14px;
+  transition: transform .12s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  background: rgba(5, 30, 25, 0.38);
+  color: rgba(240,255,248,.95);
+  outline: none;
+}
+
+.field input:focus{
+  border-color: rgba(210,255,235,.28);
+  box-shadow: 0 0 0 4px rgba(210,255,235,.08);
+  background: rgba(5, 30, 25, 0.48);
+  transform: translateY(-1px);
+}
+
+.field input[type="checkbox"]{
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  accent-color: rgba(140, 255, 210, 0.95);
+}
+
+.field label:has(input[type="checkbox"]){
+  flex-direction: row;
+  align-items: center;
+  gap: .55rem;
+  margin-bottom: 0;
+  letter-spacing: .2px;
+}
+
+.error{
+  font-size: 11px;
+  color: rgba(255, 170, 170, .95);
+  margin-top: 4px;
+}
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+
+  border-radius: 14px;
+  padding: .85rem 1rem;
+  font-weight: 650;
+  text-decoration: none;
+  border: 1px solid transparent;
+
+  cursor: pointer;
+  transition: transform .12s ease, filter .18s ease, box-shadow .18s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:active{
+  transform: translateY(1px);
+}
+
+.btn:not(.secondary){
+  flex: 1;
+  color: #04110f;
+  background: linear-gradient(135deg, rgba(210,255,235,.95), rgba(210,255,235,.75));
+  border-color: rgba(210,255,235,.22);
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+}
+
+.btn:not(.secondary):hover{
+  filter: brightness(1.03);
+}
+
+.btn.secondary{
+  color: rgba(235,255,248,.92);
+  background: rgba(210,255,235,.10);
+  border-color: rgba(210,255,235,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.btn.secondary:hover{
+  filter: brightness(1.06);
+}
+
+@media (max-width: 600px){
+  .card{ padding: 20px; }
+  form > div[style*="display:flex"]{
+    flex-direction: column;
+  }
+  .btn{ width: 100%; }
+}
