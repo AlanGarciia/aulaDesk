@@ -2,14 +2,7 @@
   @vite('resources/css/espai/aules/aulaForm.css')
 @endpush
 
-<<<<<<< HEAD
-  @push('styles')
-        @vite('resources/css/espai/aules/aulaCreate.css')
-    @endpush
-
-=======
 <x-app-layout>
->>>>>>> fb1925c (Nuevooo)
     <div class="page">
         <div class="container">
             <div class="card">

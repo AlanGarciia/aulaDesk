@@ -5,26 +5,6 @@
 <x-app-layout>
     <div class="page">
         <div class="container">
-<<<<<<< HEAD
-            <!-- Botones superiores -->
-            <p>
-                <a class="btn btn-secondary" href="{{ route('espai.index') }}">Tornar a l'espai</a>
-                <a class="btn" href="{{ route('espai.aules.create') }}">Nova aula</a>
-                <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">Veure franges</a>
-            </p>
-
-            <!-- Mensaje de éxito -->
-                        @if(session('ok'))
-            <div id="successModal" class="modal-overlay">
-                <div class="modal-box">
-                    {{ session('ok') }}
-                    </div>
-                    </div>
-                        @endif
-
-            <!-- GRID DE TARJETAS -->
-            <div class="card {{ $aules->isEmpty() ? 'card-empty' : '' }}">
-=======
 
             <div class="page-header">
                 <h2 class="page-title">Aules</h2>
@@ -37,11 +17,41 @@
             </div>
 
             @if(session('ok'))
-                <div class="alert-success">{{ session('ok') }}</div>
+                <div id="successModal" class="modal-overlay">
+                    <div class="modal-box">
+                        {{ session('ok') }}
+                        <button type="button" class="btn btn-secondary modal-close" onclick="document.getElementById('successModal').style.display='none'">
+                            Tancar
+                        </button>
+                    </div>
+                </div>
             @endif
 
+            <form method="GET" action="{{ route('espai.aules.index') }}" class="filters-form">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="Buscar per nom">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="codi">Codi</label>
+                        <input type="text" name="codi" id="codi" value="{{ request('codi') }}" placeholder="Buscar per codi">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="planta">Planta</label>
+                        <input type="text" name="planta" id="planta" value="{{ request('planta') }}" placeholder="Buscar per planta">
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">Netejar</a>
+                    </div>
+                </div>
+            </form>
+
             <div class="aules-grid">
->>>>>>> fb1925c (Nuevooo)
                 @forelse($aules as $aula)
                     <div class="aula-card">
                         <div class="aula-name">{{ $aula->nom }}</div>
@@ -64,14 +74,10 @@
                         </div>
                     </div>
                 @empty
-<<<<<<< HEAD
                     <div class="empty-state">
-                        No hi ha aules disponibles.
-                        <a href="{{ route('espai.aules.create') }}">Crear primera aula</a>
+                        <div>No hi ha aules disponibles.</div>
+                        <a class="btn btn-primary" href="{{ route('espai.aules.create') }}">Crear primera aula</a>
                     </div>
-=======
-                    <div class="empty-state">No hi ha aules.</div>
->>>>>>> fb1925c (Nuevooo)
                 @endforelse
             </div>
 

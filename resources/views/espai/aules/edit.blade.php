@@ -3,12 +3,6 @@
 @endpush
 
 <x-app-layout>
-
-
-    @push('styles')
-        @vite('resources/css/espai/aules/aulaEdit.css')
-    @endpush
-
     <div class="page">
         <div class="container">
             <div class="card">

@@ -24,14 +24,31 @@ class AulaController extends Controller
         return null;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+        if (!$espaiId) {
+            abort(403, 'No hay espai actual seleccionado.');
+        }
 
-        $aules = Aula::where('espai_id', $espaiId)
-            ->latest()
-            ->paginate(15);
+        $query = Aula::where('espai_id', $espaiId);
+
+        if ($request->nom) {
+            $query->where('nom', 'like', '%' . $request->nom . '%');
+        }
+
+        if ($request->codi) {
+            $query->where('codi', 'like', '%' . $request->codi . '%');
+        }
+
+        if ($request->planta) {
+            $query->where('planta', 'like', '%' . $request->planta . '%');
+        }
+
+        $aules = $query
+            ->orderBy('codi', 'asc')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('espai.aules.aules', compact('aules'));
     }
@@ -65,7 +82,6 @@ class AulaController extends Controller
         Aula::create($data);
 
         return redirect()->route('espai.aules.index');
-        //->with('ok', 'Aula creada.');
     }
 
     public function edit(Aula $aula)
@@ -73,7 +89,6 @@ class AulaController extends Controller
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
 
-        // Seguridad: que no editen aulas de otro espai
         abort_if($aula->espai_id !== $espaiId, 403);
 
         return view('espai.aules.edit', compact('aula'));

@@ -204,7 +204,6 @@
 
   .actions .btn{
     width: 100%;
-<<<<<<< HEAD
     display: flex;
     justify-content: center;    /* centra el card */
 }
@@ -375,7 +374,5 @@
     .actions .btn {
         width: 100%;
     }
-=======
   }
->>>>>>> fb1925c (Nuevooo)
 }
