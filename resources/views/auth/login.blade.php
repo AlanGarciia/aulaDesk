@@ -1,48 +1,35 @@
 <x-guest-layout>
 
-    <!-- Botón Tornar arriba a la izquierda -->
+    @push('styles')
+        @vite('resources/css/login.css')
+    @endpush
+
+    @push('scripts')
+        @vite('resources/js/particles.js')
+    @endpush
+
+    <!-- Botón Tornar fijo en la esquina superior izquierda -->
     <a href="{{ url('/') }}" class="back-link" aria-label="Tornar a l'inici">← Tornar</a>
+
+    <!-- Canvas para partículas -->
+    <canvas id="particles" class="absolute inset-0 w-full h-full z-0"></canvas>
 
     <div class="login-card">
         <h1 class="login-title">Iniciar sessió</h1>
-
-        @if (session('status'))
-            <div class="status-message">
-                {{ session('status') }}
-            </div>
-        @endif
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    placeholder="exemple@domini.com"
-                    required
-                    autofocus
-                >
-                @error('email')
-                    <span class="error">{{ $message }}</span>
-                @enderror
+                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="exemple@domini.com" required autofocus>
+                @error('email') <span class="error">{{ $message }}</span> @enderror
             </div>
 
             <div class="form-group">
                 <label for="password">Contrasenya</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="La teva contrasenya"
-                    required
-                >
-                @error('password')
-                    <span class="error">{{ $message }}</span>
-                @enderror
+                <input type="password" id="password" name="password" placeholder="La teva contrasenya" required>
+                @error('password') <span class="error">{{ $message }}</span> @enderror
             </div>
 
             <div class="remember">
@@ -50,13 +37,9 @@
                 <label for="remember">Recordar-me</label>
             </div>
 
-            <button type="submit">Iniciar sessió</button>
+            <a class="forgot-link" href="{{ route('password.request') }}">Has oblidat la contrasenya?</a>
 
-            @if (Route::has('password.request'))
-                <a class="forgot-link" href="{{ route('password.request') }}">
-                    Has oblidat la contrasenya?
-                </a>
-            @endif
+            <button type="submit">Iniciar sessió</button>
         </form>
     </div>
 

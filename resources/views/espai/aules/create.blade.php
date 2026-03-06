@@ -3,6 +3,10 @@
         <h2 class="page-title">Nueva aula</h2>
     </x-slot>
 
+  @push('styles')
+        @vite('resources/css/espai/aules/aulaCreate.css')
+    @endpush
+
     <div class="page">
         <div class="container">
             <div class="card">

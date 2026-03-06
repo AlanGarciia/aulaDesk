@@ -196,3 +196,26 @@ body{
     display: block;
 }
 
+/* =========================
+   Pixel Snow background
+========================= */
+
+#pixelSnow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+#pixelSnow canvas{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+/* mejora rendimiento */
+canvas{
+    transform: translateZ(0);
+}

@@ -27,9 +27,9 @@ body {
     z-index: 0;
 }
 
-/* --- Botón Tornar fijo esquina superior izquierda --- */
+/* --- Botón Tornar fijo en la esquina superior izquierda --- */
 .back-link {
-    position: fixed; /* fijo en la ventana */
+    position: fixed;
     top: 20px;
     left: 20px;
     z-index: 50;
@@ -51,7 +51,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* --- Card login --- */
+/* --- Card registro / login --- */
 .login-card {
     position: relative;
     z-index: 10;
@@ -73,7 +73,7 @@ body {
     transform: translateY(-5px) scale(1.02);
 }
 
-/* --- Animación de entrada --- */
+/* --- Animación entrada --- */
 @keyframes fadeInUp {
     0% { opacity: 0; transform: translateY(40px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -97,16 +97,8 @@ form {
     gap: 1.3rem;
 }
 
-/* --- Labels --- */
-label {
-    color: #ffffff; /* blanco */
-    font-weight: 500;
-    margin-bottom: 0.3rem;
-    display: block;
-    font-size: 0.95rem;
-}
-
-/* --- Inputs Email y Contrasenya --- */
+/* --- Inputs --- */
+input[type="text"],
 input[type="email"],
 input[type="password"] {
     width: 100%;
@@ -114,7 +106,7 @@ input[type="password"] {
     border-radius: 15px;
     border: 1px solid rgba(255,255,255,0.2);
     background: rgba(20,20,30,0.6);
-    color: #ffffff; /* TEXTO EN BLANCO */
+    color: #fff;
     font-size: 1rem;
     transition: all 0.4s ease;
     backdrop-filter: blur(10px);
@@ -127,11 +119,11 @@ input::placeholder {
 input:focus {
     outline: none;
     border-color: #00f2fe;
-    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    box-shadow: 0 0 20px rgba(0,255,255,0.5);
     transform: scale(1.02);
 }
 
-/* --- Botón login --- */
+/* --- Botón Registrar --- */
 button {
     padding: 1rem 1.2rem;
     border-radius: 15px;
@@ -152,69 +144,25 @@ button:hover {
     box-shadow: 0 6px 30px rgba(0,255,255,0.6);
 }
 
-/* --- Checkbox Recordar-me estilo moderno --- */
-.remember {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-    color: #fff; /* texto blanco */
-    cursor: pointer;
-}
-
-/* Ocultar checkbox real */
-.remember input[type="checkbox"] {
-    display: none;
-}
-
-/* Crear toggle personalizado */
-.remember label {
-    position: relative;
-    padding-left: 30px;
-    cursor: pointer;
-    user-select: none;
-}
-
-/* Casilla visual */
-.remember label::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    border: 2px solid rgba(255,255,255,0.6);
-    background: rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
-}
-
-/* Marca visible cuando está checked */
-.remember input[type="checkbox"]:checked + label::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
-    width: 8px;
-    height: 12px;
-    border-right: 2px solid #00f2fe;
-    border-bottom: 2px solid #00f2fe;
-    transition: all 0.3s ease;
-}
-
-/* --- Link olvidar contraseña --- */
+/* --- Link login --- */
 .forgot-link {
-    text-align: right;
+    text-align: center;
     display: block;
     color: #00f2fe;
     font-size: 0.9rem;
-    margin-top: -0.2rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     transition: all 0.3s ease;
 }
 
 .forgot-link:hover {
-    text-shadow: 0 0 6px #00f2fe;
+    text-shadow: 0 0 8px #00f2fe;
+}
+
+/* --- Label inputs --- */
+label {
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    display: block;
+    font-size: 0.95rem;
 }
