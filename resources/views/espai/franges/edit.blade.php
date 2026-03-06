@@ -2,6 +2,10 @@
     <x-slot name="header">
         <h2 class="page-title">Editar franja</h2>
     </x-slot>
+    
+    @push('styles')
+        @vite('resources/css/espai/franges/frangesForm.css')
+    @endpush
 
     <div class="page">
         <div class="container">
@@ -23,13 +27,13 @@
                     </div>
 
                     <div class="field">
-                        <label>Inici</label>
+                        <label>Inici d'horari</label>
                         <input type="time" name="inici" value="{{ old('inici', substr($franja->inici,0,5)) }}" required>
                         @error('inici') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="field">
-                        <label>Fi</label>
+                        <label>Fi d'horari</label>
                         <input type="time" name="fi" value="{{ old('fi', substr($franja->fi,0,5)) }}" required>
                         @error('fi') <div class="error">{{ $message }}</div> @enderror
                     </div>

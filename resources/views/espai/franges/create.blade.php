@@ -1,3 +1,7 @@
+@push('styles')
+    @vite('resources/css/espai/franges/frangesForm.css')
+@endpush
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="page-title">Nova franja</h2>
@@ -22,18 +26,18 @@
                     </div>
 
                     <div class="field">
-                        <label>Inici</label>
+                        <label>Inici d'horari</label>
                         <input type="time" name="inici" value="{{ old('inici') }}" required>
                         @error('inici') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="field">
-                        <label>Fi</label>
+                        <label>Fi d'horari</label>
                         <input type="time" name="fi" value="{{ old('fi') }}" required>
                         @error('fi') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
-                    <div style="display:flex; gap:10px; margin-top:12px;">
+                    <div class="form-actions">
                         <button class="btn btn-primary" type="submit">Desar</button>
                         <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">Cancel·lar</a>
                     </div>
