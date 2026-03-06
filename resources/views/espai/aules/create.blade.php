@@ -1,18 +1,21 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="page-title">Nueva aula</h2>
-    </x-slot>
+@push('styles')
+  @vite('resources/css/espai/aules/aulaForm.css')
+@endpush
 
+<<<<<<< HEAD
   @push('styles')
         @vite('resources/css/espai/aules/aulaCreate.css')
     @endpush
 
+=======
+<x-app-layout>
+>>>>>>> fb1925c (Nuevooo)
     <div class="page">
         <div class="container">
             <div class="card">
                 <form method="POST" action="{{ route('espai.aules.store') }}">
                     @csrf
-
+                    <h1>Cració d'aula</h1>
                     <div class="field">
                         <label>Nombre</label>
                         <input name="nom" value="{{ old('nom') }}" required>

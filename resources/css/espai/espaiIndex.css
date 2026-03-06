@@ -1,189 +1,313 @@
-/* =========================================================
-   VARIABLES DE COLOR
-========================================================= */
-:root {
-    --color-bg: #1f1f2e;
-    --color-text: #ecf0f1;
-    --color-subtext: #bdc3c7;
-    --color-primary: #34495e;
-    --color-primary-dark: #2c3e50;
-    --color-success: #27ae60;
-    --color-danger: #e74c3c;
-    --color-danger-dark: #c0392b;
-    --color-accent: #f39c12;
-}
+/* =========================
+   Espai Index — Dark Glass UI
+   ========================= */
 
-/* =========================================================
-   BASE
-========================================================= */
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--color-bg);
-    color: var(--color-text);
-}
-
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-========================================================= */
 .page {
-    min-height: 100vh;
-    padding: 2rem;
-    position: relative; /* referencia para botón fijo */
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 800px at 20% 10%, hsla(210, 90%, 55%, 0.18), transparent 55%),
+    radial-gradient(900px 700px at 80% 20%, hsla(280, 90%, 55%, 0.14), transparent 55%),
+    radial-gradient(900px 700px at 60% 90%, hsla(120, 90%, 45%, 0.10), transparent 55%),
+    linear-gradient(180deg, hsl(225, 20%, 8%), hsl(225, 22%, 6%));
+  color: hsl(0, 0%, 96%);
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+  position: relative;
 }
 
-/* =========================================================
-   BOTÓN DE SALIR ARRIBA DERECHA
-========================================================= */
+.page-header{
+  position: relative;
+  padding: 1rem 2rem 2rem;
+  border-radius: 1rem;
+
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.08), hsla(0,0%,100%,0.03));
+  border: 1px solid hsla(0,0%,100%,0.10);
+  box-shadow: 0 24px 70px hsla(0,0%,0%,0.45);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  margin-top: 0.25rem;
+  margin-bottom: 2.25rem;
+}
+
+.page-title{
+  margin: 0;
+  font-size: 3rem;
+  letter-spacing: 0.2px;
+}
+
+.page-subtitle{
+  margin: 0.75rem 0 0;
+  color: hsla(0,0%,100%,0.72);
+  font-size: 1.25rem;
+}
+
+
+
+/* ---------- Alert (session status) ---------- */
+.alert-success {
+  width: 100%;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, hsla(140, 70%, 45%, 0.18), hsla(140, 70%, 45%, 0.08));
+  border: 1px solid hsla(140, 60%, 55%, 0.22);
+  color: hsla(0, 0%, 100%, 0.92);
+  box-shadow: 0 14px 38px hsla(0, 0%, 0%, 0.30);
+}
+
+/* ---------- Exit button (estilizado) ---------- */
 .btn-exit {
-    position: fixed;        /* fijo respecto a la ventana */
-    top: 1rem;              
-    right: 1rem;            
-    width: 120px;
-    height: 40px;
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--color-danger), var(--color-danger-dark));
-    color: #fff;
-    text-decoration: none;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-    transition: all 0.2s ease;
-    z-index: 1000;
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  padding: 0.65rem 0.9rem;
+  border-radius: 999px;
+
+  text-decoration: none;
+  color: hsla(0, 0%, 100%, 0.92);
+
+  background: hsla(0, 0%, 100%, 0.06);
+  border: 1px solid hsla(0, 0%, 100%, 0.12);
+  box-shadow: 0 18px 45px hsla(0, 0%, 0%, 0.35);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    background 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    border-color 0.2s cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+.btn-exit .icon {
+  font-size: 1.05em;
+  line-height: 1;
 }
 
 .btn-exit:hover {
-    background: linear-gradient(135deg, var(--color-danger-dark), var(--color-danger));
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  transform: translateY(-1px);
+  background: hsla(0, 0%, 100%, 0.09);
+  border-color: hsla(0, 0%, 100%, 0.18);
 }
 
-/* =========================================================
-   TITULO PRINCIPAL
-========================================================= */
-.page-title {
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: 1rem;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+.btn-exit:focus-visible {
+  outline: none;
+  box-shadow:
+    0 18px 45px hsla(0, 0%, 0%, 0.35),
+    0 0 0 3px hsla(210, 90%, 60%, 0.25);
 }
 
-.page-subtitle {
-    font-size: 1rem;
-    color: var(--color-subtext);
-    margin-bottom: 3rem;
+/* ---------- (Opcional) estilos base para .btn si los usas en otras vistas ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  padding: 0.85rem 1.1rem;
+  border-radius: 1rem;
+
+  text-decoration: none;
+  color: hsla(0, 0%, 100%, 0.92);
+
+  background: hsla(0, 0%, 100%, 0.06);
+  border: 1px solid hsla(0, 0%, 100%, 0.12);
+  box-shadow: 0 18px 45px hsla(0, 0%, 0%, 0.32);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    background 0.2s cubic-bezier(0.83, 0, 0.17, 1),
+    border-color 0.2s cubic-bezier(0.83, 0, 0.17, 1);
 }
 
-/* =========================================================
-   ALERTA ÉXITO
-========================================================= */
-.alert-success {
-    background-color: var(--color-success);
-    color: #fff;
-    padding: 0.8rem 1.2rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    text-align: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
-    font-weight: 600;
+.btn:hover {
+  transform: translateY(-1px);
+  background: hsla(0, 0%, 100%, 0.09);
+  border-color: hsla(0, 0%, 100%, 0.18);
 }
 
-/* =========================================================
-   GRID DE BOTONES (PANEL DE CONTROL)
-========================================================= */
-.navbar {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    grid-auto-rows: 160px;
-    gap: 1.8rem;
+.btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 18px 45px hsla(0, 0%, 0%, 0.32),
+    0 0 0 3px hsla(210, 90%, 60%, 0.25);
 }
 
-/* =========================================================
-   BOTONES DEL PANEL (DASHBOARD-CARDS)
-========================================================= */
-.navbar .btn {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--color-text);
-    text-decoration: none;
-    text-align: center;
-    background: linear-gradient(145deg, var(--color-primary-dark), var(--color-primary));
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.4), -3px -3px 10px rgba(255,255,255,0.05);
-    transition: all 0.2s ease;
-    min-height: 160px;
-    padding: 1.5rem;
+.btn .icon {
+  font-size: 1.1em;
+  line-height: 1;
 }
 
-.navbar .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.5), -5px -5px 15px rgba(255,255,255,0.1);
-    background: linear-gradient(145deg, #3a4a5a, #4c5c7a);
+/* ---------- Glass Icons grid ---------- */
+.icon-btns {
+  display: grid;
+  grid-gap: 5em;
+  grid-template-columns: repeat(2, 1fr);
+  margin: auto;
+  padding: 3em 0 2em;
+  overflow: visible;
+  justify-items: center;
 }
 
-.navbar .btn .icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-accent);
+/* Anchor behaves like button */
+.icon-btn {
+  background-color: transparent;
+  outline: none;
+  position: relative;
+
+  /* un poco más grande */
+  width: 7.2em;
+  height: 7.2em;
+
+  perspective: 24em;
+  transform-style: preserve-3d;
+  -webkit-tap-highlight-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  text-decoration: none;
+  color: inherit;
 }
 
-/* =========================================================
-   TARJETA DE INFORMACIÓN
-========================================================= */
-.card.info-card {
-    background: linear-gradient(145deg, var(--color-primary-dark), var(--color-primary));
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 3px 3px 12px rgba(0,0,0,0.4), -3px -3px 12px rgba(255,255,255,0.05);
-    margin-bottom: 2.5rem;
+.icon-btn__back,
+.icon-btn__front,
+.icon-btn__label {
+  transition:
+    opacity 0.3s cubic-bezier(0.83, 0, 0.17, 1),
+    transform 0.3s cubic-bezier(0.83, 0, 0.17, 1);
 }
 
-.card.info-card h3 {
-    margin-top: 0;
-    margin-bottom: 0.8rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--color-accent);
+.icon-btn__back,
+.icon-btn__front {
+  border-radius: 1.25em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.card.info-card p {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--color-text);
+.icon-btn__back {
+  box-shadow: 0.6em -0.6em 0.95em hsla(223, 10%, 5%, 0.35);
+  display: block;
+  transform: rotate(15deg);
+  transform-origin: 100% 100%;
+  will-change: transform;
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-@media (max-width: 1024px) {
-    .navbar { grid-template-columns: repeat(2, 1fr); }
+/* cristal más oscuro */
+.icon-btn__front {
+  background-color: hsla(0, 0%, 100%, 0.08);
+  box-shadow:
+    0 0 0 0.1em hsla(0, 0%, 100%, 0.16) inset,
+    0 18px 40px hsla(0, 0%, 0%, 0.25);
+  backdrop-filter: blur(0.85em);
+  -webkit-backdrop-filter: blur(0.85em);
+  -moz-backdrop-filter: blur(0.85em);
+  display: flex;
+  transform-origin: 80% 50%;
+  will-change: transform;
 }
 
-@media (max-width: 600px) {
-    .page-title { font-size: 2rem; }
-    .page-subtitle { font-size: 0.9rem; }
-    .navbar { grid-template-columns: 1fr; }
-    .navbar .btn { grid-column: span 1 !important; }
-    .btn-exit { width: 100px; height: 35px; font-size: 0.85rem; }
+.icon-btn__icon {
+  margin: auto;
+
+  /* caja del icono más grande */
+  width: 2.1em;
+  height: 2.1em;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Bootstrap Icons más grandes */
+  font-size: 2.05em;
+  line-height: 1;
 }
-.btn-exit .icon {
-    font-size: 1.2rem;
-    margin-right: 0.3rem;
+
+.icon-btn__label {
+  font-size: 1.05em;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 2;
+  opacity: 0;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  transform: translateY(0);
+  color: hsla(0, 0%, 100%, 0.85);
+}
+
+/* Hover / focus interactions */
+.icon-btn:focus-visible .icon-btn__back,
+.icon-btn:hover .icon-btn__back {
+  transform: rotate(25deg) translate3d(-0.5em, -0.5em, 0.5em);
+}
+
+.icon-btn:focus-visible .icon-btn__front,
+.icon-btn:hover .icon-btn__front {
+  transform: translate3d(0, 0, 2em);
+}
+
+.icon-btn:focus-visible .icon-btn__label,
+.icon-btn:hover .icon-btn__label {
+  opacity: 1;
+  transform: translateY(20%);
+}
+
+/* Focus ring accesible */
+.icon-btn:focus-visible {
+  outline: none;
+}
+
+.icon-btn:focus-visible .icon-btn__front {
+  box-shadow:
+    0 0 0 0.1em hsla(0, 0%, 100%, 0.18) inset,
+    0 18px 40px hsla(0, 0%, 0%, 0.25),
+    0 0 0 3px hsla(210, 90%, 60%, 0.25);
+}
+
+@media (min-width: 768px) {
+  .icon-btns {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- Gradients (equivalente a gradientMapping) ---------- */
+.bg-blue {
+  background: linear-gradient(hsl(223, 90%, 50%), hsl(208, 90%, 50%));
+}
+
+.bg-purple {
+  background: linear-gradient(hsl(283, 90%, 50%), hsl(268, 90%, 50%));
+}
+
+.bg-red {
+  background: linear-gradient(hsl(3, 90%, 50%), hsl(348, 90%, 50%));
+}
+
+.bg-indigo {
+  background: linear-gradient(hsl(253, 90%, 50%), hsl(238, 90%, 50%));
+}
+
+.bg-orange {
+  background: linear-gradient(hsl(43, 90%, 50%), hsl(28, 90%, 50%));
+}
+
+.bg-green {
+  background: linear-gradient(hsl(123, 90%, 40%), hsl(108, 90%, 40%));
 }

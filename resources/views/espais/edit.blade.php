@@ -1,12 +1,19 @@
+@push('styles')
+    @vite('resources/css/espais/espaisEdit.css')
+@endpush
+
+@push('scripts')
+    @vite('resources/js/espais/particles-bg.js')
+@endpush
+
 <x-app-layout>
+    <div class="page particles-page">
 
-    @push('styles')
-        @vite('resources/css/espais/espaisEdit.css')
-    @endpush
+        {{-- Fondo de partículas --}}
+        <div id="particles-bg" class="particles-bg" aria-hidden="true"></div>
 
-    <div class="page">
         <div class="container">
-            <div class="page-header">
+            <div class="page-header page-foreground">
                 <h2 class="page-title">Editar espai</h2>
 
                 <a href="{{ route('espais.index') }}" class="btn btn-secondary">
@@ -14,8 +21,8 @@
                 </a>
             </div>
 
-            {{-- FORMULARIO COMO POST-IT GRANDE --}}
-            <div class="edit-postit">
+            {{-- FORMULARIO (cristal) --}}
+            <div class="edit-postit edit-foreground">
                 <form id="editForm" method="POST" action="{{ route('espais.update', $espai) }}">
                     @csrf
                     @method('PUT')
@@ -78,23 +85,23 @@
     </div>
 
     @push('scripts')
-    <script>
-        const deleteBtn = document.getElementById('deleteBtn');
-        const modal = document.getElementById('confirmModal');
-        const cancelBtn = document.getElementById('cancelBtn');
+        <script>
+            const deleteBtn = document.getElementById('deleteBtn');
+            const modal = document.getElementById('confirmModal');
+            const cancelBtn = document.getElementById('cancelBtn');
 
-        deleteBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
+            deleteBtn.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
 
-        cancelBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
+            cancelBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
 
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = 'none';
-        });
-    </script>
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+        </script>
     @endpush
 
 </x-app-layout>

@@ -1,6 +1,7 @@
 @push('styles')
     @vite('resources/css/espai/espaiIndex.css')
 @endpush
+
 <x-app-layout>
     <div class="page">
         <div class="container">
@@ -11,39 +12,68 @@
                 </div>
             @endif
 
-            <!-- Botón de salir arriba derecha -->
-            <a href="{{ route('espais.index') }}" class="btn-exit">
-                <i class="bi bi-box-arrow-right icon"></i>
-                Sortir
-            </a>
 
-            <!-- Título del panel -->
-            <h2 class="page-title">Espai</h2>
-            <p class="page-subtitle">Selecciona una opció per gestionar el teu espai</p>
+            <header class="page-header">
+                <p class="page-subtitle">Panell d'administrador</p>
 
-            <!-- GRID DE BOTONES -->
-            <nav class="navbar">
-                <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
-                    <i class="bi bi-person-plus icon"></i>
-                    Afegir usuaris
+                <a href="{{ route('espais.index') }}" class="btn-exit" aria-label="Sortir">
+                    <i class="bi bi-box-arrow-right icon" aria-hidden="true"></i>
+                    <span>Sortir</span>
                 </a>
-                <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
-                    <i class="bi bi-people icon"></i>
-                    Veure usuaris
+            </header>
+
+            <nav class="icon-btns" aria-label="Opcions de l'espai">
+                <a href="{{ route('espai.usuaris.create') }}" class="icon-btn" aria-label="Afegir usuaris">
+                    <span class="icon-btn__back bg-blue" aria-hidden="true"></span>
+                    <span class="icon-btn__front" aria-hidden="true">
+                        <span class="icon-btn__icon" aria-hidden="true">
+                            <i class="bi bi-person-plus" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                    <span class="icon-btn__label">Afegir usuaris</span>
                 </a>
-                <a href="{{ route('espai.noticies.index') }}" class="btn btn-secondary">
-                    <i class="bi bi-journal-text icon"></i>
-                    Tauló de notícies
+
+                <a href="{{ route('espai.usuaris.index') }}" class="icon-btn" aria-label="Veure usuaris">
+                    <span class="icon-btn__back bg-purple" aria-hidden="true"></span>
+                    <span class="icon-btn__front" aria-hidden="true">
+                        <span class="icon-btn__icon" aria-hidden="true">
+                            <i class="bi bi-people" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                    <span class="icon-btn__label">Veure usuaris</span>
                 </a>
-                <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">
-                    <i class="bi bi-building icon"></i>
-                    Aules
+
+                <a href="{{ route('espai.noticies.index') }}" class="icon-btn" aria-label="Tauló de notícies">
+                    <span class="icon-btn__back bg-red" aria-hidden="true"></span>
+                    <span class="icon-btn__front" aria-hidden="true">
+                        <span class="icon-btn__icon" aria-hidden="true">
+                            <i class="bi bi-journal-text" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                    <span class="icon-btn__label">Tauló de notícies</span>
                 </a>
-                <a href="{{ route('espai.guardies.index') }}" class="btn btn-secondary">
-                    <i class="bi bi-calendar-check icon"></i>
-                    Guardies
+
+                <a href="{{ route('espai.aules.index') }}" class="icon-btn" aria-label="Aules">
+                    <span class="icon-btn__back bg-indigo" aria-hidden="true"></span>
+                    <span class="icon-btn__front" aria-hidden="true">
+                        <span class="icon-btn__icon" aria-hidden="true">
+                            <i class="bi bi-building" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                    <span class="icon-btn__label">Aules</span>
+                </a>
+
+                <a href="{{ route('espai.guardies.index') }}" class="icon-btn" aria-label="Guardies">
+                    <span class="icon-btn__back bg-green" aria-hidden="true"></span>
+                    <span class="icon-btn__front" aria-hidden="true">
+                        <span class="icon-btn__icon" aria-hidden="true">
+                            <i class="bi bi-calendar-check" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                    <span class="icon-btn__label">Guardies</span>
                 </a>
             </nav>
+
         </div>
     </div>
 </x-app-layout>

@@ -1,7 +1,9 @@
+@push('styles')
+  @vite('resources/css/espai/aules/aulaForm.css')
+@endpush
+
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="page-title">Editar aula</h2>
-    </x-slot>
+
 
     @push('styles')
         @vite('resources/css/espai/aules/aulaEdit.css')
@@ -13,6 +15,8 @@
                 <form method="POST" action="{{ route('espai.aules.update', $aula) }}">
                     @csrf
                     @method('PUT')
+                    <h1>Editar aula</h1>
+
 
                     <div class="field">
                         <label>Nombre</label>
