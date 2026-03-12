@@ -41,7 +41,6 @@ class GuardiaController extends Controller
             5 => 'Dv',
         ];
 
-        // Horari assignat del professor (base)
         $horaris = AulaHorario::query()
             ->where('usuari_espai_id', $usuariEspaiId)
             ->whereIn('dia_setmana', $dies)
@@ -188,7 +187,6 @@ class GuardiaController extends Controller
             $franjaLabel = (string) $franja->nom . ' (' . $inici . ' - ' . $fi . ')';
         }
 
-        // ✅ CORRECCIÓN: el campo es dia_setmana (no dia_setwana)
         $horari = AulaHorario::query()
             ->where('usuari_espai_id', $usuariEspaiId)
             ->where('dia_setmana', $dia)
@@ -307,7 +305,6 @@ class GuardiaController extends Controller
 
             $titol = 'Guàrdia pendent (' . $diaTxt . ')';
 
-            // Campos reales: titol + contingut
             $cont = "S'ha sol·licitat una guàrdia.\n";
             $cont .= "Dia: " . $diaTxt . "\n";
             $cont .= "Franja ID: " . (string) $franjaId . "\n";
@@ -355,7 +352,6 @@ public function acceptar(Request $request, GuardiaSolicitud $solicitud)
 
     $result = DB::transaction(function () use ($solicitud, $usuariEspaiId, $espaiId) {
 
-        // 1) Bloquea y verifica que sigue pendiente
         $sol = GuardiaSolicitud::query()
             ->where('id', (int) $solicitud->id)
             ->lockForUpdate()
@@ -369,7 +365,6 @@ public function acceptar(Request $request, GuardiaSolicitud $solicitud)
         $franjaId = (int) $sol->franja_horaria_id;
         $aulaId = (int) $sol->aula_id;
 
-        // 2) El cobridor NO puede estar ya en otra aula ese día/franja
         $ocupat = AulaHorario::query()
             ->where('dia_setmana', $dia)
             ->where('franja_horaria_id', $franjaId)
@@ -382,7 +377,6 @@ public function acceptar(Request $request, GuardiaSolicitud $solicitud)
 
         abort_if($ocupat, 422, 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.');
 
-        // 3) Busca el registro de horario del aula en ese slot
         $slot = AulaHorario::query()
             ->where('aula_id', $aulaId)
             ->where('dia_setmana', $dia)
@@ -394,19 +388,16 @@ public function acceptar(Request $request, GuardiaSolicitud $solicitud)
         if (!$slot) {
             $slot = AulaHorario::query()->create([
                 'aula_id' => $aulaId,
-                'dia_setwana' => $dia, // <-- NO. tu campo es dia_setmana, lo ponemos bien abajo
+                'dia_setmana' => $dia,
+                'franja_horaria_id' => $franjaId,
             ]);
         }
 
-        // (por si tuviste el typo en algún sitio viejo)
         if (isset($slot->dia_setwana)) {
-            // nada, solo para que lo veas: tu DB debe tener dia_setmana
         }
 
-        // 4) Guarda quién era el profe original y cambia al cobridor
         $originalId = $slot ? (int) $slot->usuari_espai_id : null;
 
-        // Si tu tabla tiene el campo correcto, actualizamos/creamos bien:
         AulaHorario::updateOrCreate(
             [
                 'aula_id' => $aulaId,
