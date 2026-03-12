@@ -34,4 +34,10 @@ class UsuariEspai extends Model
     {
         return $this->belongsTo(Espai::class);
     }
+
+    public function grups()
+    {
+        return $this->belongsToMany(Grup::class, 'grup_usuari', 'usuari_espai_id', 'grup_id');
+    }
+
 }

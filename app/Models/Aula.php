@@ -33,4 +33,9 @@ class Aula extends Model
         return $this->hasMany(Ticket::class)->latest();
     }
 
+    public function alumnes()
+    {
+        return $this->belongsToMany(Alumne::class, 'aula_alumne');
+    }
+
 }

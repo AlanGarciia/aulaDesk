@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlumneController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\EspaiController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\AulaAdminController;
 use App\Http\Controllers\FranjaHorariaController;
 use App\Http\Controllers\GuardiaController;
 use App\Http\Controllers\EspaiShareController;
+use App\Http\Controllers\GrupController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -123,6 +125,21 @@ Route::middleware('espai.session')->group(function () {
     // Acceptar guardia (desde noticia)
     Route::post('/espai/guardies/{solicitud}/acceptar', [GuardiaController::class, 'acceptar'])
         ->name('espai.guardies.acceptar');
+
+       // alumnes
+        Route::get('/espai/alumnes', [AlumneController::class, 'index'])->name('espai.alumnes.index');
+        Route::get('/espai/alumnes/create', [AlumneController::class, 'create'])->name('espai.alumnes.create');
+        Route::post('/espai/alumnes', [AlumneController::class, 'store'])->name('espai.alumnes.store');
+        Route::delete('/espai/alumnes/{alumne}', [AlumneController::class, 'destroy'])->name('espai.alumnes.destroy');
+
+        //grups
+        Route::get('/espai/grups', [GrupController::class, 'index'])->name('espai.grups.index');
+        Route::get('/espai/grups/create', [GrupController::class, 'create'])->name('espai.grups.create');
+        Route::post('/espai/grups', [GrupController::class, 'store'])->name('espai.grups.store');
+        Route::get('/espai/grups/{grup}/edit', [GrupController::class, 'edit'])->name('espai.grups.edit');
+        Route::put('/espai/grups/{grup}', [GrupController::class, 'update'])->name('espai.grups.update');
+        Route::delete('/espai/grups/{grup}', [GrupController::class, 'destroy'])->name('espai.grups.destroy');
+
 });
 
 require __DIR__ . '/auth.php';

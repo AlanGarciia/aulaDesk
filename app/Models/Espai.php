@@ -23,4 +23,14 @@ class Espai extends Model
         return $this->hasMany(Aula::class);
     }
 
+    public function alumnes()
+    {
+        return $this->hasMany(Alumne::class);
+    }
+
+    public function grups()
+    {
+        return $this->hasMany(Grup::class);
+    }
+
 }
