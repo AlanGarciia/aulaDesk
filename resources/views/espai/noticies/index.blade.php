@@ -1,4 +1,7 @@
 <x-app-layout>
+    <a href="{{ route('espai.index') }}"class="btn btn-secondary btn-top-right">
+        Tornar
+    </a>
     @vite(['resources/css/espai/noticies/noticiesIndex.css'])
 
     <x-slot name="header">
@@ -7,13 +10,12 @@
                 <h2 class="page-title">Tauló de notícies</h2>
             </div>
 
-            <div class="page-header__actions">
-                <a class="btn btn-primary" href="{{ route('espai.noticies.create') }}">
-                    + Nova notícia
-                </a>
-                <a class="btn btn-secondary" href="{{ route('espai.index') }}">
-                    Tornar a l’espai
-                </a>
+            <div class="page-header__actions page-header__actions--with-exit">
+                <div class="page-header__actions-left">
+                    <a class="btn btn-primary" href="{{ route('espai.noticies.create') }}">
+                        + Nova notícia
+                    </a>
+                </div>
             </div>
         </div>
     </x-slot>
@@ -159,7 +161,7 @@
                                     </button>
                                 </form>
 
-                                {{-- Botó acceptar guardia (només si és guardia + pendent + no és meva) --}}
+                                {{-- Botó acceptar guardia --}}
                                 @if($isGuardia && $sol && $solPendent && !$esMeva)
                                     <form method="POST" action="{{ route('espai.guardies.acceptar', $sol) }}" class="inline-form">
                                         @csrf
@@ -169,23 +171,20 @@
                                     </form>
                                 @endif
 
-                                {{-- Si és guardia i és meva i pendent --}}
+                                {{-- Pendent meva --}}
                                 @if($isGuardia && $sol && $solPendent && $esMeva)
                                     <span class="pill" style="background: rgba(59,130,246,.10); color:#1e3a8a; border:1px solid rgba(59,130,246,.25);">
                                         Pendent (teua)
                                     </span>
                                 @endif
 
-                                {{-- Edit/Delete només per noticies normals creades per mi --}}
+                                {{-- Edit/Delete --}}
                                 @if(!$isGuardia && (int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
-                                    <a class="btn btn-secondary"
-                                       href="{{ route('espai.noticies.edit', $n) }}">
+                                    <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">
                                         Editar
                                     </a>
 
-                                    <button type="button"
-                                            class="btn btn-danger btn-delete"
-                                            data-action="{{ route('espai.noticies.destroy', $n) }}">
+                                    <button type="button" class="btn btn-danger btn-delete" data-action="{{ route('espai.noticies.destroy', $n) }}">
                                         Eliminar
                                     </button>
                                 @endif
@@ -194,15 +193,13 @@
 
                         @if($n->imatge_path)
                             <div class="post__media">
-                                <img src="{{ asset('storage/'.$n->imatge_path) }}"
-                                     alt="imatge"
-                                     loading="lazy">
+                                <img src="{{ asset('storage/'.$n->imatge_path) }}" alt="imatge" loading="lazy">
                             </div>
                         @endif
 
                         @if($n->contingut)
                             @php
-                                $limit = 260; // ajusta a gust
+                                $limit = 260;
                                 $text = trim((string) $n->contingut);
                                 $isLong = mb_strlen($text) > $limit;
                             @endphp
@@ -225,8 +222,7 @@
                         <p class="empty__text">
                             Crea la primera notícia perquè aparegui aquí.
                         </p>
-                        <a class="btn btn-primary"
-                           href="{{ route('espai.noticies.create') }}">
+                        <a class="btn btn-primary" href="{{ route('espai.noticies.create') }}">
                             + Nova notícia
                         </a>
                     </div>
@@ -235,7 +231,7 @@
         </div>
     </div>
 
-    {{-- 🔹 MODAL SOLO PARA ESTA VISTA --}}
+    {{-- MODAL --}}
     @push('modals')
     <div id="deleteModal" class="modal-periodic">
         <div class="modal-periodic__content">
@@ -243,30 +239,24 @@
 
             <div class="modal-periodic__icon">📰</div>
             <h3 class="modal-periodic__title">Eliminar notícia</h3>
-
             <p class="modal-periodic__text">
-                Estàs segur que vols eliminar aquesta notícia?
-                Aquesta acció no es pot desfer.
+                Estàs segur que vols eliminar aquesta notícia? Aquesta acció no es pot desfer.
             </p>
 
             <div class="modal-periodic__actions">
-                <button id="cancelDelete" class="btn btn-secondary">
-                    Cancelar
-                </button>
+                <button id="cancelDelete" class="btn btn-secondary">Cancelar</button>
 
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        Eliminar
-                    </button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
             </div>
         </div>
     </div>
     @endpush
 
-    {{-- 🔹 JS SOLO PARA ESTA VISTA --}}
+    {{-- JS --}}
     @push('scripts')
     <script>
     document.addEventListener('DOMContentLoaded', () => {

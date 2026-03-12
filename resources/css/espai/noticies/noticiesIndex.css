@@ -275,3 +275,9 @@ html, body{
     from {transform: translateY(-20px); opacity: 0;}
     to {transform: translateY(0); opacity: 1;}
 }
+.btn-top-right {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+}
