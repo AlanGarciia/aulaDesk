@@ -4,21 +4,18 @@
 
 <x-app-layout>
     <div class="page">
-        <!-- Título con fondo -->
         <div class="page-title-container">
             <h2 class="page-title">Usuaris de l'espai</h2>
         </div>
 
-        <!-- Botones fuera del container -->
         <div class="actions">
             <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary">
                 + Afegir usuari
             </a>
 
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-            <i class="bi bi-box-arrow-right"></i>
+                <i class="bi bi-box-arrow-right"></i>
                 Sortir
-                
             </a>
         </div>
 
@@ -28,6 +25,32 @@
                     {{ session('status') }}
                 </div>
             @endif
+
+            <form method="GET" action="{{ route('espai.usuaris.index') }}" class="filters-form">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="Buscar per nom">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="rol">Rol</label>
+                        <select name="rol" id="rol">
+                            <option value="">Tots</option>
+                            @foreach(\App\Models\UsuariEspai::ROLS as $rol)
+                                <option value="{{ $rol }}" {{ request('rol') === $rol ? 'selected' : '' }}>
+                                    {{ ucfirst($rol) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">Netejar</a>
+                    </div>
+                </div>
+            </form>
 
             <div class="card">
                 @forelse ($usuaris as $usuari)

@@ -84,6 +84,7 @@
     rgba(255,255,255,.08),
     rgba(255,255,255,.18)
   );
+
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -205,12 +206,8 @@
   .actions .btn{
     width: 100%;
     display: flex;
-    justify-content: center;    /* centra el card */
+    justify-content: center;
 }
-
-/* =========================
-   ALERTA ERROR
-========================= */
 
 .alert-danger {
     background: #f8d7da;
@@ -225,13 +222,9 @@
     margin-right: auto;
 }
 
-/* =========================
-   TARJETA FORMULARIO
-========================= */
-
 .card {
     max-width: 420px;
-    width: 100%;               /* flexible en pantallas pequeñas */
+    width: 100%;
     background: #ffffff;
     border-left: 6px solid #1f6f54;
     border-radius: 12px;
@@ -248,34 +241,6 @@
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.15);
 }
-
-/* Cabecera institucional superior */
-.card::before {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #1f6f54;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-/* =========================
-   TÍTULO INTERNO
-========================= */
-
-.inside-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1f6f54;
-    margin-bottom: 25px;
-    text-align: center;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 10px;
-}
-
-/* =========================
-   CAMPOS
-========================= */
 
 .field {
     display: flex;
@@ -313,10 +278,6 @@
     margin-top: 4px;
 }
 
-/* =========================
-   BOTONES
-========================= */
-
 .actions {
     display: flex;
     justify-content: space-between;
@@ -336,7 +297,6 @@
     text-align: center;
 }
 
-/* Crear usuario */
 .actions .btn-primary {
     background: #1f6f54;
     color: white;
@@ -346,7 +306,6 @@
     background: #175843;
 }
 
-/* Cancelar */
 .actions .btn-secondary {
     background: rgba(255, 255, 255, 0.8);
     color: #1f6f54;
@@ -358,10 +317,7 @@
     color: white;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
+/*Para el movil, No Borrar Gonzalo */
 @media (max-width: 600px) {
     .card {
         padding: 20px;

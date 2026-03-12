@@ -10,9 +10,6 @@ use Illuminate\Validation\Rule;
 
 class UsuariEspaiController extends Controller
 {
-    /**
-     * Llista usuaris de l'espai actiu.
-     */
     public function index(Request $request)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -26,7 +23,19 @@ class UsuariEspaiController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        $usuaris = $espai->usuaris()->latest()->get();
+        $query = $espai->usuaris();
+
+        if ($request->filled('nom')) {
+            $query->where('nom', 'like', '%' . $request->nom . '%');
+        }
+
+        if ($request->filled('rol')) {
+            $query->where('rol', $request->rol);
+        }
+
+        $usuaris = $query
+            ->orderByRaw('LOWER(nom) ASC')
+            ->get();
 
         return view('espai.usuaris.index', [
             'espai' => $espai,
@@ -34,9 +43,6 @@ class UsuariEspaiController extends Controller
         ]);
     }
 
-    /**
-     * Formulari per crear usuari dins l'espai actiu.
-     */
     public function create(Request $request)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -55,9 +61,6 @@ class UsuariEspaiController extends Controller
         ]);
     }
 
-    /**
-     * Desa un usuari dins l'espai actiu.
-     */
     public function store(Request $request)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -101,6 +104,7 @@ class UsuariEspaiController extends Controller
             ->route('espai.usuaris.index')
             ->with('status', 'Usuari creat correctament.');
     }
+
     public function edit(Request $request, UsuariEspai $usuariEspai)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -110,12 +114,10 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        // Ha de pertànyer a l'espai actiu
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
             abort(404);
         }
 
-        // I l'espai actiu ha de ser del propietari loguejat
         $espai = Espai::where('id', $espaiId)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
@@ -135,12 +137,10 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        // Ha de pertànyer a l'espai actiu
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
             abort(404);
         }
 
-        // I l'espai actiu ha de ser del propietari loguejat
         $espai = Espai::where('id', $espaiId)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
@@ -159,7 +159,6 @@ class UsuariEspaiController extends Controller
             ]
         );
 
-        // Evita duplicats de nom dins l'espai (excloent l'usuari actual)
         $exists = $espai->usuaris()
             ->where('nom', $data['nom'])
             ->where('id', '!=', $usuariEspai->id)
@@ -171,7 +170,6 @@ class UsuariEspaiController extends Controller
                 ->withInput();
         }
 
-        // (Opcional) Protegir l'admin: no canviar-li el rol
         $isAdmin = ($usuariEspai->nom === 'admin' || $usuariEspai->rol === UsuariEspai::ROL_ADMIN);
         if ($isAdmin) {
             $data['rol'] = UsuariEspai::ROL_ADMIN;
@@ -191,9 +189,6 @@ class UsuariEspaiController extends Controller
             ->with('status', 'Usuari actualitzat correctament.');
     }
 
-    /**
-     * Elimina un usuari de l'espai actiu.
-     */
     public function destroy(Request $request, UsuariEspai $usuariEspai)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -203,12 +198,10 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        // Ha de pertànyer a l'espai actiu
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
             abort(404);
         }
 
-        // I l'espai actiu ha de ser del propietari loguejat
         Espai::where('id', $espaiId)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
