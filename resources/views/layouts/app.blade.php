@@ -15,12 +15,16 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!-- CSS principal -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- CSS principal + CSS de perfil -->
+    @vite([
+    'resources/css/app.css',
+    'resources/js/app.js'
+])
 
     <!-- CSS específico de cada vista -->
     @stack('styles')
 </head>
+
 <body class="font-sans antialiased bg-[var(--color-bg)]">
 <div class="min-h-screen">
 
@@ -28,6 +32,7 @@
     <main>
         {{ $slot }}
     </main>
+
 </div>
 
 {{-- Modales específicos de cada vista --}}

@@ -1,3 +1,113 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* === TARJETAS ESTILO APPLE (Glass suave) === */
+.profile-wrapper > section {
+    backdrop-filter: blur(22px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    padding: 28px !important;
+    margin-bottom: 32px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+/* Modo oscuro estilo Apple */
+.dark .profile-wrapper > section {
+    background: rgba(30, 30, 30, 0.55) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45) !important;
+}
+
+/* === TITULOS === */
+.profile-wrapper h2 {
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    color: #1c1c1e !important;
+    margin-bottom: 6px !important;
+}
+
+.dark .profile-wrapper h2 {
+    color: #f5f5f7 !important;
+}
+
+/* === DESCRIPCIÓN === */
+.profile-wrapper p {
+    color: #6e6e73 !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 16px !important;
+}
+
+.dark .profile-wrapper p {
+    color: #a1a1a6 !important;
+}
+
+/* === LABELS === */
+.profile-wrapper label {
+    font-weight: 500 !important;
+    color: #3a3a3c !important;
+    margin-bottom: 4px !important;
+}
+
+.dark .profile-wrapper label {
+    color: #e5e5ea !important;
+}
+
+/* === INPUTS ESTILO iOS === */
+.profile-wrapper input {
+    background: rgba(255,255,255,0.7) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    padding: 12px 14px !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.dark .profile-wrapper input {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.15) !important;
+    color: #f5f5f7 !important;
+}
+
+.profile-wrapper input:focus {
+    border-color: #0a84ff !important;
+    box-shadow: 0 0 0 3px rgba(10,132,255,0.35) !important;
+    outline: none !important;
+}
+
+/* === BOTONES ESTILO APPLE === */
+.profile-wrapper .x-primary-button {
+    background: #0a84ff !important;
+    color: white !important;
+    padding: 10px 18px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    transition: background 0.2s ease !important;
+}
+
+.profile-wrapper .x-primary-button:hover {
+    background: #0066cc !important;
+}
+
+.profile-wrapper .x-danger-button {
+    background: #ff3b30 !important;
+    padding: 10px 18px !important;
+    border-radius: 12px !important;
+}
+
+.profile-wrapper .x-danger-button:hover {
+    background: #d70015 !important;
+}
+
+.profile-wrapper .x-secondary-button {
+    padding: 10px 18px !important;
+    border-radius: 12px !important;
+    background: rgba(0,0,0,0.05) !important;
+}
+
+.dark .profile-wrapper .x-secondary-button {
+    background: rgba(255,255,255,0.1) !important;
+}
