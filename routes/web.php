@@ -21,12 +21,32 @@ Route::get('/', function () {
         return redirect()->route('espais.index');
     }
 
-    return view('landing');
+    return view('presentacion.landing');
 });
 
 Route::get('/dashboard', function () {
     return redirect()->route('espais.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/funcionalitats', function () {
+    return view('presentacion.funcionalitats'); 
+})->name('funcionalitats');
+
+Route::get('/plans', function () {
+    return view('presentacion.plans'); 
+})->name('plans');
+
+Route::get('/plans', function () {
+    return view('presentacion.plans'); 
+})->name('plans');
+
+Route::get('/comFunciona', function () {
+    return view('presentacion.comFunciona'); 
+})->name('comFunciona');
+
+Route::get('/faq', function () {
+    return view('presentacion.faq'); 
+})->name('faq');
 
 //Aixo s'eliminará
 Route::get('/espais/{espai}/acces', [EspaiController::class, 'accesForm'])->name('espais.acces.form');
