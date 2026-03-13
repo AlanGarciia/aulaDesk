@@ -60,9 +60,9 @@ class GrupController extends Controller
             abort(404);
         }
 
-        $usuaris = $espai->usuaris()->orderBy('nom')->get();
+        $alumnes = $espai->alumnes()->orderBy('nom')->get();
 
-        return view('espai.grups.edit', compact('espai', 'grup', 'usuaris'));
+        return view('espai.grups.edit', compact('espai', 'grup', 'alumnes'));
     }
 
     public function update(Request $request, Grup $grup)
@@ -75,13 +75,12 @@ class GrupController extends Controller
 
         $data = $request->validate([
             'nom' => ['required', 'string', 'max:255'],
-            'usuaris' => ['array'],
+            'alumnes' => ['array'],
         ]);
 
         $grup->update(['nom' => $data['nom']]);
 
-        // Sincronizar usuarios del grupo
-        $grup->usuaris()->sync($data['usuaris'] ?? []);
+        $grup->alumnes()->sync($data['alumnes'] ?? []);
 
         return redirect()->route('espai.grups.index')
             ->with('status', 'Grup actualitzat correctament.');
@@ -101,4 +100,3 @@ class GrupController extends Controller
             ->with('status', 'Grup eliminat correctament.');
     }
 }
-
