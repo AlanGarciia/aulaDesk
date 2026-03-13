@@ -14,6 +14,12 @@
                 + Afegir alumne
             </a>
 
+            {{-- 🔥 NUEVO BOTÓN AÑADIDO --}}
+            <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary">
+                <i class="bi bi-people"></i>
+                Veure grups
+            </a>
+
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
                 <i class="bi bi-box-arrow-right"></i>
                 Sortir
@@ -58,12 +64,9 @@
                 </div>
             </form>
 
-            {{-- LLISTAT --}}
             <div class="card">
-
                 @forelse ($alumnes as $alumne)
                     <div class="user-row">
-
                         <div class="user-info">
                             <div class="user-name">
                                 {{ $alumne->nom }} {{ $alumne->cognoms }}
