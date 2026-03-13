@@ -38,14 +38,13 @@ class AlumneController extends Controller
 
         $alumnes = $query
             ->orderByRaw('LOWER(nom) ASC')
-            ->paginate(20); // 👈 AQUÍ ESTÁ LA CLAVE
+            ->paginate(20);
 
         return view('espai.alumnes.index', [
             'espai' => $espai,
             'alumnes' => $alumnes,
         ]);
     }
-
 
     public function create(Request $request)
     {
@@ -68,7 +67,6 @@ class AlumneController extends Controller
             'telefon' => ['nullable', 'string', 'max:20'],
         ]);
 
-        // Evitar duplicados
         if ($espai->alumnes()->where('idalu', $data['idalu'])->exists()) {
             return back()
                 ->withErrors(['idalu' => 'Aquest IDALU ja existeix dins d’aquest espai.'])
@@ -95,5 +93,104 @@ class AlumneController extends Controller
         return redirect()
             ->route('espai.alumnes.index')
             ->with('ok', 'Alumne eliminat correctament.');
+    }
+
+    
+
+    public function importForm(Request $request)
+    {
+        $espai = $this->getEspai($request);
+        return view('espai.alumnes.import', compact('espai'));
+    }
+
+    public function import(Request $request)
+    {
+        $espai = $this->getEspai($request);
+
+        $request->validate([
+            'csv' => ['required', 'file', 'mimes:csv,txt'],
+        ]);
+
+        $file = fopen($request->file('csv')->getRealPath(), 'r');
+
+        $header = fgetcsv($file);
+
+        $normalized = array_map(fn($h) => strtolower(trim($h)), $header);
+
+        $map = [
+            'nom'      => ['nom', 'nombre', 'name', 'first name'],
+            'cognoms'  => ['cognoms', 'apellidos', 'surname', 'last name'],
+            'correu'   => ['correu', 'correo', 'email', 'mail'],
+            'idalu'    => ['idalu', 'id', 'identificador', 'student id'],
+            'telefon'  => ['telefon', 'telefono', 'tel', 'phone'],
+        ];
+
+        $index = [];
+
+        foreach ($map as $campo => $posibles) {
+            foreach ($posibles as $nombre) {
+                $col = array_search($nombre, $normalized);
+                if ($col !== false) {
+                    $index[$campo] = $col;
+                    break;
+                }
+            }
+        }
+
+        while ($row = fgetcsv($file)) {
+
+            $espai->alumnes()->create([
+                'nom'      => $row[$index['nom']]      ?? '',
+                'cognoms'  => $row[$index['cognoms']]  ?? '',
+                'correu'   => $row[$index['correu']]   ?? null,
+                'idalu'    => $row[$index['idalu']]    ?? null,
+                'telefon'  => $row[$index['telefon']]  ?? null,
+            ]);
+        }
+
+        fclose($file);
+
+        return redirect()->route('espai.alumnes.index')
+            ->with('ok', 'Alumnes importats correctament.');
+    }
+
+    public function export(Request $request)
+    {
+        $espai = $this->getEspai($request);
+
+        $alumnes = $espai->alumnes()->get([
+            'nom',
+            'cognoms',
+            'correu',
+            'idalu',
+            'telefon'
+        ]);
+
+        $filename = 'alumnes_espai_' . $espai->id . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $callback = function () use ($alumnes) {
+            $output = fopen('php://output', 'w');
+
+            fputcsv($output, ['nom', 'cognoms', 'correu', 'idalu', 'telefon']);
+
+            foreach ($alumnes as $alumne) {
+                fputcsv($output, [
+                    $alumne->nom,
+                    $alumne->cognoms,
+                    $alumne->correu,
+                    $alumne->idalu,
+                    $alumne->telefon,
+                ]);
+            }
+
+            fclose($output);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
