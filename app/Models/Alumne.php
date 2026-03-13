@@ -27,4 +27,8 @@ class Alumne extends Model
         return $this->belongsToMany(Aula::class, 'aula_alumne');
     }
 
+    public function grups()
+    {
+        return $this->belongsToMany(Grup::class, 'grup_alumne', 'alumne_id', 'grup_id');
+    }
 }

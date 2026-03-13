@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Grup extends Model
 {
     protected $fillable = ['espai_id', 'nom'];
-
-    public function usuaris()
+    public function alumnes()
     {
-        return $this->belongsToMany(UsuariEspai::class, 'grup_usuari', 'grup_id', 'usuari_espai_id');
+        return $this->belongsToMany(Alumne::class, 'grup_alumne', 'grup_id', 'alumne_id');
     }
 
     public function espai()
@@ -18,4 +17,3 @@ class Grup extends Model
         return $this->belongsTo(Espai::class);
     }
 }
-
