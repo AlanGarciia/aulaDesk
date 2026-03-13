@@ -10,14 +10,29 @@
         </div>
 
         <div class="actions">
+
             <a href="{{ route('espai.alumnes.create') }}" class="btn btn-primary">
                 + Afegir alumne
+            </a>
+
+            <a href="{{ route('espai.alumnes.import.form') }}" class="btn btn-secondary">
+                Importar CSV
+            </a>
+
+            <a href="{{ route('espai.alumnes.export') }}" class="btn btn-secondary">
+                Exportar CSV
+            </a>
+
+            <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary">
+                <i class="bi bi-people"></i>
+                Veure grups
             </a>
 
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
                 <i class="bi bi-box-arrow-right"></i>
                 Sortir
             </a>
+
         </div>
 
         <div class="container">
@@ -28,7 +43,6 @@
                 </div>
             @endif
 
-            {{-- FILTRES --}}
             <form method="GET" action="{{ route('espai.alumnes.index') }}" class="filters-form">
                 <div class="filters-grid">
 
@@ -58,9 +72,7 @@
                 </div>
             </form>
 
-            {{-- LLISTAT --}}
             <div class="card">
-
                 @forelse ($alumnes as $alumne)
                     <div class="user-row">
 
@@ -100,7 +112,6 @@
                 @empty
                     <p class="empty-state">No hi ha alumnes creats en aquest espai.</p>
                 @endforelse
-
             </div>
 
             <div class="pagination">

@@ -152,6 +152,16 @@ Route::middleware('espai.session')->group(function () {
         Route::post('/espai/alumnes', [AlumneController::class, 'store'])->name('espai.alumnes.store');
         Route::delete('/espai/alumnes/{alumne}', [AlumneController::class, 'destroy'])->name('espai.alumnes.destroy');
 
+        //alumnes importar y exportar:
+        Route::get('/espai/alumnes/import', [AlumneController::class, 'importForm'])
+        ->name('espai.alumnes.import.form');
+
+        Route::post('/espai/alumnes/import', [AlumneController::class, 'import'])
+        ->name('espai.alumnes.import');
+        Route::get('/espai/alumnes/export', [AlumneController::class, 'export'])
+        ->name('espai.alumnes.export');
+
+
         //grups
         Route::get('/espai/grups', [GrupController::class, 'index'])->name('espai.grups.index');
         Route::get('/espai/grups/create', [GrupController::class, 'create'])->name('espai.grups.create');
