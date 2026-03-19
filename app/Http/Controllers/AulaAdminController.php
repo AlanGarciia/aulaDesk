@@ -8,6 +8,7 @@ use App\Models\UsuariEspai;
 use App\Models\FranjaHoraria;
 use App\Models\Ticket;
 use App\Models\GuardiaSolicitud;
+use App\Models\Grup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -62,6 +63,12 @@ class AulaAdminController extends Controller
             ->orderBy('nom')
             ->get();
 
+        // 🔹 AÑADIDO: cargar grupos del espai
+        $grups = Grup::query()
+            ->where('espai_id', $espaiId)
+            ->orderBy('nom')
+            ->get();
+
         $dies = [
             1 => 'Dilluns',
             2 => 'Dimarts',
@@ -75,7 +82,6 @@ class AulaAdminController extends Controller
             ->orderBy('ordre')
             ->get();
 
-        // [dia][franja_id] => usuari_espai_id (profe "normal")
         $assignacions = [];
 
         if ($franges->isNotEmpty()) {
@@ -95,7 +101,6 @@ class AulaAdminController extends Controller
             }
         }
 
-        // ✅ Ocupats: [dia][franja_id][prof_id] = nomAula (para pintar conflictos en rojo / avisos)
         $ocupats = [];
 
         if ($franges->isNotEmpty()) {
@@ -133,8 +138,7 @@ class AulaAdminController extends Controller
             }
         }
 
-        // ✅ Guardies acceptades d'AQUESTA AULA, només la setmana actual
-        // [dia][franja_id] => nom cobridor
+        // Guardies acceptades
         $substituts = [];
 
         if ($franges->isNotEmpty()) {
@@ -146,9 +150,8 @@ class AulaAdminController extends Controller
                 ->where('aula_id', $aula->id)
                 ->where('estat', 'acceptada')
                 ->whereNotNull('cobridor_usuari_espai_id')
-                // usamos updated_at porque al aceptar la guardia se actualiza
                 ->whereBetween('updated_at', [$weekStart, $weekEnd])
-                ->with('cobridor') // ⚠️ necesita relación cobridor() en el modelo
+                ->with('cobridor')
                 ->get();
 
             foreach ($guardies as $g) {
@@ -184,12 +187,18 @@ class AulaAdminController extends Controller
             'franges',
             'tickets',
             'ocupats',
-            'substituts'
+            'substituts',
+            'grups' // ← AÑADIDO
         ));
     }
 
     public function update(Request $request, Aula $aula)
     {
+        // NO TOCO NADA DE TU UPDATE
+        // porque tú aún usas profesores y conflictos de profesores.
+        // Solo añadimos grupos en la vista, no en la lógica.
+        // Cuando quieras migrar a grupos, te lo preparo.
+        
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
             abort(403, 'No hi ha cap espai seleccionat.');
@@ -246,7 +255,7 @@ class AulaAdminController extends Controller
             5 => 'Divendres',
         ];
 
-        // ✅ Conflictes (no permitir el mismo profe en otra aula a la vez)
+        // Conflictes
         $conflicts = [];
 
         foreach ($dies as $dia) {
@@ -304,7 +313,7 @@ class AulaAdminController extends Controller
                 ->with('conflicts', $conflicts);
         }
 
-        // ✅ Guardar
+        // Guardar
         foreach ($dies as $dia) {
             foreach ($franjaIds as $franjaId) {
 
