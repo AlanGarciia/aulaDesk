@@ -13,14 +13,7 @@
                 </div>
             </div>
 
-            @if(session('ok'))
-                <div class="modal-overlay">
-                    <div class="modal-box">
-                        <span>{{ session('ok') }}</span>
-                    </div>
-                </div>
-            @endif
-
+            {{-- Conflictes --}}
             @php
                 $conflicts = session('conflicts');
                 $hasConflicts = is_array($conflicts) && count($conflicts);
@@ -28,30 +21,21 @@
 
             @if($hasConflicts)
                 <div class="conflict-backdrop" id="conflictModal">
-                    <div class="conflict-card" role="dialog" aria-modal="true" aria-labelledby="conflictTitle">
+                    <div class="conflict-card">
                         <div class="conflict-head">
-                            <h3 class="conflict-title" id="conflictTitle">Conflicte d’horari</h3>
+                            <h3 class="conflict-title">Conflicte d’horari</h3>
                             <button type="button" class="btn btn-secondary" id="closeConflictModal">Tancar</button>
                         </div>
 
                         <div class="conflict-body">
-                            <p class="conflict-text">
-                                No s’ha pogut desar perquè el professor ja està assignat a una altra aula en el mateix moment.
-                            </p>
+                            <p>No s’ha pogut desar perquè el professor ja està assignat a una altra aula en el mateix moment.</p>
 
                             <ul class="conflict-list">
                                 @foreach($conflicts as $c)
-                                    @php
-                                        $profTxt = is_array($c) && isset($c['professor']) ? (string) $c['professor'] : '';
-                                        $diaTxt = is_array($c) && isset($c['dia']) ? (string) $c['dia'] : '';
-                                        $franjaTxt = is_array($c) && isset($c['franja']) ? (string) $c['franja'] : '';
-                                        $aulaTxt = is_array($c) && isset($c['aula']) ? (string) $c['aula'] : '';
-                                    @endphp
-
                                     <li>
-                                        <span class="conflict-tag">{{ $profTxt }}</span>
-                                        <span>{{ $diaTxt }}, {{ $franjaTxt }}</span>
-                                        <span class="conflict-extra">Ja està a: <strong>{{ $aulaTxt }}</strong></span>
+                                        <span class="conflict-tag">{{ $c['professor'] }}</span>
+                                        <span>{{ $c['dia'] }}, {{ $c['franja'] }}</span>
+                                        <span class="conflict-extra">Ja està a: <strong>{{ $c['aula'] }}</strong></span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -64,110 +48,219 @@
                 </div>
 
                 <script>
-                    (function () {
-                        var modal = document.getElementById('conflictModal');
-                        var btn1 = document.getElementById('closeConflictModal');
-                        var btn2 = document.getElementById('closeConflictModal2');
-
-                        function closeModal() {
-                            if (modal) modal.style.display = 'none';
-                        }
-
-                        if (btn1) btn1.addEventListener('click', closeModal);
-                        if (btn2) btn2.addEventListener('click', closeModal);
-
-                        if (modal) {
-                            modal.addEventListener('click', function (e) {
-                                if (e.target === modal) closeModal();
-                            });
-                        }
-
-                        document.addEventListener('keydown', function (e) {
-                            if (e.key === 'Escape') closeModal();
-                        });
-                    })();
+                    document.getElementById('closeConflictModal').onclick =
+                    document.getElementById('closeConflictModal2').onclick =
+                        () => document.getElementById('conflictModal').style.display = 'none';
                 </script>
             @endif
 
-            @if($franges->isEmpty())
-                <div class="panel-card">
-                    <div class="empty-state">
-                        No hi ha franges horàries creades.
-                    </div>
+            {{-- Horari --}}
+            <div class="panel-card">
+                <div class="section-header">
+                    <h3 class="section-title">Horari de l’aula</h3>
                 </div>
-            @else
-                <div class="panel-card">
-                    <div class="section-header">
-                        <h3 class="section-title">Horari de l’aula</h3>
-                    </div>
 
-                    <form method="POST" action="{{ route('espai.aules.admin.update', $aula) }}">
-                        @csrf
+                <form method="POST" action="{{ route('espai.aules.admin.update', $aula) }}">
+                    @csrf
 
-                        <div class="table-wrap">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Franja</th>
-                                        @foreach($dies as $diaNom)
-                                            <th>{{ $diaNom }}</th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($franges as $franja)
-                                        <tr>
-                                            <td class="franja-cell">
-                                                @if($franja->nom)
-                                                    <strong>{{ $franja->nom }}</strong>
-                                                    <br>
-                                                @endif
-                                                {{ substr($franja->inici, 0, 5) }} - {{ substr($franja->fi, 0, 5) }}
-                                            </td>
-
-                                            @foreach($dies as $diaNum => $diaNom)
-                                                @php
-                                                    $valor = '';
-                                                    if (isset($assignacions[$diaNum]) && isset($assignacions[$diaNum][$franja->id])) {
-                                                        $valor = $assignacions[$diaNum][$franja->id];
-                                                    }
-
-                                                    $oldVal = old('assignacions.' . $diaNum . '.' . $franja->id);
-                                                    if ($oldVal !== null) {
-                                                        $valor = $oldVal;
-                                                    }
-                                                @endphp
-
-                                                <td>
-                                                    <select class="input-control select-control" name="assignacions[{{ $diaNum }}][{{ $franja->id }}]">
-                                                        <option value="">-- lliure --</option>
-                                                        @foreach($professors as $p)
-                                                            <option value="{{ $p->id }}" {{ (string)$valor === (string)$p->id ? 'selected' : '' }}>
-                                                                {{ $p->nom }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                            @endforeach
-                                        </tr>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Franja</th>
+                                    @foreach($dies as $diaNom)
+                                        <th>{{ $diaNom }}</th>
                                     @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                </tr>
+                            </thead>
 
-                        <div class="form-actions">
-                            <button class="btn btn-primary" type="submit">Desar horari</button>
-                        </div>
-                    </form>
+                            <tbody>
+                            @foreach($franges as $franja)
+                                <tr>
+                                    <td class="franja-cell">
+                                        @if($franja->nom)
+                                            <strong>{{ $franja->nom }}</strong><br>
+                                        @endif
+                                        {{ substr($franja->inici, 0, 5) }} - {{ substr($franja->fi, 0, 5) }}
+                                    </td>
+
+                                    @foreach($dies as $diaNum => $diaNom)
+                                        @php
+                                            $professorId = $assignacions[$diaNum][$franja->id]['professor'] ?? '';
+                                            $grupId = $assignacions[$diaNum][$franja->id]['grup'] ?? '';
+                                            $grupNom = $grups->firstWhere('id', $grupId)->nom ?? null;
+                                        @endphp
+
+                                        <td>
+                                            <div class="horari-cell">
+
+                                                {{-- SELECT DE PROFESSOR --}}
+                                                <select class="input-control select-control"
+                                                        name="professors[{{ $diaNum }}][{{ $franja->id }}]">
+                                                    <option value="">-- lliure --</option>
+
+                                                    @foreach($professors as $p)
+                                                        <option value="{{ $p->id }}"
+                                                            {{ (string)$professorId === (string)$p->id ? 'selected' : '' }}>
+                                                            👨‍🏫 {{ $p->nom }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                {{-- BOTÓN PARA ASIGNAR GRUPO --}}
+                                                <button type="button"
+                                                        class="btn btn-small btn-secondary open-grup-modal"
+                                                        data-dia="{{ $diaNum }}"
+                                                        data-franja="{{ $franja->id }}"
+                                                        style="margin-top:4px;">
+                                                    Assignar grup
+                                                </button>
+
+                                                {{-- INPUT HIDDEN PARA GUARDAR EL GRUPO --}}
+                                                <input type="hidden"
+                                                       class="input-grup"
+                                                       name="grups[{{ $diaNum }}][{{ $franja->id }}]"
+                                                       value="{{ $grupId }}">
+
+                                                {{-- MOSTRAR GRUPO ASIGNADO --}}
+                                                <div class="grup-label" style="margin-top:4px; font-size:13px; color:#444;">
+                                                    @if($grupNom)
+                                                        Grup: <strong>{{ $grupNom }}</strong>
+                                                    @else
+                                                        Sense grup
+                                                    @endif
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit">Desar horari</button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- MODAL DE GRUPS --}}
+            <style>
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.65);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                    backdrop-filter: blur(3px);
+                }
+                .modal-content {
+                    background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%);
+                    padding: 22px;
+                    border-radius: 10px;
+                    max-width: 420px;
+                    width: 90%;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+                    border: 1px solid #d0d0d0;
+                }
+            </style>
+
+            <div id="modalGrups" class="modal">
+                <div class="modal-content">
+                    <h3>Selecciona un grup</h3>
+
+                    <input type="text" id="buscadorGrups" class="input-control"
+                           placeholder="Cerca grup..." style="margin-bottom:10px;">
+
+                    <div id="llistaGrups">
+                        @foreach($grups as $g)
+                            <button class="btn btn-primary grup-option"
+                                    data-grup-id="{{ $g->id }}"
+                                    data-grup-nom="{{ $g->nom }}"
+                                    style="width:100%; margin-bottom:5px;">
+                                {{ $g->nom }}
+                            </button>
+                        @endforeach
+                    </div>
+
+                    <button class="btn btn-secondary" id="tancarModalGrups">Tancar</button>
                 </div>
-            @endif
+            </div>
 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+
+                    let modal = document.getElementById('modalGrups');
+                    let buscador = document.getElementById('buscadorGrups');
+                    let currentHiddenInput = null;
+                    let currentLabel = null;
+
+                    // Abrir modal
+                    document.querySelectorAll('.open-grup-modal').forEach(btn => {
+                        btn.addEventListener('click', function () {
+
+                            let dia = this.dataset.dia;
+                            let franja = this.dataset.franja;
+
+                            currentHiddenInput = document.querySelector(
+                                `input[name="grups[${dia}][${franja}]"]`
+                            );
+
+                            currentLabel = this.parentElement.querySelector('.grup-label');
+
+                            buscador.value = "";
+                            filtrarGrups("");
+
+                            modal.style.display = 'flex';
+                        });
+                    });
+
+                    // Filtrar grupos
+                    buscador.addEventListener('input', function () {
+                        filtrarGrups(this.value.toLowerCase());
+                    });
+
+                    function filtrarGrups(texto) {
+                        document.querySelectorAll('.grup-option').forEach(btn => {
+                            let nom = btn.dataset.grupNom.toLowerCase();
+                            btn.style.display = nom.includes(texto) ? 'block' : 'none';
+                        });
+                    }
+
+                    // Seleccionar grupo
+                    document.querySelectorAll('.grup-option').forEach(btn => {
+                        btn.addEventListener('click', function () {
+
+                            let id = this.dataset.grupId;
+                            let nom = this.dataset.grupNom;
+
+                            currentHiddenInput.value = id;
+                            currentLabel.innerHTML = `Grup: <strong>${nom}</strong>`;
+
+                            modal.style.display = 'none';
+                        });
+                    });
+
+                    // Cerrar modal
+                    document.getElementById('tancarModalGrups').onclick =
+                        () => modal.style.display = 'none';
+                });
+            </script>
+
+            {{-- TICKETS --}}
             <div class="panel-card">
                 <div class="section-header">
                     <h3 class="section-title">Tickets de l’aula</h3>
                 </div>
 
+                {{-- FORMULARIO TICKETS --}}
                 <form method="POST" action="{{ route('espai.aules.tickets.store', $aula) }}">
                     @csrf
 
@@ -175,9 +268,6 @@
                         <div class="field">
                             <label for="titol">Títol</label>
                             <input id="titol" class="input-control" name="titol" value="{{ old('titol') }}" required>
-                            @error('titol')
-                                <div class="error-text">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="field field-small">
@@ -189,18 +279,12 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('prioritat')
-                                <div class="error-text">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
                     <div class="field">
                         <label for="descripcio">Descripció</label>
                         <textarea id="descripcio" class="input-control textarea-control" name="descripcio" rows="4">{{ old('descripcio') }}</textarea>
-                        @error('descripcio')
-                            <div class="error-text">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="form-actions">
@@ -210,16 +294,9 @@
 
                 <hr class="section-divider">
 
-                @php
-                    if (!isset($tickets) || $tickets === null) {
-                        $tickets = collect();
-                    }
-                @endphp
-
+                {{-- LISTA DE TICKETS --}}
                 @if($tickets->isEmpty())
-                    <div class="empty-state">
-                        No hi ha tickets.
-                    </div>
+                    <div class="empty-state">No hi ha tickets.</div>
                 @else
                     <div class="table-wrap">
                         <table class="data-table">
@@ -234,15 +311,9 @@
                                     <th>Accions</th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 @foreach($tickets as $t)
-                                    @php
-                                        $creadorNom = '-';
-                                        if ($t->creador && isset($t->creador->nom) && $t->creador->nom !== '') {
-                                            $creadorNom = $t->creador->nom;
-                                        }
-                                    @endphp
-
                                     <tr>
                                         <td>{{ $t->id }}</td>
                                         <td>
@@ -253,8 +324,9 @@
                                         </td>
                                         <td>{{ $t->prioritat }}</td>
                                         <td>{{ $t->estat }}</td>
-                                        <td>{{ $creadorNom }}</td>
+                                        <td>{{ $t->creador->nom ?? '-' }}</td>
                                         <td>{{ $t->created_at->format('d/m/Y H:i') }}</td>
+
                                         <td class="actions-cell">
                                             <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $t]) }}" class="inline-form">
                                                 @csrf
@@ -277,10 +349,12 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
                     </div>
                 @endif
             </div>
+
         </div>
     </div>
 </x-app-layout>

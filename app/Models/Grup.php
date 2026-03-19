@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Grup extends Model
 {
     protected $fillable = ['espai_id', 'nom'];
+
     public function alumnes()
     {
         return $this->belongsToMany(Alumne::class, 'grup_alumne', 'grup_id', 'alumne_id');
@@ -15,5 +16,10 @@ class Grup extends Model
     public function espai()
     {
         return $this->belongsTo(Espai::class);
+    }
+
+    public function horaris()
+    {
+        return $this->hasMany(AulaHorari::class, 'grup_id');
     }
 }

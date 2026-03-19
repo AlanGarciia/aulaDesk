@@ -8,28 +8,15 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('aula_horaris', function (Blueprint $table) {
-
             $table->id();
 
-            $table->foreignId('espai_id')
-                ->constrained('espais')
-                ->cascadeOnDelete();
-
-            $table->foreignId('aula_id')
-                ->constrained('aules')
-                ->cascadeOnDelete();
-
-            $table->unsignedTinyInteger('dia_setmana');
+            $table->foreignId('espai_id')->constrained('espais')->cascadeOnDelete();
+            $table->foreignId('aula_id')->constrained('aules')->cascadeOnDelete();
+            $table->unsignedTinyInteger('dia_setmana'); // 1 = Dilluns ... 5 = Divendres
 
             $table->foreignId('franja_horaria_id')
                 ->constrained('franja_horaries')
                 ->cascadeOnDelete();
-
-            // 🔥 ESTA ES LA COLUMNA QUE TE FALTABA
-            $table->foreignId('professor_id')
-                ->nullable()
-                ->constrained('users')
-                ->nullOnDelete();
 
             $table->foreignId('grup_id')
                 ->nullable()
