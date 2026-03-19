@@ -83,32 +83,32 @@
         <ul class="feature-cards">
 
             <li class="card-item">
-                <h3>✨ Simplicitat real</h3>
+                <h3>Simplicitat real</h3>
                 <p>Tot està dissenyat perquè puguis fer més amb menys. Menys clics, menys caos, més agilitat.</p>
             </li>
 
             <li class="card-item">
-                <h3>⚡ Velocitat i fluïdesa</h3>
+                <h3>Velocitat i fluïdesa</h3>
                 <p>Res de pantalles lentes o processos eterns. Tot respon al moment.</p>
             </li>
 
             <li class="card-item">
-                <h3>🎯 Enfocat en el que importa</h3>
+                <h3>Enfocat en el que importa</h3>
                 <p>El centre funciona millor quan les eines no molesten. aulaDesk desapareix i tu treballes.</p>
             </li>
 
             <li class="card-item">
-                <h3>🔒 Confiança i seguretat</h3>
+                <h3>Confiança i seguretat</h3>
                 <p>Dades protegides, accés segur i tranquil·litat per a tot el personal.</p>
             </li>
             
             <li class="card-item">
-                <h3>🌱 Evolució constant</h3>
+                <h3>Evolució constant</h3>
                 <p>Actualitzacions freqüents, millores contínues i noves funcionalitats sense interrompre el teu dia a dia.</p>
             </li>
 
             <li class="card-item">
-                <h3>🤝 Pensat per a equips</h3>
+                <h3>Pensat per a equips</h3>
                 <p>Tot el centre treballa alineat: direcció, professorat i administració comparteixen un mateix espai fluid.</p>
             </li>
         </ul>
@@ -144,71 +144,46 @@
         SECCIÓN 4 — PLANS
     ============================= -->
     <section class="section pricing">
-        <h2>Plans per a cada centre</h2>
-        <p>Comença sense risc i evoluciona quan ho necessitis.</p>
+    <h2>Plans per a cada centre</h2>
+    <p>Comença sense risc i evoluciona quan ho necessitis.</p>
 
-        <div class="pricing-grid">
-            <div class="plan">
-                <h3>Gratuït</h3>
-                <p>Perfecte per començar</p>
-                <ul>
-                    <li>Sense compromís</li>
-                    <li>Ideal per centres petits</li>
-                    <li>Accés immediat</li>
-                </ul>
-                <a href="#" class="btn btn--primary">Començar</a>
-            </div>
+    <div class="pricing-grid">
 
-            <div class="plan featured">
-                <h3>Premium</h3>
-                <p>La millor experiència</p>
-                <ul>
-                    <li>Rendiment superior</li>
-                    <li>Funcions avançades</li>
-                    <li>Millor suport</li>
-                </ul>
-                <a href="#" class="btn btn--primary">Provar Premium</a>
-            </div>
+        <!-- PLAN GRATUIT -->
+        <div class="plan-card">
+            <h3 class="plan-title">Gratuït</h3>
+            <p class="plan-subtitle">Perfecte per començar</p>
 
-            <div class="plan">
-                <h3>Enterprise</h3>
-                <p>Per institucions grans</p>
-                <ul>
-                    <li>Solucions personalitzades</li>
-                    <li>Escalabilitat total</li>
-                    <li>Assessorament dedicat</li>
-                </ul>
-                <a href="#" class="btn btn--primary">Contactar</a>
-            </div>
+            <ul class="plan-features">
+                <li>Sense compromís</li>
+                <li>Ideal per centres petits</li>
+                <li>Accés immediat</li>
+            </ul>
+
+            <a href="#" class="plan-btn">Començar</a>
         </div>
-    </section>
 
-    <!-- ============================
-        SECCIÓN 5 — CONFIANÇA
-    ============================= -->
-    <section class="section faq">
-        <h2>Centres que confien en aulaDesk</h2>
+        <!-- PLAN PREMIUM DESTACADO -->
+        <div class="plan-card plan-featured">
+            <div class="badge">Més popular</div>
 
-        <details>
-            <summary>Escoles</summary>
-            <p>Organització simple i fluida per al dia a dia.</p>
-        </details>
+            <h3 class="plan-title">Premium</h3>
+            <p class="plan-subtitle">La millor experiència</p>
 
-        <details>
-            <summary>Instituts</summary>
-            <p>Millor coordinació entre equips i menys càrrega administrativa.</p>
-        </details>
+            <ul class="plan-features">
+                <li>Rendiment superior</li>
+                <li>Funcions avançades</li>
+                <li>Millor suport</li>
+            </ul>
 
-        <details>
-            <summary>Acadèmies</summary>
-            <p>Gestió clara i ràpida per a grups i horaris.</p>
-        </details>
+            <a href="#" class="plan-btn primary">Provar Premium</a>
+        </div>
 
-        <details>
-            <summary>Centres privats</summary>
-            <p>Una imatge moderna i professional per a tota la institució.</p>
-        </details>
-    </section>
+    </div>
+</section>
+
+
+    
 
     <!-- ============================
         FOOTER
@@ -234,10 +209,10 @@
             <div class="footer-col">
                 <h4>Empresa</h4>
                 <ul>
-                    <li><a href="#">Sobre nosaltres</a></li>
-                    <li><a href="#">Contacte</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Suport</a></li>
+                    <li><a href="sobreNosotros">Sobre nosaltres</a></li>
+                    <li><a href="contacte">Contacte</a></li>
+                    <li><a href="blog">Blog</a></li>
+                    <li><a href="suport">Suport</a></li>
                 </ul>
             </div>
 

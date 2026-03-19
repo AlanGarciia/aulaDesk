@@ -114,6 +114,9 @@
         <h2>Comença avui mateix</h2>
         <p>Prova aulaDesk gratuïtament i descobreix com pot ajudar al teu centre.</p>
         <a href="{{ route('register') }}" class="btn-primary">Crear compte</a>
+
+        <!-- BOTÓN DE INICIO -->
+        <a href="/" class="btn-secondary">Tornar a l'inici</a>
     </section>
 
 </body>

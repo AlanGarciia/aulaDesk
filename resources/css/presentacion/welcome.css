@@ -549,3 +549,100 @@ details p {
         transform: translateY(0);
     }
 }
+/* ============================
+   PRICING — NUEVO DISEÑO
+============================ */
+
+.pricing {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.pricing-grid {
+    max-width: 900px;
+    margin: 50px auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.plan-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    text-align: center;
+    transition: .25s ease;
+    position: relative;
+}
+
+.plan-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+}
+
+.plan-featured {
+    background: rgba(91, 124, 250, 0.12);
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(91, 124, 250, 0.25);
+}
+
+.badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--primary);
+    color: #0b1020;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.plan-title {
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.plan-subtitle {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+}
+
+.plan-features li {
+    margin: 10px 0;
+    color: var(--muted);
+}
+
+.plan-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.plan-btn:hover {
+    background: rgba(255,255,255,.08);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.plan-btn.primary {
+    background: var(--primary);
+    color: #0b1020;
+    border: none;
+}
+
+.plan-btn.primary:hover {
+    background: var(--primaryHover);
+}

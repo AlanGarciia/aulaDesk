@@ -28,33 +28,31 @@
                     Assigna permisos personalitzats i controla l’accés a cada espai.
                 </p>
             </div>
-            <div class="image">
-                <img src="{{ Vite::asset('resources/images/gestio.png') }}" alt="Dashboard aulaDesk">
-        </div>
 
+            <div class="image">
+                <img src="{{ Vite::asset('resources/images/gestio.png') }}" alt="Gestió d'usuaris aulaDesk">
             </div>
         </div>
     </section>
 
     <!-- Sección 2 -->
     <section class="feature-section alt">
-    <div class="feature">
+        <div class="feature">
 
-        <div class="image">
-            <img src="{{ Vite::asset('resources/images/dashboard.png') }}" alt="Dashboard aulaDesk">
+            <div class="image">
+                <img src="{{ Vite::asset('resources/images/dashboard.png') }}" alt="Dashboard aulaDesk">
+            </div>
+
+            <div class="text">
+                <h2>Administració d’espais i aules</h2>
+                <p>
+                    Organitza totes les aules, laboratoris, sales i espais del centre. 
+                    Controla disponibilitat, capacitat i assignacions.
+                </p>
+            </div>
+
         </div>
-
-        <div class="text">
-            <h2>Administració d’espais i aules</h2>
-            <p>
-                Organitza totes les aules, laboratoris, sales i espais del centre. 
-                Controla disponibilitat, capacitat i assignacions.
-            </p>
-        </div>
-
-    </div>
-</section>
-
+    </section>
 
     <!-- Sección 3 -->
     <section class="feature-section">
@@ -66,20 +64,21 @@
                     d’un sol cop d’ull.
                 </p>
             </div>
-            <div class="image">
-                <img src="{{ Vite::asset('resources/images/configuracio.png') }}" alt="Dashboard aulaDesk">
-        </div>
 
+            <div class="image">
+                <img src="{{ Vite::asset('resources/images/configuracio.png') }}" alt="Configuració aulaDesk">
             </div>
         </div>
     </section>
-
 
     <!-- CTA -->
     <section class="cta">
         <h2>Vols provar aulaDesk?</h2>
         <p>Comença gratuïtament i descobreix totes les funcionalitats.</p>
         <a href="{{ route('register') }}" class="btn-primary">Crear compte</a>
+
+        <!-- BOTÓN DE INICIO -->
+        <a href="/" class="btn-secondary">Tornar a l'inici</a>
     </section>
 
 </body>

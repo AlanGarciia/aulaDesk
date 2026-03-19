@@ -70,28 +70,7 @@
 
                 <a href="{{ route('register') }}" class="btn-primary">Provar Premium</a>
             </div>
-
-            <!-- ENTERPRISE -->
-            <div class="plan">
-                <h3>Enterprise</h3>
-                <p class="subtitle">Solucions a mida per a centres grans</p>
-
-                <div class="price">Contactar</div>
-
-                <ul class="features">
-                    <li><strong>Infraestructura dedicada</strong> amb servidors exclusius.</li>
-                    <li><strong>Funcions personalitzades</strong> segons les necessitats del centre.</li>
-                    <li><strong>Integració amb sistemes interns</strong> (ERP, CRMs, control d’accés...).</li>
-                    <li><strong>Formació i onboarding</strong> per a tot el personal.</li>
-                    <li><strong>Suport 24/7</strong> amb assistència directa.</li>
-                    <li><strong>Consultoria tècnica</strong> per optimitzar processos.</li>
-                </ul>
-
-                <a href="#" class="btn-primary">Contactar</a>
-            </div>
-
         </div>
-
     </section>
 
     <!-- COMPARATIVA -->
@@ -103,13 +82,11 @@
                 <span>Funcionalitat</span>
                 <span>Gratuït</span>
                 <span>Premium</span>
-                <span>Enterprise</span>
             </div>
 
             <div class="row">
                 <span>Usuaris il·limitats</span>
                 <span>—</span>
-                <span>✔</span>
                 <span>✔</span>
             </div>
 
@@ -117,13 +94,11 @@
                 <span>Gestió d’espais avançada</span>
                 <span>—</span>
                 <span>✔</span>
-                <span>✔</span>
             </div>
 
             <div class="row">
                 <span>Integracions externes</span>
                 <span>—</span>
-                <span>✔</span>
                 <span>✔</span>
             </div>
 
@@ -131,14 +106,12 @@
                 <span>Suport prioritari</span>
                 <span>—</span>
                 <span>✔</span>
-                <span>✔</span>
             </div>
 
             <div class="row">
                 <span>Funcions personalitzades</span>
                 <span>—</span>
                 <span>—</span>
-                <span>✔</span>
             </div>
         </div>
     </section>
@@ -148,6 +121,9 @@
         <h2>Comença avui mateix</h2>
         <p>Prova aulaDesk gratuïtament i descobreix totes les seves funcionalitats.</p>
         <a href="{{ route('register') }}" class="btn-primary">Crear compte</a>
+
+        <!-- BOTÓN DE INICIO -->
+        <a href="/" class="btn-secondary">Tornar a l'inici</a>
     </section>
 
 </body>
