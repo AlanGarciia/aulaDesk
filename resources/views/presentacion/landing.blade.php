@@ -176,7 +176,7 @@
                 <li>Millor suport</li>
             </ul>
 
-            <a href="#" class="plan-btn primary">Provar Premium</a>
+            {{-- <a href="#" class="plan-btn primary">Provar Premium</a> --}}
         </div>
 
     </div>
