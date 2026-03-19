@@ -104,35 +104,38 @@
         <h2>Encara tens dubtes?</h2>
         <p>Contacta amb nosaltres i t’ajudarem encantats.</p>
         <a href="{{ route('register') }}" class="btn-primary">Començar ara</a>
+
+        <!-- BOTÓN DE INICIO -->
+        <a href="/" class="btn-secondary">Tornar a l'inici</a>
     </section>
 
     <section class="contact-form">
-    <h2>Envia’ns la teva consulta</h2>
-    <p>Responem normalment en menys de 24 hores.</p>
+        <h2>Envia’ns la teva consulta</h2>
+        <p>Responem normalment en menys de 24 hores.</p>
 
-    <form id="fakeForm">
-        <div class="form-group">
-            <label for="name">Nom complet</label>
-            <input type="text" id="name" name="name" required>
-        </div>
+        <form id="fakeForm">
+            <div class="form-group">
+                <label for="name">Nom complet</label>
+                <input type="text" id="name" name="name" required>
+            </div>
 
-        <div class="form-group">
-            <label for="email">Correu electrònic</label>
-            <input type="email" id="email" name="email" required>
-        </div>
+            <div class="form-group">
+                <label for="email">Correu electrònic</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-        <div class="form-group">
-            <label for="message">Missatge</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-        </div>
+            <div class="form-group">
+                <label for="message">Missatge</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
 
-        <button type="submit" class="btn-primary">Enviar missatge</button>
+            <button type="submit" class="btn-primary">Enviar missatge</button>
 
-        <p id="fakeSuccess" class="success" style="display:none;">
-            Missatge enviat correctament! Ens posarem en contacte amb tu aviat.
-        </p>
-    </form>
-</section>
+            <p id="fakeSuccess" class="success" style="display:none;">
+                Missatge enviat correctament! Ens posarem en contacte amb tu aviat.
+            </p>
+        </form>
+    </section>
 
     <script>
         // Animación FAQ

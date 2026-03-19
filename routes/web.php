@@ -48,6 +48,22 @@ Route::get('/faq', function () {
     return view('presentacion.faq'); 
 })->name('faq');
 
+Route::get('/sobreNosotros', function () {
+    return view('presentacion.sobreNosotros'); 
+})->name('sobreNosotros');
+
+Route::get('/contacte', function () {
+    return view('presentacion.contacte'); 
+})->name('contacte');
+
+Route::get('/blog', function () {
+    return view('presentacion.blog'); 
+})->name('blog');
+
+Route::get('/suport', function () {
+    return view('presentacion.suport'); 
+})->name('suport');
+
 //Aixo s'eliminará
 Route::get('/espais/{espai}/acces', [EspaiController::class, 'accesForm'])->name('espais.acces.form');
 Route::post('/espais/{espai}/acces', [EspaiController::class, 'acces'])->name('espais.acces');

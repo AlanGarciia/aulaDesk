@@ -132,3 +132,21 @@ body{
     transform: scale(1.03);
     opacity: 1;
 }
+.btn-secondary{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.btn-secondary:hover{
+    background: rgba(255,255,255,.08);
+    border-color: var(--primary);
+    color: var(--primary);
+}
