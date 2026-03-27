@@ -20,8 +20,6 @@ class GuardiaSolicitud extends Model
         'tipus',
         'comentari',
         'estat',
-        // si luego añades vigencia:
-        // 'vigent_fins',
     ];
 
     protected $casts = [
@@ -32,7 +30,6 @@ class GuardiaSolicitud extends Model
         'aula_id' => 'integer',
         'dia_setmana' => 'integer',
         'franja_horaria_id' => 'integer',
-        // 'vigent_fins' => 'datetime',
     ];
 
     public function espai(): BelongsTo

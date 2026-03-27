@@ -43,11 +43,19 @@
 
                         <div class="user-actions">
 
+                            {{-- 🔵 NUEVO BOTÓN: VER ALUMNES DEL GRUP --}}
+                            <a class="btn btn-secondary"
+                               href="{{ route('espai.grups.veure', $grup) }}">
+                                Veure
+                            </a>
+
+                            {{-- BOTÓN GESTIONAR --}}
                             <a class="btn btn-secondary"
                                href="{{ route('espai.grups.edit', $grup) }}">
                                 Gestionar
                             </a>
 
+                            {{-- BOTÓN ELIMINAR --}}
                             <form class="inline-form"
                                   method="POST"
                                   action="{{ route('espai.grups.destroy', $grup) }}"
