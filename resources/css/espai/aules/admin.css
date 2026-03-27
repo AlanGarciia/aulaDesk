@@ -446,6 +446,10 @@
     backdrop-filter: blur(3px); /* efecto blur elegante */
 }
 
+.horari-cell.guardia {
+    background-color: #ffeb3b; /* amarillo */
+}
+
 /* Caja del modal */
 .modal-content {
     background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%);

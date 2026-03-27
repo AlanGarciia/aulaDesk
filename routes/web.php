@@ -15,6 +15,7 @@ use App\Http\Controllers\FranjaHorariaController;
 use App\Http\Controllers\GuardiaController;
 use App\Http\Controllers\EspaiShareController;
 use App\Http\Controllers\GrupController;
+use App\Http\Controllers\AulaHorarioController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -132,6 +133,10 @@ Route::middleware('espai.session')->group(function () {
 
     Route::post('/espai/aules/{aula}/admin', [AulaAdminController::class, 'update'])
         ->name('espai.aules.admin.update');
+        
+        // 🔥 NUEVO: guardar horario con grupos (separado)
+    Route::post('/espai/aules/{aula}/horari', [AulaHorarioController::class, 'update'])
+        ->name('espai.aules.horari.update');
 
     // franjas
     Route::resource('/espai/franges', FranjaHorariaController::class)

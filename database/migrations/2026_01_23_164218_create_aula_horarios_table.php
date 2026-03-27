@@ -16,7 +16,8 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table->foreignId('aula_id')
-                ->constrained('aules')
+            //si no va, cambiar a aules (By Alan)
+                ->constrained('aulas')
                 ->cascadeOnDelete();
 
             $table->unsignedTinyInteger('dia_setmana');
@@ -24,8 +25,6 @@ return new class extends Migration {
             $table->foreignId('franja_horaria_id')
                 ->constrained('franja_horaries')
                 ->cascadeOnDelete();
-
-            // 🔥 ESTA ES LA COLUMNA QUE TE FALTABA
             $table->foreignId('professor_id')
                 ->nullable()
                 ->constrained('users')

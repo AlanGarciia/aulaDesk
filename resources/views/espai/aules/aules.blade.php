@@ -62,7 +62,7 @@
 
                         <div class="aula-actions">
                             <a class="btn btn-secondary" href="{{ route('espai.aules.admin', $aula) }}">Administrar</a>
-                            <a class="btn btn-secondary" href="{{ route('espai.aules.edit', $aula) }}">Editar</a>
+                            <a class="btn btn-secondary" href="{{ route('espai.aules.edit', $aula) }}"><i class="bi bi-pencil-square"></i></a>
 
                             <form class="inline-form" method="POST" action="{{ route('espai.aules.destroy', $aula) }}">
                                 @csrf

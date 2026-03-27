@@ -1,11 +1,13 @@
+/* ===== Página y contenedor ===== */
 .page {
   min-height: 100vh;
   background:
-    radial-gradient(1200px 800px at 20% 10%, hsla(155, 90%, 45%, 0.20), transparent 55%),
-    radial-gradient(900px 700px at 80% 20%, hsla(170, 90%, 45%, 0.14), transparent 55%),
-    radial-gradient(900px 700px at 60% 90%, hsla(140, 90%, 40%, 0.10), transparent 55%),
-    linear-gradient(180deg, hsl(160, 22%, 8%), hsl(160, 24%, 6%));
-  color: hsl(0, 0%, 96%);
+    radial-gradient(1200px 800px at 20% 10%, hsla(155, 90%, 10%, 0.20), transparent 55%),
+    radial-gradient(900px 700px at 80% 20%, hsla(170, 90%, 10%, 0.14), transparent 55%),
+    radial-gradient(900px 700px at 60% 90%, hsla(140, 90%, 10%, 0.10), transparent 55%),
+    linear-gradient(180deg, hsl(160, 22%, 12%), hsl(160, 24%, 6%));
+  color: #eee;
+  font-family: "Inter", sans-serif;
 }
 
 .container {
@@ -14,13 +16,14 @@
   padding: 3rem 1.25rem 4rem;
 }
 
+/* ===== Card de guardias ===== */
 .guardies-card {
   margin-top: 1rem;
   padding: 1.25rem;
   border-radius: 1.25rem;
-  background: linear-gradient(135deg, hsla(0,0%,100%,0.08), hsla(0,0%,100%,0.03));
-  border: 1px solid hsla(0,0%,100%,0.10);
-  box-shadow: 0 24px 70px hsla(0,0%,0%,0.42);
+  background: linear-gradient(135deg, hsla(0,0%,100%,0.03), hsla(0,0%,100%,0.01));
+  border: 1px solid hsla(0,0%,100%,0.08);
+  box-shadow: 0 24px 70px hsla(0,0%,0%,0.5);
   backdrop-filter: blur(16px);
 }
 
@@ -37,19 +40,26 @@
   margin:0;
   font-size:1.2rem;
   font-weight:700;
+  color: #fff;
 }
 
 .guardies-sub{
   margin:.25rem 0 0;
   font-size:.9rem;
-  color:hsla(0,0%,100%,0.65);
+  color:#ccc;
 }
 
+/* ===== Tabla de horario ===== */
 .timetable{
   width:100%;
   border-collapse:separate;
   border-spacing:0;
   min-width:850px;
+}
+
+.timetable th, .timetable td {
+  height: 80px; /* altura uniforme */
+  vertical-align: middle;
 }
 
 .timetable thead th{
@@ -58,68 +68,130 @@
   font-size:.82rem;
   letter-spacing:.6px;
   text-transform:uppercase;
-  color:hsla(0,0%,100%,0.76);
-  background:hsla(0,0%,100%,0.05);
-  border-bottom:1px solid hsla(0,0%,100%,0.10);
+  color:#ddd;
+  background:#111;
+  border-bottom:1px solid #333;
 }
 
 .timetable tbody td{
   padding:.95rem .9rem;
-  border-bottom:1px solid hsla(0,0%,100%,0.08);
-  background:hsla(0,0%,100%,0.02);
+  border-bottom:1px solid #222;
+  vertical-align: top;
+  background: #1b1b1b;
+  position: relative;
+  transition: background 0.2s ease;
+  color: #eee;
 }
 
 .timecell{
   white-space:nowrap;
   font-weight:600;
+  color:#fff;
 }
 
+/* ===== Slots ===== */
 .slot{
   display:flex;
   flex-direction:column;
+  justify-content: space-between;
+  height: 100%;
   gap:6px;
 }
 
 .slot-row{
   display:flex;
-  justify-content:space-between;
+  flex-direction:column;
   align-items:center;
+  gap:4px;
 }
 
+.slot-empty {
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #aaa;
+  background-color: #2a2a2a;
+}
+
+/* Aula asignada */
+.slot-aula {
+  background-color: #1565c0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Botón solicitar guardia */
 .btn-guardia{
+  width: 100%;
+  font-size: 0.78rem;
   padding:.45rem .7rem;
   border-radius:.8rem;
-  font-size:.78rem;
   font-weight:700;
   text-decoration:none;
-  color:hsla(0,0%,100%,0.92);
-  background:hsla(0,0%,100%,0.06);
-  border:1px solid hsla(0,0%,100%,0.12);
+  color:#fff;
+  background: #333;
+  border:1px solid #555;
+  text-align:center;
 }
 
+.btn-guardia:hover {
+  background: #444;
+}
+
+/* Badges de guardia */
 .badge-guardia{
-  display:inline-flex;
-  padding:.25rem .6rem;
-  border-radius:999px;
-  font-size:.78rem;
-  font-weight:800;
-}
-
-.badge-guardia--pendent{
-  background:hsla(35,90%,55%,0.18);
+  display:block;
+  width:100%;
+  text-align:center;
+  padding:4px 0;
+  border-radius:8px;
+  font-weight:700;
+  font-size:0.82rem;
+  margin-top:4px;
+  color: #4b3b00;
+  background-color: #fdd835;
 }
 
 .badge-guardia--acceptada{
-  background:hsla(155,70%,45%,0.18);
+  background-color: #fdd835;
+  color: #4b3b00;
+}
+
+.badge-guardia--pendent{
+  background-color: #fdd835;
+  color: #4b3b00;
 }
 
 .badge-guardia--cobridor{
-  background:hsla(210,90%,55%,0.16);
+  background-color: #0d47a1;
+  color: #fff;
 }
 
+/* Leyenda */
 .legend{
   display:flex;
   gap:.6rem;
   flex-wrap:wrap;
   padding:1rem 1.4rem;
+}
+
+.legend .dot {
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  margin-right:4px;
+  background-color:#888;
 }
