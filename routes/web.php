@@ -196,6 +196,8 @@ Route::middleware('espai.session')->group(function () {
         Route::get('/espai/grups/{grup}/edit', [GrupController::class, 'edit'])->name('espai.grups.edit');
         Route::put('/espai/grups/{grup}', [GrupController::class, 'update'])->name('espai.grups.update');
         Route::delete('/espai/grups/{grup}', [GrupController::class, 'destroy'])->name('espai.grups.destroy');
+        Route::get('/grups/{grup}/veure', [GrupController::class, 'veure'])->name('espai.grups.veure');
+
 
 });
 

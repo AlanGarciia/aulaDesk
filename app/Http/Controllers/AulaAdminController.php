@@ -126,7 +126,6 @@ class AulaAdminController extends Controller
             }
         }
 
-        // Guardies acceptades
         $substituts = [];
         if ($franges->isNotEmpty()) {
             $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
@@ -213,7 +212,6 @@ class AulaAdminController extends Controller
         $dies = [1, 2, 3, 4, 5];
         $diesLabels = [1=>'Dilluns',2=>'Dimarts',3=>'Dimecres',4=>'Dijous',5=>'Divendres'];
 
-        // Conflictes
         $conflicts = [];
         foreach ($dies as $dia) {
             foreach ($franjaIds as $franjaId) {

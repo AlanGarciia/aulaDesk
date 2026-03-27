@@ -20,7 +20,7 @@
                     </div>
 
                     <p>Format esperat:</p>
-                    <pre>nom,cognoms,correu,idalu,telefon</pre>
+                    <pre>nom,cognoms,correu,idalu,telefon i grup</pre>
 
                     <div class="actions">
                         <button type="submit" class="btn btn-primary">Importar</button>

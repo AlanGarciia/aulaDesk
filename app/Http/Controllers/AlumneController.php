@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumne;
 use App\Models\Espai;
+use App\Models\Grup;
 use Illuminate\Http\Request;
 
 class AlumneController extends Controller
@@ -95,10 +96,6 @@ class AlumneController extends Controller
             ->with('ok', 'Alumne eliminat correctament.');
     }
 
-    /* ---------------------------------------------------------
-     *  EDITAR ALUMNE
-     * --------------------------------------------------------- */
-
     public function edit(Request $request, Alumne $alumne)
     {
         $espai = $this->getEspai($request);
@@ -129,7 +126,6 @@ class AlumneController extends Controller
             'telefon' => ['nullable', 'string', 'max:20'],
         ]);
 
-        // Evitar duplicados de IDALU en el mismo espai
         if ($espai->alumnes()
             ->where('idalu', $data['idalu'])
             ->where('id', '!=', $alumne->id)
@@ -148,7 +144,7 @@ class AlumneController extends Controller
     }
 
     /* ---------------------------------------------------------
-     *  IMPORTAR CSV (ROBUSTO)
+     *  IMPORT CSV
      * --------------------------------------------------------- */
 
     public function importForm(Request $request)
@@ -168,7 +164,6 @@ class AlumneController extends Controller
         $file = fopen($request->file('csv')->getRealPath(), 'r');
 
         $header = fgetcsv($file);
-
         $normalized = array_map(fn($h) => strtolower(trim($h)), $header);
 
         $map = [
@@ -177,6 +172,7 @@ class AlumneController extends Controller
             'correu'   => ['correu', 'correo', 'email', 'mail'],
             'idalu'    => ['idalu', 'id', 'identificador', 'student id'],
             'telefon'  => ['telefon', 'telefono', 'tel', 'phone'],
+            'grup'     => ['grup', 'grupo', 'group', 'class'],
         ];
 
         $index = [];
@@ -193,13 +189,23 @@ class AlumneController extends Controller
 
         while ($row = fgetcsv($file)) {
 
-            $espai->alumnes()->create([
+            $alumne = $espai->alumnes()->create([
                 'nom'      => $row[$index['nom']]      ?? '',
                 'cognoms'  => $row[$index['cognoms']]  ?? '',
                 'correu'   => $row[$index['correu']]   ?? null,
                 'idalu'    => $row[$index['idalu']]    ?? null,
                 'telefon'  => $row[$index['telefon']]  ?? null,
             ]);
+
+            $grupNom = $row[$index['grup']] ?? null;
+
+            if ($grupNom) {
+                $grupNom = trim($grupNom);
+
+                $grup = $espai->grups()->firstOrCreate(['nom' => $grupNom]);
+
+                $alumne->grups()->attach($grup->id);
+            }
         }
 
         fclose($file);
@@ -209,20 +215,14 @@ class AlumneController extends Controller
     }
 
     /* ---------------------------------------------------------
-     *  EXPORTAR CSV
+     *  EXPORT CSV
      * --------------------------------------------------------- */
 
     public function export(Request $request)
     {
         $espai = $this->getEspai($request);
 
-        $alumnes = $espai->alumnes()->get([
-            'nom',
-            'cognoms',
-            'correu',
-            'idalu',
-            'telefon'
-        ]);
+        $alumnes = $espai->alumnes()->with('grups')->get();
 
         $filename = 'alumnes_espai_' . $espai->id . '.csv';
 
@@ -234,15 +234,18 @@ class AlumneController extends Controller
         $callback = function () use ($alumnes) {
             $output = fopen('php://output', 'w');
 
-            fputcsv($output, ['nom', 'cognoms', 'correu', 'idalu', 'telefon']);
+            fputcsv($output, ['nom', 'cognoms', 'correu', 'idalu', 'telefon', 'grups']);
 
             foreach ($alumnes as $alumne) {
+                $grups = $alumne->grups->pluck('nom')->join(', ');
+
                 fputcsv($output, [
                     $alumne->nom,
                     $alumne->cognoms,
                     $alumne->correu,
                     $alumne->idalu,
                     $alumne->telefon,
+                    $grups,
                 ]);
             }
 

@@ -95,9 +95,9 @@
                             $esMeva = ((int) $sol->solicitant_usuari_espai_id === $meuUsuariEspaiId);
                         }
 
-                        $cobridorId = null;
+                        $cobridor = null;
                         if ($sol && isset($sol->cobridor_usuari_espai_id) && $sol->cobridor_usuari_espai_id) {
-                            $cobridorId = (int) $sol->cobridor_usuari_espai_id;
+                            $cobridor = $sol->cobridor; // ← RELACIÓN
                         }
                     @endphp
 
@@ -120,9 +120,13 @@
                                             <span class="pill" style="background: rgba(16,185,129,.12); color:#065f46; border:1px solid rgba(16,185,129,.30);">
                                                 Acceptada
                                             </span>
-                                            @if($cobridorId)
+
+                                            @if($cobridor)
                                                 <span class="dot">•</span>
-                                                <span>Cobridor: <strong>{{ $cobridorId }}</strong></span>
+                                                <span>
+                                                    Cobridor:
+                                                    <strong>{{ $cobridor->nom }}</strong>
+                                                </span>
                                             @endif
                                         @else
                                             <span class="pill" style="background: rgba(239,68,68,.10); color:#7f1d1d; border:1px solid rgba(239,68,68,.25);">
@@ -133,6 +137,7 @@
 
                                     <span class="dot">•</span>
                                     <span>{{ $n->created_at->format('d/m/Y') }}</span>
+
                                     <span class="dot">•</span>
                                     <span>
                                         Reaccions:
@@ -143,7 +148,7 @@
                                         <span class="dot">•</span>
                                         <span>
                                             Autor:
-                                            <strong>{{ $n->usuari_espai_id }}</strong>
+                                            <strong>{{ $n->autor->nom ?? 'Autor desconegut' }}</strong>
                                         </span>
                                     @endif
                                 </div>
@@ -174,7 +179,7 @@
                                 {{-- Pendent meva --}}
                                 @if($isGuardia && $sol && $solPendent && $esMeva)
                                     <span class="pill" style="background: rgba(59,130,246,.10); color:#1e3a8a; border:1px solid rgba(59,130,246,.25);">
-                                        Pendent (teua)
+                                        Pendent (teva)
                                     </span>
                                 @endif
 

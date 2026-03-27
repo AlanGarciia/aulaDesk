@@ -43,7 +43,6 @@ class AulaTicketController extends Controller
         $espaiId = session('espai_id');
         if (!$espaiId) abort(403, 'No hi ha cap espai actiu a la sessió.');
 
-        //seguridad: aula y ticket deben ser del espai actual y coincidir
         if ((int)$aula->espai_id !== (int)$espaiId) abort(403);
         if ((int)$ticket->espai_id !== (int)$espaiId) abort(403);
         if ((int)$ticket->aula_id !== (int)$aula->id) abort(404);

@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('grup_alumne', function (Blueprint $table) {
             $table->id();
@@ -18,15 +18,15 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('grup_id')->references('id')->on('grups')->onDelete('cascade');
             $table->foreign('alumne_id')->references('id')->on('alumnes')->onDelete('cascade');
+            $table->unique(['grup_id', 'alumne_id']);
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('grup_usuari');
+        Schema::dropIfExists('grup_alumne');
     }
 };

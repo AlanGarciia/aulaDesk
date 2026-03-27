@@ -17,10 +17,25 @@
 
                 <h2 class="inside-title">Gestionar grup: {{ $grup->nom }}</h2>
 
+                {{-- FORMULARIO GET SOLO PARA BUSCAR --}}
+                <form method="GET" action="{{ route('espai.grups.edit', $grup) }}" style="margin-bottom: 12px;">
+                    <div class="field">
+                        <label class="label">Buscar alumne</label>
+                        <input type="text"
+                               id="search"
+                               name="search"
+                               value="{{ request('search') }}"
+                               class="input"
+                               placeholder="Buscar alumne...">
+                    </div>
+                </form>
+
+                {{-- FORMULARIO PRINCIPAL POST --}}
                 <form method="POST" action="{{ route('espai.grups.update', $grup) }}">
                     @csrf
                     @method('PUT')
 
+                    {{-- NOMBRE DEL GRUPO --}}
                     <div class="field">
                         <label for="nom" class="label">Nom del grup</label>
                         <input id="nom" name="nom" type="text"
@@ -28,10 +43,9 @@
                                class="input" required>
                     </div>
 
+                    {{-- GRID DE ALUMNES --}}
                     <div class="field">
                         <label class="label">Alumnes del grup</label>
-
-                        <input type="text" id="search" class="input" placeholder="Buscar alumne...">
 
                         <div id="alumnes-grid" class="alumnes-grid">
                             @foreach ($alumnes as $alumne)
@@ -58,6 +72,9 @@
                             @endforeach
                         </div>
 
+                        <div class="pagination">
+                            {{ $alumnes->links('vendor.pagination.three') }}
+                        </div>
                     </div>
 
                     <div class="actions">
@@ -70,20 +87,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const searchInput = document.getElementById('search');
-        const grid = document.getElementById('alumnes-grid');
-
-        searchInput.addEventListener('input', function () {
-            const term = this.value.toLowerCase();
-            const cards = grid.querySelectorAll('.alumne-card');
-
-            cards.forEach(card => {
-                const name = card.querySelector('.alumne-name').textContent.toLowerCase();
-                card.style.display = name.includes(term) ? '' : 'none';
-            });
-        });
-    </script>
 
 </x-app-layout>

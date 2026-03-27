@@ -60,9 +60,26 @@ class GrupController extends Controller
             abort(404);
         }
 
-        $alumnes = $espai->alumnes()->orderBy('nom')->get();
+        // 🔵 BÚSQUEDA
+        $query = $espai->alumnes()->orderBy('nom');
 
-        return view('espai.grups.edit', compact('espai', 'grup', 'alumnes'));
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('cognoms', 'like', "%{$search}%")
+                  ->orWhere('idalu', 'like', "%{$search}%");
+            });
+        }
+
+        $alumnes = $query->paginate(3)->withQueryString();
+
+        return view('espai.grups.edit', [
+            'espai' => $espai,
+            'grup' => $grup,
+            'alumnes' => $alumnes,
+        ]);
     }
 
     public function update(Request $request, Grup $grup)
@@ -79,7 +96,6 @@ class GrupController extends Controller
         ]);
 
         $grup->update(['nom' => $data['nom']]);
-
         $grup->alumnes()->sync($data['alumnes'] ?? []);
 
         return redirect()->route('espai.grups.index')
@@ -99,4 +115,18 @@ class GrupController extends Controller
         return redirect()->route('espai.grups.index')
             ->with('status', 'Grup eliminat correctament.');
     }
+
+    public function veure(Request $request, Grup $grup)
+    {
+        $espai = $this->getEspai($request);
+
+        if ($grup->espai_id !== $espai->id) {
+            abort(404);
+        }
+
+        $alumnes = $grup->alumnes()->orderBy('nom')->paginate(10);
+
+        return view('espai.grups.veure', compact('espai', 'grup', 'alumnes'));
+    }
+
 }
