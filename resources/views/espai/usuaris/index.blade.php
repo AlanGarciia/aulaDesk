@@ -64,7 +64,7 @@
 
                         <div class="user-actions">
                             <a class="btn btn-secondary" href="{{ route('espai.usuaris.edit', $usuari) }}">
-                                Editar
+                                <i class="bi bi-pencil-square"></i>
                             </a>
 
                             <form class="inline-form"

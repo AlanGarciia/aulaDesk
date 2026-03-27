@@ -37,7 +37,7 @@
                                 <td>{{ substr($f->inici,0,5) }}</td>
                                 <td>{{ substr($f->fi,0,5) }}</td>
                                 <td>
-                                    <a class="btn" href="{{ route('espai.franges.edit', $f) }}">Editar</a>
+                                    <a class="btn" href="{{ route('espai.franges.edit', $f) }}"><i class="bi bi-pencil-square"></i></a>
 
                                     <form method="POST" action="{{ route('espai.franges.destroy', $f) }}" style="display:inline;">
                                         @csrf

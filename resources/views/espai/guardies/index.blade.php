@@ -23,12 +23,11 @@
                             } elseif (session()->has('usuari_espai_nom')) {
                                 $nomUsuari = (string) session('usuari_espai_nom');
                             }
-
                             $salutacio = $nomUsuari !== '' ? 'Hola ' . $nomUsuari . '!' : 'Hola!';
                         @endphp
 
                         <h3 class="guardies-title">
-                            {{ $salutacio }} aquest es el teu horari de la setmana:
+                            {{ $salutacio }} aquest és el teu horari de la setmana:
                         </h3>
 
                         <p class="guardies-sub">
@@ -58,10 +57,7 @@
                                 <tr>
                                     <th style="width: 1%;">Hora</th>
                                     @foreach($dies as $dia)
-                                        @php
-                                            $label = $diesLabels[$dia] ?? 'Dia ' . $dia;
-                                        @endphp
-                                        <th>{{ $label }}</th>
+                                        <th>{{ $diesLabels[$dia] ?? 'Dia ' . $dia }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -76,7 +72,6 @@
                                                 $cell = $slots[$dia][$franja->id] ?? null;
                                                 $sol = $solSlots[$dia][$franja->id] ?? null;
 
-                                                $solEstat = $sol['estat'] ?? '';
                                                 $solEsMeva = $sol['es_meva'] ?? false;
                                                 $solSocCobridor = $sol['soc_cobridor'] ?? false;
 
@@ -103,13 +98,15 @@
                                                         </div>
 
                                                         @if($solEsMeva)
-                                                            <span class="badge-guardia badge-guardia--{{ $solEstat === 'acceptada' ? 'acceptada' : 'pendent' }}">
-                                                                Guàrdia {{ $solEstat }}
+                                                            <span class="badge-guardia badge-guardia--{{ $sol['estat'] ?? 'pendent' }}">
+                                                                Guàrdia {{ $sol['estat'] ?? 'pendent' }}
                                                             </span>
                                                         @endif
 
                                                         @if($solSocCobridor)
-                                                            <span class="badge-guardia badge-guardia--cobridor">Cobreixes tu</span>
+                                                            <span class="badge-guardia badge-guardia--cobridor">
+                                                                Cobreixes tu
+                                                            </span>
                                                         @endif
 
                                                         @if(!empty($cell['meta']))
@@ -123,13 +120,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-
-                    <div class="legend">
-                        <span class="badge-soft"><span class="dot"></span> Cela buida = sense aula assignada</span>
-                        <span class="badge-soft"><i class="bi bi-door-open"></i> Aula assignada en aquella franja</span>
-                        <span class="badge-soft">🟠 Guàrdia pendent</span>
-                        <span class="badge-soft">🔵 Cobreixes tu</span>
                     </div>
                 @endif
             </div>
