@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class AulaTicketController extends Controller
 {
+
+    public function index(Aula $aula)
+    {
+        $tickets = $aula->tickets()->where('estat', 'obert')->get();
+        return view('espai.tickets.index', compact('aula', 'tickets'));
+    }
     public function store(Request $request, Aula $aula)
     {
 

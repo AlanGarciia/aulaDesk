@@ -199,6 +199,11 @@ Route::middleware('espai.session')->group(function () {
         Route::get('/grups/{grup}/veure', [GrupController::class, 'veure'])->name('espai.grups.veure');
 
 
+      Route::get('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'index'])->name('espai.aules.tickets.index');
+
+      // Mostrar todos los tickets abiertos (sin aula específica)
+Route::get('/espai/tickets', [AulaTicketController::class, 'allOpen'])
+    ->name('espai.tickets.index');
 });
 
 require __DIR__ . '/auth.php';
