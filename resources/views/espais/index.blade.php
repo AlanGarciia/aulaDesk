@@ -4,39 +4,49 @@
         @vite('resources/css/espais/espaisIndex.css')
     @endpush
 
-    <nav class="breeze-nav" style="padding:12px 0;">
-        <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span style="font-weight:700;">aulaDesk</span>
+    {{-- ============================
+         NUEVO HEADER MODERNO
+       ============================ --}}
+    <nav class="nav-modern">
+        <div class="nav-inner">
+
+            {{-- LOGO --}}
+            <div class="nav-left">
+                <div class="nav-logo">aulaDesk</div>
             </div>
 
-        <div class="breeze-user-wrapper">
-            <button type="button" class="btn btn-secondary breeze-user-btn" id="userMenuBtn">
-                <i class="bi bi-person-circle"></i>
-                {{ auth()->user()->name }}
-                <i class="bi bi-caret-down-fill caret-icon"></i>
-            </button>
+            {{-- USER MENU --}}
+            <div class="nav-right">
+                <button class="nav-user-btn" id="userMenuBtn">
+                    <i class="bi bi-person-circle"></i>
+                    <span>{{ auth()->user()->name }}</span>
+                    <i class="bi bi-chevron-down nav-caret"></i>
+                </button>
 
-            <div id="userMenu" class="breeze-dropdown">
-                <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                    <i class="bi bi-gear"></i>
-                    <span>Perfil</span>
-                </a>
+                <div id="userMenu" class="nav-dropdown">
+                    <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                        <i class="bi bi-gear"></i>
+                        Perfil
+                    </a>
 
-                <div class="dropdown-divider"></div>
+                    <div class="dropdown-divider"></div>
 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="dropdown-item logout-item">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span>Surt</span>
-                    </button>
-                </form>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item logout-item">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Surt
+                        </button>
+                    </form>
+                </div>
             </div>
+
         </div>
-    </div>
-</nav>
+    </nav>
 
+    {{-- ============================
+         CONTENIDO PRINCIPAL
+       ============================ --}}
     <div class="page">
         <div class="container">
 
@@ -134,6 +144,9 @@
         </div>
     </div>
 
+    {{-- ============================
+         MODALES
+       ============================ --}}
     <div id="confirmModal" class="modal" aria-hidden="true">
         <div class="modal-content modal-delete" role="dialog" aria-modal="true" aria-labelledby="confirmText">
             <p id="confirmText"></p>
@@ -176,12 +189,16 @@
         </div>
     </div>
 
+    {{-- ============================
+         SCRIPTS
+       ============================ --}}
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --------------------
-            // Tilt effect
-            // --------------------
+
+            /* --------------------
+               Tilt effect
+            -------------------- */
             const cards = document.querySelectorAll('[data-tilt]');
             cards.forEach((card) => {
                 const inner = card.querySelector('.tilt-card__inner');
@@ -231,9 +248,9 @@
                 card.addEventListener('blur', onLeave);
             });
 
-            // --------------------
-            // Click tarjeta => entrar (excepto botones de acciones)
-            // --------------------
+            /* --------------------
+               Click tarjeta => entrar
+            -------------------- */
             document.querySelectorAll('.js-enter-card').forEach((card) => {
                 const url = card.dataset.enterUrl;
 
@@ -250,9 +267,9 @@
                 });
             });
 
-            // --------------------
-            // SHARE modal
-            // --------------------
+            /* --------------------
+               SHARE modal
+            -------------------- */
             const shareBtns = document.querySelectorAll('.share-btn');
             const shareModal = document.getElementById('shareModal');
             const shareTitle = document.getElementById('shareTitle');
@@ -274,9 +291,9 @@
                 shareModal.style.display = 'none';
             });
 
-            // --------------------
-            // DELETE confirm modal
-            // --------------------
+            /* --------------------
+               DELETE confirm modal
+            -------------------- */
             const deleteBtns = document.querySelectorAll('.delete-btn');
             const modal = document.getElementById('confirmModal');
             const confirmText = document.getElementById('confirmText');
@@ -300,7 +317,9 @@
                 modal.style.display = 'none';
             });
 
-            // SUCCESS modal (si hay status)
+            /* --------------------
+               SUCCESS modal
+            -------------------- */
             const successModal = document.getElementById('successModal');
             const successText = document.getElementById('successText');
             const successCloseBtn = document.getElementById('successCloseBtn');
@@ -314,38 +333,34 @@
                 successModal.style.display = 'none';
             });
 
-            // Close modals clicking outside
+            /* --------------------
+               Close modals clicking outside
+            -------------------- */
             window.addEventListener('click', (e) => {
                 if (e.target === modal) modal.style.display = 'none';
                 if (e.target === successModal) successModal.style.display = 'none';
                 if (e.target === shareModal) shareModal.style.display = 'none';
             });
 
-            // --------------------
-            // MENU BREEZE
-            // --------------------
+            /* --------------------
+               MENU MODERNO
+            -------------------- */
             const userMenuBtn = document.getElementById('userMenuBtn');
             const userMenu = document.getElementById('userMenu');
-
-            function toggleUserMenu(forceOpen = null) {
-                if (!userMenu) return;
-                if (forceOpen === true) return userMenu.style.display = 'block';
-                if (forceOpen === false) return userMenu.style.display = 'none';
-                userMenu.style.display = (userMenu.style.display === 'block') ? 'none' : 'block';
-            }
 
             if (userMenuBtn) {
                 userMenuBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    toggleUserMenu();
+                    userMenu.style.display = userMenu.style.display === 'flex' ? 'none' : 'flex';
                 });
             }
 
             window.addEventListener('click', (e) => {
-                if (userMenu && !userMenu.contains(e.target) && e.target !== userMenuBtn) {
+                if (!userMenu.contains(e.target) && e.target !== userMenuBtn) {
                     userMenu.style.display = 'none';
                 }
             });
+
         });
     </script>
     @endpush

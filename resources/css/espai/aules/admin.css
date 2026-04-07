@@ -425,6 +425,7 @@
     font-size: 0.9rem;
     background-color: red !important;
   }
+
   option{
     font-size: 0.9rem;
     background-color: red !important;
@@ -432,7 +433,7 @@
   }
 
   /* Fondo oscuro del modal */
-.modal {
+  .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -444,14 +445,14 @@
     align-items: center;
     z-index: 9999;
     backdrop-filter: blur(3px); /* efecto blur elegante */
-}
+  }
 
-.horari-cell.guardia {
+  .horari-cell.guardia {
     background-color: #ffeb3b; /* amarillo */
-}
+  }
 
-/* Caja del modal */
-.modal-content {
+  /* Caja del modal */
+  .modal-content {
     background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%);
     padding: 22px;
     border-radius: 10px;
@@ -460,21 +461,84 @@
     box-shadow: 0 8px 30px rgba(0,0,0,0.35);
     border: 1px solid #d0d0d0;
     animation: modalFadeIn 0.18s ease-out;
-}
+  }
 
-/* Animación suave */
-@keyframes modalFadeIn {
+  /* Animación suave */
+  @keyframes modalFadeIn {
     from {
-        opacity: 0;
-        transform: scale(0.92);
+      opacity: 0;
+      transform: scale(0.92);
     }
     to {
-        opacity: 1;
-        transform: scale(1);
+      opacity: 1;
+      transform: scale(1);
     }
+  }
 }
 
+/* =========================
+   TICKETS UI
+========================= */
 
+.ticket-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
 
+.ticket-table tr:hover {
+  background: hsla(0, 0%, 100%, 0.05);
+}
 
+.ticket-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-alta {
+  background: hsla(0, 80%, 60%, 0.2);
+  color: #ff6b6b;
+}
+
+.badge-mitja {
+  background: hsla(45, 90%, 55%, 0.2);
+  color: #ffd166;
+}
+
+.badge-baixa {
+  background: hsla(140, 60%, 45%, 0.2);
+  color: #80ed99;
+}
+
+.badge-obert {
+  background: hsla(220, 80%, 60%, 0.2);
+  color: #8ecae6;
+}
+
+.badge-proces {
+  background: hsla(190, 80%, 50%, 0.2);
+  color: #48cae4;
+}
+
+.badge-tancat {
+  background: hsla(140, 60%, 45%, 0.2);
+  color: #52b788;
+}
+
+.select-small {
+  min-width: 120px;
+}
+
+.btn-small {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
 }
