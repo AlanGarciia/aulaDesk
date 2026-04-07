@@ -111,7 +111,7 @@ Route::middleware('espai.session')->group(function () {
     Route::put('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'update'])->name('espai.usuaris.update');
     Route::delete('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'destroy'])->name('espai.usuaris.destroy');
 
-    // noticies (incluye index con filtro ?tipus=guardia dentro del controller)
+    // noticies
     Route::resource('/espai/noticies', NoticiaController::class)
         ->parameters(['noticies' => 'noticia'])
         ->names('espai.noticies');
@@ -133,8 +133,8 @@ Route::middleware('espai.session')->group(function () {
 
     Route::post('/espai/aules/{aula}/admin', [AulaAdminController::class, 'update'])
         ->name('espai.aules.admin.update');
-        
-        // 🔥 NUEVO: guardar horario con grupos (separado)
+
+    // 🔥 guardar horario con grupos
     Route::post('/espai/aules/{aula}/horari', [AulaHorarioController::class, 'update'])
         ->name('espai.aules.horari.update');
 
@@ -163,47 +163,46 @@ Route::middleware('espai.session')->group(function () {
     Route::post('/espai/guardies/solicitar', [GuardiaController::class, 'guardarSolicitud'])
         ->name('espai.guardia.solicitaGuardia.post');
 
-    // Acceptar guardia (desde noticia)
+    // Acceptar guardia
     Route::post('/espai/guardies/{solicitud}/acceptar', [GuardiaController::class, 'acceptar'])
         ->name('espai.guardies.acceptar');
 
-       // alumnes
-        Route::get('/espai/alumnes', [AlumneController::class, 'index'])->name('espai.alumnes.index');
-        Route::get('/espai/alumnes/create', [AlumneController::class, 'create'])->name('espai.alumnes.create');
-        Route::post('/espai/alumnes', [AlumneController::class, 'store'])->name('espai.alumnes.store');
-        Route::delete('/espai/alumnes/{alumne}', [AlumneController::class, 'destroy'])->name('espai.alumnes.destroy');
-        Route::get('/espai/alumnes/{alumne}/edit', [AlumneController::class, 'edit'])
-        ->name('espai.alumnes.edit');
+    // alumnes
+    Route::get('/espai/alumnes', [AlumneController::class, 'index'])->name('espai.alumnes.index');
+    Route::get('/espai/alumnes/create', [AlumneController::class, 'create'])->name('espai.alumnes.create');
+    Route::post('/espai/alumnes', [AlumneController::class, 'store'])->name('espai.alumnes.store');
+    Route::delete('/espai/alumnes/{alumne}', [AlumneController::class, 'destroy'])->name('espai.alumnes.destroy');
+    Route::get('/espai/alumnes/{alumne}/edit', [AlumneController::class, 'edit'])->name('espai.alumnes.edit');
+    Route::put('/espai/alumnes/{alumne}', [AlumneController::class, 'update'])->name('espai.alumnes.update');
 
-        Route::put('/espai/alumnes/{alumne}', [AlumneController::class, 'update'])
-            ->name('espai.alumnes.update');
+    // ⭐ NUEVA RUTA INFO
+    Route::get('/espai/alumnes/{alumne}/info', [AlumneController::class, 'info'])
+        ->name('espai.alumnes.info');
 
-
-        //alumnes importar y exportar:
-        Route::get('/espai/alumnes/import', [AlumneController::class, 'importForm'])
+    // alumnes importar y exportar
+    Route::get('/espai/alumnes/import', [AlumneController::class, 'importForm'])
         ->name('espai.alumnes.import.form');
 
-        Route::post('/espai/alumnes/import', [AlumneController::class, 'import'])
+    Route::post('/espai/alumnes/import', [AlumneController::class, 'import'])
         ->name('espai.alumnes.import');
-        Route::get('/espai/alumnes/export', [AlumneController::class, 'export'])
+
+    Route::get('/espai/alumnes/export', [AlumneController::class, 'export'])
         ->name('espai.alumnes.export');
 
+    // grups
+    Route::get('/espai/grups', [GrupController::class, 'index'])->name('espai.grups.index');
+    Route::get('/espai/grups/create', [GrupController::class, 'create'])->name('espai.grups.create');
+    Route::post('/espai/grups', [GrupController::class, 'store'])->name('espai.grups.store');
+    Route::get('/espai/grups/{grup}/edit', [GrupController::class, 'edit'])->name('espai.grups.edit');
+    Route::put('/espai/grups/{grup}', [GrupController::class, 'update'])->name('espai.grups.update');
+    Route::delete('/espai/grups/{grup}', [GrupController::class, 'destroy'])->name('espai.grups.destroy');
+    Route::get('/grups/{grup}/veure', [GrupController::class, 'veure'])->name('espai.grups.veure');
 
-        //grups
-        Route::get('/espai/grups', [GrupController::class, 'index'])->name('espai.grups.index');
-        Route::get('/espai/grups/create', [GrupController::class, 'create'])->name('espai.grups.create');
-        Route::post('/espai/grups', [GrupController::class, 'store'])->name('espai.grups.store');
-        Route::get('/espai/grups/{grup}/edit', [GrupController::class, 'edit'])->name('espai.grups.edit');
-        Route::put('/espai/grups/{grup}', [GrupController::class, 'update'])->name('espai.grups.update');
-        Route::delete('/espai/grups/{grup}', [GrupController::class, 'destroy'])->name('espai.grups.destroy');
-        Route::get('/grups/{grup}/veure', [GrupController::class, 'veure'])->name('espai.grups.veure');
+    Route::get('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'index'])->name('espai.aules.tickets.index');
 
-
-      Route::get('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'index'])->name('espai.aules.tickets.index');
-
-      // Mostrar todos los tickets abiertos (sin aula específica)
-Route::get('/espai/tickets', [AulaTicketController::class, 'allOpen'])
-    ->name('espai.tickets.index');
+    // Mostrar todos los tickets abiertos
+    Route::get('/espai/tickets', [AulaTicketController::class, 'allOpen'])
+        ->name('espai.tickets.index');
 });
 
 require __DIR__ . '/auth.php';

@@ -254,4 +254,10 @@ class AlumneController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function info(Alumne $alumne)
+    {
+        return view('espai.alumnes.info', compact('alumne'));
+    }
+
 }
