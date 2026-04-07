@@ -96,6 +96,10 @@
                             <a href="{{ route('espai.alumnes.edit', $alumne) }}" class="btn btn-secondary">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
+                            <a href="{{ route('espai.alumnes.info', $alumne) }}" class="btn btn-secondary">
+                                <i class="bi bi-info-circle"></i>
+                            </a>
+
                             <form class="inline-form"
                                   method="POST"
                                   action="{{ route('espai.alumnes.destroy', $alumne) }}"

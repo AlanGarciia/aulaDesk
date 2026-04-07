@@ -1,0 +1,170 @@
+/* === PAGE BACKGROUND === */
+.page{
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 15% 10%, rgba(255,255,255,.14), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(255,255,255,.10), transparent 55%),
+    radial-gradient(1000px 700px at 50% 90%, rgba(255,255,255,.08), transparent 55%),
+    linear-gradient(135deg, #0b1020 0%, #0a1633 40%, #07101f 100%);
+}
+
+/* === LAYOUT CONTAINERS === */
+.page-title-container,
+.actions,
+.container{
+  width: min(900px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.page-title-container{
+  margin-top: 1.25rem;
+  margin-bottom: .85rem;
+}
+
+/* === TITLE === */
+.page-title{
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 0;
+  padding: .9rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255,255,255,.92);
+  font-size: 1.55rem;
+  font-weight: 750;
+  letter-spacing: .2px;
+  text-shadow: 0 1px 18px rgba(0,0,0,.35);
+  box-shadow: 0 16px 50px rgba(0,0,0,.30);
+}
+
+/* === ACTION BUTTONS === */
+.actions{
+  margin-bottom: 1.4rem;
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.container{
+  padding-top: 1.25rem;
+  padding-bottom: 2.25rem;
+}
+
+/* === MAIN CARD === */
+.user-info-card{
+  padding: 1.8rem 2rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 22px 70px rgba(0,0,0,.40);
+  display: grid;
+  gap: 1.2rem;
+}
+
+/* === INFO ROWS === */
+.info-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .9rem 1rem;
+  border-radius: 16px;
+  background: rgba(10, 16, 32, 0.28);
+  border: 1px solid rgba(255,255,255,.10);
+  transition: background .18s ease, border-color .18s ease;
+}
+
+.info-row:hover{
+  background: rgba(10, 16, 32, 0.38);
+  border-color: rgba(255,255,255,.18);
+}
+
+.info-label{
+  color: rgba(255,255,255,.75);
+  font-size: .95rem;
+  font-weight: 600;
+}
+
+.info-value{
+  color: rgba(255,255,255,.92);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+}
+
+/* === BUTTONS === */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  border-radius: 14px;
+  padding: .85rem 1rem;
+  font-weight: 650;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .12s ease, filter .18s ease;
+  white-space: nowrap;
+}
+
+.btn:active{
+  transform: translateY(1px);
+}
+
+.btn-primary{
+  color: #07101f;
+  background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,255,255,.75));
+  border-color: rgba(255,255,255,.22);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.btn-primary:hover{
+  filter: brightness(1.03);
+}
+
+.btn-secondary{
+  color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.18);
+}
+
+.btn-secondary:hover{
+  filter: brightness(1.06);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px){
+  .info-row{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .35rem;
+  }
+
+  .info-value{
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions .btn{
+    width: 100%;
+  }
+}
