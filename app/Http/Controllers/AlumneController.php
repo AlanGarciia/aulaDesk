@@ -95,7 +95,61 @@ class AlumneController extends Controller
             ->with('ok', 'Alumne eliminat correctament.');
     }
 
-    
+    /* ---------------------------------------------------------
+     *  EDITAR ALUMNE
+     * --------------------------------------------------------- */
+
+    public function edit(Request $request, Alumne $alumne)
+    {
+        $espai = $this->getEspai($request);
+
+        if ((int) $alumne->espai_id !== (int) $espai->id) {
+            abort(404);
+        }
+
+        return view('espai.alumnes.edit', [
+            'espai' => $espai,
+            'alumne' => $alumne,
+        ]);
+    }
+
+    public function update(Request $request, Alumne $alumne)
+    {
+        $espai = $this->getEspai($request);
+
+        if ((int) $alumne->espai_id !== (int) $espai->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'cognoms' => ['nullable', 'string', 'max:255'],
+            'correu' => ['nullable', 'email', 'max:255'],
+            'idalu' => ['required', 'string', 'size:11'],
+            'telefon' => ['nullable', 'string', 'max:20'],
+        ]);
+
+        // Evitar duplicados de IDALU en el mismo espai
+        if ($espai->alumnes()
+            ->where('idalu', $data['idalu'])
+            ->where('id', '!=', $alumne->id)
+            ->exists()) 
+        {
+            return back()
+                ->withErrors(['idalu' => 'Aquest IDALU ja existeix dins d’aquest espai.'])
+                ->withInput();
+        }
+
+        $alumne->update($data);
+
+        return redirect()
+            ->route('espai.alumnes.index')
+            ->with('ok', 'Alumne actualitzat correctament.');
+    }
+
+    /* ---------------------------------------------------------
+     *  IMPORTAR CSV (ROBUSTO)
+     * --------------------------------------------------------- */
 
     public function importForm(Request $request)
     {
@@ -153,6 +207,10 @@ class AlumneController extends Controller
         return redirect()->route('espai.alumnes.index')
             ->with('ok', 'Alumnes importats correctament.');
     }
+
+    /* ---------------------------------------------------------
+     *  EXPORTAR CSV
+     * --------------------------------------------------------- */
 
     public function export(Request $request)
     {

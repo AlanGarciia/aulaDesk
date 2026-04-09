@@ -22,14 +22,16 @@
             </header>
 
             <nav class="icon-btns" aria-label="Opcions de l'espai">
-                <a href="{{ route('espai.usuaris.create') }}" class="icon-btn" aria-label="Afegir usuaris">
+
+                {{-- 🔵 Botó GRUPS (substitueix Afegir usuaris) --}}
+                <a href="{{ route('espai.grups.index') }}" class="icon-btn" aria-label="Grups">
                     <span class="icon-btn__back bg-blue" aria-hidden="true"></span>
                     <span class="icon-btn__front" aria-hidden="true">
                         <span class="icon-btn__icon" aria-hidden="true">
-                            <i class="bi bi-person-plus" aria-hidden="true"></i>
+                            <i class="bi bi-people-fill" aria-hidden="true"></i>
                         </span>
                     </span>
-                    <span class="icon-btn__label">Afegir usuaris</span>
+                    <span class="icon-btn__label">Grups</span>
                 </a>
 
                 <a href="{{ route('espai.usuaris.index') }}" class="icon-btn" aria-label="Veure usuaris">
