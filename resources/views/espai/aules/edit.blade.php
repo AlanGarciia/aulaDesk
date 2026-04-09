@@ -36,14 +36,6 @@
                         @error('planta') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="field">
-                        <label>
-                            <input type="checkbox" name="activa" value="1" {{ old('activa', $aula->activa) ? 'checked' : '' }}>
-                            Activa
-                        </label>
-                        @error('activa') <div class="error">{{ $message }}</div> @enderror
-                    </div>
-
                     <div style="display:flex; gap:10px;">
                         <button class="btn" type="submit">Guardar</button>
                         <a class="btn secondary" href="{{ route('espai.aules.index') }}">Cancelar</a>

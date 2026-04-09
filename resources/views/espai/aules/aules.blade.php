@@ -58,17 +58,21 @@
                         <div class="aula-meta">Codi: {{ $aula->codi }}</div>
                         <div class="aula-meta">Capacitat: {{ $aula->capacitat }}</div>
                         <div class="aula-meta">Planta: {{ $aula->planta }}</div>
-                        <div class="aula-activa">Activa: {{ $aula->activa ? 'Sí' : 'No' }}</div>
 
                         <div class="aula-actions">
-                            <a class="btn btn-secondary" href="{{ route('espai.aules.admin', $aula) }}">Administrar</a>
-                            <a class="btn btn-secondary" href="{{ route('espai.aules.edit', $aula) }}"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-secondary" href="{{ route('espai.aules.admin', $aula) }}">
+                                Administrar
+                            </a>
+
+                            <a class="btn btn-secondary btn-icon" href="{{ route('espai.aules.edit', $aula) }}">
+                                <i class="bi bi-pencil"></i>
+                            </a>
 
                             <form class="inline-form" method="POST" action="{{ route('espai.aules.destroy', $aula) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger" type="submit" onclick="return confirm('Eliminar aquesta aula?')">
-                                    Eliminar
+                                <button class="btn btn-danger btn-icon" type="submit">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                         </div>

@@ -4,62 +4,51 @@
         @vite('resources/css/espais/espaisIndex.css')
     @endpush
 
-    {{-- ============================
-         NUEVO HEADER MODERNO
-       ============================ --}}
-    <nav class="nav-modern">
-        <div class="nav-inner">
-
-            {{-- LOGO --}}
-            <div class="nav-left">
-                <div class="nav-logo">aulaDesk</div>
-            </div>
-
-            {{-- USER MENU --}}
-            <div class="nav-right">
-                <button class="nav-user-btn" id="userMenuBtn">
-                    <i class="bi bi-person-circle"></i>
-                    <span>{{ auth()->user()->name }}</span>
-                    <i class="bi bi-chevron-down nav-caret"></i>
-                </button>
-
-                <div id="userMenu" class="nav-dropdown">
-                    <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                        <i class="bi bi-gear"></i>
-                        Perfil
-                    </a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="dropdown-item logout-item">
-                            <i class="bi bi-box-arrow-right"></i>
-                            Surt
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </nav>
-
-    {{-- ============================
-         CONTENIDO PRINCIPAL
-       ============================ --}}
     <div class="page">
         <div class="container">
 
+            {{-- ============================
+                 HEADER INTEGRADO
+               ============================ --}}
             <div class="page-header">
                 <h2 class="page-title">Els meus espais</h2>
+
+                <div class="user-inline-menu">
+                    <button class="nav-user-btn" id="userMenuBtn">
+                        <i class="bi bi-person-circle"></i>
+                        <span>{{ auth()->user()->name }}</span>
+                        <i class="bi bi-chevron-down nav-caret"></i>
+                    </button>
+
+                    <div id="userMenu" class="nav-dropdown">
+                        <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                            <i class="bi bi-gear"></i> Perfil
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item logout-item">
+                                <i class="bi bi-box-arrow-right"></i> Surt
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
 
+            {{-- ============================
+                 BOTÓN CREAR ESPAI
+               ============================ --}}
             <div class="actions">
                 <button class="btn btn-primary" onclick="window.location='{{ route('espais.create') }}'">
                     <i class="bi bi-plus"></i> Crear espai
                 </button>
             </div>
 
+            {{-- ============================
+                 GRID DE ESPAIS
+               ============================ --}}
             <div class="tilt-grid">
                 @forelse ($espais as $espai)
                     <div
@@ -188,181 +177,44 @@
             </form>
         </div>
     </div>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-    {{-- ============================
-         SCRIPTS
-       ============================ --}}
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    /* ============================
+       ENTRAR AL ESPAI AL CLICAR LA CARD
+    ============================ */
+    document.querySelectorAll('.js-enter-card').forEach(card => {
+        card.addEventListener('click', (e) => {
 
-            /* --------------------
-               Tilt effect
-            -------------------- */
-            const cards = document.querySelectorAll('[data-tilt]');
-            cards.forEach((card) => {
-                const inner = card.querySelector('.tilt-card__inner');
-                const tooltip = card.querySelector('.tilt-card__tooltip');
+            // Si clicas un botón dentro de la card, NO entrar
+            if (e.target.closest('.js-no-enter')) return;
 
-                const amplitude = Number(card.dataset.tiltAmplitude || 12);
-                const scaleOnHover = Number(card.dataset.tiltScale || 1.05);
-
-                function onMove(e) {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-
-                    const ox = x - rect.width / 2;
-                    const oy = y - rect.height / 2;
-
-                    const rx = (oy / (rect.height / 2)) * -amplitude;
-                    const ry = (ox / (rect.width / 2)) * amplitude;
-
-                    inner.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(${scaleOnHover})`;
-
-                    if (tooltip) {
-                        tooltip.style.transform = `translate3d(${x + 10}px, ${y + 10}px, 0)`;
-                    }
-                }
-
-                function onEnter() {
-                    if (tooltip) tooltip.style.opacity = '1';
-                }
-
-                function onLeave() {
-                    inner.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
-                    if (tooltip) tooltip.style.opacity = '0';
-                }
-
-                card.addEventListener('mousemove', onMove);
-                card.addEventListener('mouseenter', onEnter);
-                card.addEventListener('mouseleave', onLeave);
-
-                card.addEventListener('focus', () => {
-                    inner.style.transform = `rotateX(0deg) rotateY(0deg) scale(${scaleOnHover})`;
-                    if (tooltip) {
-                        tooltip.style.opacity = '1';
-                        tooltip.style.transform = `translate3d(12px, 12px, 0)`;
-                    }
-                });
-                card.addEventListener('blur', onLeave);
-            });
-
-            /* --------------------
-               Click tarjeta => entrar
-            -------------------- */
-            document.querySelectorAll('.js-enter-card').forEach((card) => {
-                const url = card.dataset.enterUrl;
-
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('.js-no-enter') || e.target.closest('[data-no-enter]')) return;
-                    if (url) window.location = url;
-                });
-
-                card.addEventListener('keydown', (e) => {
-                    if (e.target.closest('.js-no-enter') || e.target.closest('[data-no-enter]')) return;
-                    if (e.key !== 'Enter' && e.key !== ' ') return;
-                    e.preventDefault();
-                    if (url) window.location = url;
-                });
-            });
-
-            /* --------------------
-               SHARE modal
-            -------------------- */
-            const shareBtns = document.querySelectorAll('.share-btn');
-            const shareModal = document.getElementById('shareModal');
-            const shareTitle = document.getElementById('shareTitle');
-            const shareForm = document.getElementById('shareForm');
-            const shareEmail = document.getElementById('shareEmail');
-            const shareCancelBtn = document.getElementById('shareCancelBtn');
-
-            shareBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    shareTitle.textContent = `Compartir l'espai "${btn.dataset.espaiName}"`;
-                    shareForm.action = btn.dataset.action;
-                    shareEmail.value = '';
-                    shareModal.style.display = 'flex';
-                    shareEmail.focus();
-                });
-            });
-
-            shareCancelBtn?.addEventListener('click', () => {
-                shareModal.style.display = 'none';
-            });
-
-            /* --------------------
-               DELETE confirm modal
-            -------------------- */
-            const deleteBtns = document.querySelectorAll('.delete-btn');
-            const modal = document.getElementById('confirmModal');
-            const confirmText = document.getElementById('confirmText');
-            const confirmBtn = document.getElementById('confirmBtn');
-            const cancelBtn = document.getElementById('cancelBtn');
-            let formToSubmit = null;
-
-            deleteBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    formToSubmit = document.getElementById(btn.dataset.formId);
-                    confirmText.textContent = `Segur que vols eliminar l'espai "${btn.dataset.espaiName}"?`;
-                    modal.style.display = 'flex';
-                });
-            });
-
-            confirmBtn?.addEventListener('click', () => {
-                if (formToSubmit) formToSubmit.submit();
-            });
-
-            cancelBtn?.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
-
-            /* --------------------
-               SUCCESS modal
-            -------------------- */
-            const successModal = document.getElementById('successModal');
-            const successText = document.getElementById('successText');
-            const successCloseBtn = document.getElementById('successCloseBtn');
-
-            @if(session('status'))
-                successText.textContent = "{{ session('status') }}";
-                successModal.style.display = 'flex';
-            @endif
-
-            successCloseBtn?.addEventListener('click', () => {
-                successModal.style.display = 'none';
-            });
-
-            /* --------------------
-               Close modals clicking outside
-            -------------------- */
-            window.addEventListener('click', (e) => {
-                if (e.target === modal) modal.style.display = 'none';
-                if (e.target === successModal) successModal.style.display = 'none';
-                if (e.target === shareModal) shareModal.style.display = 'none';
-            });
-
-            /* --------------------
-               MENU MODERNO
-            -------------------- */
-            const userMenuBtn = document.getElementById('userMenuBtn');
-            const userMenu = document.getElementById('userMenu');
-
-            if (userMenuBtn) {
-                userMenuBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    userMenu.style.display = userMenu.style.display === 'flex' ? 'none' : 'flex';
-                });
-            }
-
-            window.addEventListener('click', (e) => {
-                if (!userMenu.contains(e.target) && e.target !== userMenuBtn) {
-                    userMenu.style.display = 'none';
-                }
-            });
-
+            const url = card.dataset.enterUrl;
+            if (url) window.location.href = url;
         });
-    </script>
-    @endpush
+    });
+
+    /* ============================
+       MENU USUARIO
+    ============================ */
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuBtn && userMenu) {
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('is-open');
+        });
+
+        window.addEventListener('click', () => {
+            userMenu.classList.remove('is-open');
+        });
+    }
+
+});
+</script>
+@endpush
+
 
 </x-app-layout>

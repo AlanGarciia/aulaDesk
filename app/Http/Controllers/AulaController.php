@@ -72,12 +72,10 @@ class AulaController extends Controller
                 'codi' => ['nullable', 'string', 'max:50'],
                 'capacitat' => ['nullable', 'integer', 'min:0'],
                 'planta' => ['nullable', 'string', 'max:50'],
-                'activa' => ['sometimes', 'boolean'],
             ]
         );
 
         $data['espai_id'] = $espaiId;
-        $data['activa'] = $request->boolean('activa');
 
         Aula::create($data);
 
@@ -106,12 +104,8 @@ class AulaController extends Controller
                 'codi' => ['nullable', 'string', 'max:50'],
                 'capacitat' => ['nullable', 'integer', 'min:0'],
                 'planta' => ['nullable', 'string', 'max:50'],
-                'activa' => ['sometimes', 'boolean'],
             ]
         );
-
-        $data['activa'] = $request->boolean('activa');
-
         $aula->update($data);
 
         return redirect()->route('espai.aules.index')->with('ok', 'Aula actualizada.');

@@ -1,2 +1,1 @@
-Hacer lo de tickets en la parte de Aulas
 Ahora si que si, hemos arreglado muchos fallos y solo quedaria el tema roles, y permisos.

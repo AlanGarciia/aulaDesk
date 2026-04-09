@@ -160,6 +160,15 @@
             .horari-cell.guardia {
                 background-color: #ffeb3b;
             }
+            .grup-label {
+    display: inline-block;
+    padding: 4px 10px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #555;
+    background: #f3f4f6;
+    border-radius: 999px;
+}
         </style>
 
         <div id="modalGrups" class="modal">
