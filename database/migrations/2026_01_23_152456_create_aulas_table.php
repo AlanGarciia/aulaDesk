@@ -16,8 +16,6 @@ return new class extends Migration {
             $table->string('codi')->nullable();
             $table->unsignedInteger('capacitat')->nullable();
             $table->string('planta')->nullable();
-            $table->boolean('activa')->default(true);
-
             $table->timestamps();
 
             // Evitar duplicados dentro del mismo espai

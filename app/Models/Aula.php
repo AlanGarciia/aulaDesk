@@ -15,7 +15,6 @@ class Aula extends Model
         'codi',
         'capacitat',
         'planta',
-        'activa',
     ];
 
     protected $casts = [

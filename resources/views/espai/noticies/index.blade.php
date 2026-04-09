@@ -1,6 +1,6 @@
 <x-app-layout>
     <a href="{{ route('espai.index') }}"class="btn btn-secondary btn-top-right">
-        Tornar
+        Tornar a l'espai
     </a>
     @vite(['resources/css/espai/noticies/noticiesIndex.css'])
 
@@ -12,9 +12,6 @@
 
             <div class="page-header__actions page-header__actions--with-exit">
                 <div class="page-header__actions-left">
-                    <a class="btn btn-primary" href="{{ route('espai.noticies.create') }}">
-                        + Nova notícia
-                    </a>
                 </div>
             </div>
         </div>
@@ -298,4 +295,9 @@
     });
     </script>
     @endpush
+    @if($noticies->count() > 0)
+    <a href="{{ route('espai.noticies.create') }}" class="btn-create-fixed">
+        + Nova notícia
+    </a>
+@endif
 </x-app-layout>

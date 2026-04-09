@@ -281,3 +281,22 @@ html, body{
     right: 20px;
     z-index: 2000;
 }
+.btn-create-fixed {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    background: #000;
+    color: #fff;
+    padding: 12px 18px;
+    border: 2px solid #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    cursor: pointer;
+}
+.btn-create-fixed:hover {
+    background: #222;
+}
