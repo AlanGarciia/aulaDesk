@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseRole;
 use App\Models\Espai;
 use App\Models\UsuariEspai;
 use Illuminate\Http\Request;
@@ -58,6 +59,7 @@ class UsuariEspaiController extends Controller
 
         return view('espai.usuaris.create', [
             'espai' => $espai,
+            'baseRoles' => BaseRole::where('espai_id', $espai->id)->get(),
         ]);
     }
 
@@ -74,19 +76,11 @@ class UsuariEspaiController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'rol' => ['required', Rule::in(UsuariEspai::ROLS)],
-                'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
-            ],
-            [],
-            [
-                'nom' => 'nom',
-                'rol' => 'rol',
-                'contrasenya' => 'contrasenya',
-            ]
-        );
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'rol' => ['required', Rule::in(BaseRole::where('espai_id', $espaiId)->pluck('nom')->toArray())],
+            'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
+        ]);
 
         if ($espai->usuaris()->where('nom', $data['nom'])->exists()) {
             return back()
@@ -125,6 +119,7 @@ class UsuariEspaiController extends Controller
         return view('espai.usuaris.edit', [
             'espai' => $espai,
             'usuariEspai' => $usuariEspai,
+            'baseRoles' => BaseRole::where('espai_id', $espai->id)->get(),
         ]);
     }
 
@@ -145,19 +140,11 @@ class UsuariEspaiController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'rol' => ['required', Rule::in(UsuariEspai::ROLS)],
-                'contrasenya' => ['nullable', 'string', 'min:6', 'max:255'],
-            ],
-            [],
-            [
-                'nom' => 'nom',
-                'rol' => 'rol',
-                'contrasenya' => 'contrasenya',
-            ]
-        );
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'rol' => ['required', Rule::in(BaseRole::where('espai_id', $espaiId)->pluck('nom')->toArray())],
+            'contrasenya' => ['nullable', 'string', 'min:6', 'max:255'],
+        ]);
 
         $exists = $espai->usuaris()
             ->where('nom', $data['nom'])
@@ -170,9 +157,10 @@ class UsuariEspaiController extends Controller
                 ->withInput();
         }
 
-        $isAdmin = ($usuariEspai->nom === 'admin' || $usuariEspai->rol === UsuariEspai::ROL_ADMIN);
+        // Admin protegido
+        $isAdmin = ($usuariEspai->nom === 'admin' || $usuariEspai->rol === 'admin');
         if ($isAdmin) {
-            $data['rol'] = UsuariEspai::ROL_ADMIN;
+            $data['rol'] = 'admin';
         }
 
         $usuariEspai->nom = $data['nom'];
@@ -211,5 +199,41 @@ class UsuariEspaiController extends Controller
         return redirect()
             ->route('espai.usuaris.index')
             ->with('status', 'Usuari eliminat correctament.');
+    }
+
+    /* ---------------------------------------------------------
+     *  ROLES DINÁMICOS AVANZADOS
+     * --------------------------------------------------------- */
+
+    public function assignRolesForm(Request $request, UsuariEspai $usuariEspai)
+    {
+        $espaiId = $request->session()->get('espai_id');
+
+        if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
+            abort(404);
+        }
+
+        $espai = Espai::findOrFail($espaiId);
+
+        return view('espai.usuaris.assignRoles', [
+            'usuari' => $usuariEspai,
+            'roles' => BaseRole::where('espai_id', $espaiId)->get(),
+        ]);
+    }
+
+
+    public function assignRoles(Request $request, UsuariEspai $usuariEspai)
+    {
+        $espaiId = $request->session()->get('espai_id');
+
+        if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
+            abort(404);
+        }
+
+        $usuariEspai->roles()->sync($request->roles ?? []);
+
+        return redirect()
+            ->route('espai.usuaris.index')
+            ->with('status', 'Rols actualitzats correctament.');
     }
 }

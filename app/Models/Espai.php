@@ -33,4 +33,8 @@ class Espai extends Model
         return $this->hasMany(Grup::class);
     }
 
+    public function roles()
+    {
+        return $this->hasMany(\App\Models\BaseRole::class, 'espai_id', 'id');
+    }
 }

@@ -20,16 +20,17 @@
                     <div class="field">
                         <label>Rol</label>
                         <select name="rol" required
-                            @disabled($usuariEspai->nom === 'admin' || $usuariEspai->rol === \App\Models\UsuariEspai::ROL_ADMIN)>
-                            @foreach (\App\Models\UsuariEspai::ROLS as $rol)
+                            @disabled($usuariEspai->nom === 'admin' || $usuariEspai->rol === 'admin')>
+                            @foreach (\App\Models\BaseRole::pluck('nom') as $rol)
                                 <option value="{{ $rol }}" @selected(old('rol', $usuariEspai->rol) === $rol)>
-                                    {{ $rol }}
+                                    {{ ucfirst($rol) }}
                                 </option>
                             @endforeach
                         </select>
+
                         @error('rol') <div class="error">{{ $message }}</div> @enderror
 
-                        @if ($usuariEspai->nom === 'admin' || $usuariEspai->rol === \App\Models\UsuariEspai::ROL_ADMIN)
+                        @if ($usuariEspai->nom === 'admin' || $usuariEspai->rol === 'admin')
                             <div class="help">L'usuari admin no pot canviar de rol.</div>
                         @endif
                     </div>
@@ -48,4 +49,5 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>

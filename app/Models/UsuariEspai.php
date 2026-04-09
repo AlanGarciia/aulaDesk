@@ -2,22 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UsuariEspai extends Model
 {
+    use HasFactory;
+
     protected $table = 'usuari_espais';
-
-    public const ROL_ADMIN = 'admin';
-    public const ROL_PROFESSOR = 'professor';
-    public const ROL_INFORMATIC = 'informatic';
-
-    public const ROLS = [
-        self::ROL_ADMIN,
-        self::ROL_PROFESSOR,
-        self::ROL_INFORMATIC,
-    ];
 
     protected $fillable = [
         'espai_id',
@@ -30,14 +22,53 @@ class UsuariEspai extends Model
         'contrasenya',
     ];
 
-    public function espai(): BelongsTo
+    public function espai()
     {
         return $this->belongsTo(Espai::class);
     }
 
-    public function grups()
+    /**
+     * RELACIÓN CORRECTA: roles dinámicos del usuario dentro del espai
+     * (belongsToMany con BaseRole, no Role)
+     */
+    public function roles()
     {
-        return $this->belongsToMany(Grup::class, 'grup_usuari', 'usuari_espai_id', 'grup_id');
+        return $this->belongsToMany(BaseRole::class, 'role_usuari_espai');
     }
 
+    /**
+     * DEVOLVER SOLO LOS ROLES DEL ESPAI ACTUAL
+     */
+    public static function baseRoles($espaiId = null)
+    {
+        if (!$espaiId) {
+            return [];
+        }
+
+        return BaseRole::where('espai_id', $espaiId)
+            ->pluck('nom')
+            ->toArray();
+    }
+
+    /**
+     * Comprobar si el usuario tiene un permiso dinámico
+     */
+    public function hasPermission(string $permission): bool
+    {
+        return $this->roles()
+            ->whereHas('permissions', function ($q) use ($permission) {
+                $q->where('nom', $permission);
+            })
+            ->exists();
+    }
+
+    /**
+     * Mutador de contraseña
+     */
+    public function setContrasenyaAttribute($value)
+    {
+        if (!empty($value)) {
+            $this->attributes['contrasenya'] = bcrypt($value);
+        }
+    }
 }

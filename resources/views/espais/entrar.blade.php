@@ -15,7 +15,6 @@
         <div class="container">
             <div class="card card-foreground">
 
-                {{-- Título tipo post-it dentro de la tarjeta --}}
                 <h2 class="page-title">Entrar a l'espai</h2>
 
                 <p class="subtitle">Introdueix el teu usuari d'espai per continuar.</p>

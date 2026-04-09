@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AlumneController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\EspaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsuariEspaiController;
@@ -16,6 +15,7 @@ use App\Http\Controllers\GuardiaController;
 use App\Http\Controllers\EspaiShareController;
 use App\Http\Controllers\GrupController;
 use App\Http\Controllers\AulaHorarioController;
+use App\Http\Controllers\BaseRoleController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -29,45 +29,14 @@ Route::get('/dashboard', function () {
     return redirect()->route('espais.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/funcionalitats', function () {
-    return view('presentacion.funcionalitats'); 
-})->name('funcionalitats');
-
-Route::get('/plans', function () {
-    return view('presentacion.plans'); 
-})->name('plans');
-
-Route::get('/plans', function () {
-    return view('presentacion.plans'); 
-})->name('plans');
-
-Route::get('/comFunciona', function () {
-    return view('presentacion.comFunciona'); 
-})->name('comFunciona');
-
-Route::get('/faq', function () {
-    return view('presentacion.faq'); 
-})->name('faq');
-
-Route::get('/sobreNosotros', function () {
-    return view('presentacion.sobreNosotros'); 
-})->name('sobreNosotros');
-
-Route::get('/contacte', function () {
-    return view('presentacion.contacte'); 
-})->name('contacte');
-
-Route::get('/blog', function () {
-    return view('presentacion.blog'); 
-})->name('blog');
-
-Route::get('/suport', function () {
-    return view('presentacion.suport'); 
-})->name('suport');
-
-//Aixo s'eliminará
-Route::get('/espais/{espai}/acces', [EspaiController::class, 'accesForm'])->name('espais.acces.form');
-Route::post('/espais/{espai}/acces', [EspaiController::class, 'acces'])->name('espais.acces');
+Route::get('/funcionalitats', fn() => view('presentacion.funcionalitats'))->name('funcionalitats');
+Route::get('/plans', fn() => view('presentacion.plans'))->name('plans');
+Route::get('/comFunciona', fn() => view('presentacion.comFunciona'))->name('comFunciona');
+Route::get('/faq', fn() => view('presentacion.faq'))->name('faq');
+Route::get('/sobreNosotros', fn() => view('presentacion.sobreNosotros'))->name('sobreNosotros');
+Route::get('/contacte', fn() => view('presentacion.contacte'))->name('contacte');
+Route::get('/blog', fn() => view('presentacion.blog'))->name('blog');
+Route::get('/suport', fn() => view('presentacion.suport'))->name('suport');
 
 Route::middleware('auth')->group(function () {
 
@@ -85,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/espais/{espai}/compartir', [EspaiShareController::class, 'store'])
         ->name('espais.compartir');
 
-    // entrar al espai demana inici de sessio
+    // entrar al espai
     Route::get('/espais/{espai}/entrar', [EspaiController::class, 'entrarForm'])->name('espais.entrar.form');
     Route::post('/espais/{espai}/entrar', [EspaiController::class, 'entrar'])->name('espais.entrar');
 
@@ -98,9 +67,7 @@ Route::middleware('auth')->group(function () {
 // requireix iniciar sessio dins l'espai
 Route::middleware('espai.session')->group(function () {
 
-    Route::get('/espai', function () {
-        return view('espai.index');
-    })->name('espai.index');
+    Route::get('/espai', fn() => view('espai.index'))->name('espai.index');
 
     // usuaris
     Route::get('/espai/usuaris', [UsuariEspaiController::class, 'index'])->name('espai.usuaris.index');
@@ -134,7 +101,7 @@ Route::middleware('espai.session')->group(function () {
     Route::post('/espai/aules/{aula}/admin', [AulaAdminController::class, 'update'])
         ->name('espai.aules.admin.update');
 
-    // 🔥 guardar horario con grupos
+    // guardar horario con grupos
     Route::post('/espai/aules/{aula}/horari', [AulaHorarioController::class, 'update'])
         ->name('espai.aules.horari.update');
 
@@ -174,8 +141,6 @@ Route::middleware('espai.session')->group(function () {
     Route::delete('/espai/alumnes/{alumne}', [AlumneController::class, 'destroy'])->name('espai.alumnes.destroy');
     Route::get('/espai/alumnes/{alumne}/edit', [AlumneController::class, 'edit'])->name('espai.alumnes.edit');
     Route::put('/espai/alumnes/{alumne}', [AlumneController::class, 'update'])->name('espai.alumnes.update');
-
-    // ⭐ NUEVA RUTA INFO
     Route::get('/espai/alumnes/{alumne}/info', [AlumneController::class, 'info'])
         ->name('espai.alumnes.info');
 
@@ -203,6 +168,24 @@ Route::middleware('espai.session')->group(function () {
     // Mostrar todos los tickets abiertos
     Route::get('/espai/tickets', [AulaTicketController::class, 'allOpen'])
         ->name('espai.tickets.index');
+
+    // Asignación de roles a usuarios
+    Route::get('/espai/usuaris/{usuariEspai}/roles', [UsuariEspaiController::class, 'assignRolesForm'])
+        ->name('espai.usuaris.roles');
+
+    Route::post('/espai/usuaris/{usuariEspai}/roles', [UsuariEspaiController::class, 'assignRoles'])
+        ->name('espai.usuaris.roles.store');
+
+    // Roles del espai (UNIFICADO)
+    Route::prefix('espai/roles')->group(function () {
+        Route::get('/', [BaseRoleController::class, 'index'])->name('espai.roles.index');
+        Route::get('/create', [BaseRoleController::class, 'create'])->name('espai.roles.create');
+        Route::post('/', [BaseRoleController::class, 'store'])->name('espai.roles.store');
+        Route::get('/{role}/edit', [BaseRoleController::class, 'edit'])->name('espai.roles.edit');
+        Route::put('/{role}', [BaseRoleController::class, 'update'])->name('espai.roles.update');
+        Route::delete('/{role}', [BaseRoleController::class, 'destroy'])->name('espai.roles.destroy');
+    });
+
 });
 
 require __DIR__ . '/auth.php';

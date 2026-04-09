@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseRole;
 use App\Models\Espai;
 use Illuminate\Http\Request;
 use App\Models\UsuariEspai;
 use App\Models\UsuariExternEspai;
 use Illuminate\Support\Facades\Hash;
 
-
 class EspaiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $userId = $request->user()->id;
@@ -35,40 +32,50 @@ class EspaiController extends Controller
 
     public function edit(Espai $espai)
     {
-    // Solo dejar editar si el espai pertenece al usuario actual
-    if ($espai->user_id !== auth()->id()) {
-        abort(404);
+        if ($espai->user_id !== auth()->id()) {
+            abort(404);
+        }
+
+        return view('espais.edit', compact('espai'));
     }
 
-    return view('espais.edit', compact('espai'));
-    }   
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('espais.create');
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $data = $request->validate(
-            ['nom' => ['required', 'string', 'max:255'],'descripcio' => ['nullable', 'string']], ['nom' => 'nom','descripcio' => 'descripció']
+            [
+                'nom' => ['required', 'string', 'max:255'],
+                'descripcio' => ['nullable', 'string']
+            ],
+            ['nom' => 'nom', 'descripcio' => 'descripció']
         );
 
+        // Crear espai
         $espai = $request->user()->espais()->create([
             'nom' => $data['nom'],
             'descripcio' => $data['descripcio'] ?? null,
         ]);
 
+        // 🔥 Crear roles base del espai (CORRECTO)
+        BaseRole::create([
+            'espai_id' => $espai->id,
+            'nom' => 'admin',
+        ]);
+
+        BaseRole::create([
+            'espai_id' => $espai->id,
+            'nom' => 'professor',
+        ]);
+
+        // 🔥 Crear usuari admin del espai
         $espai->usuaris()->create([
             'nom' => 'admin',
             'rol' => 'admin',
-            'contrasenya' => Hash::make('admin'),
+            'contrasenya' => 'admin', // el mutator la hashea
         ]);
 
         return redirect()
@@ -104,9 +111,6 @@ class EspaiController extends Controller
             ->with('status', 'Espai actualitzat correctament.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request, Espai $espai)
     {
         if ($espai->user_id !== $request->user()->id) {
@@ -158,7 +162,6 @@ class EspaiController extends Controller
         return redirect()->route('espai.index');
     }
 
-
     public function accesForm(Espai $espai)
     {
         return view('espais.acces', [
@@ -196,5 +199,4 @@ class EspaiController extends Controller
 
         return redirect()->route('espai.index');
     }
-
 }

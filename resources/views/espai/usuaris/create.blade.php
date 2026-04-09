@@ -14,13 +14,12 @@
             @endif
 
             <div class="card">
-
-                <!-- TÍTULO DENTRO DEL CARNET -->
                 <h2 class="inside-title">Afegir usuari</h2>
 
                 <form method="POST" action="{{ route('espai.usuaris.store') }}">
                     @csrf
 
+                    {{-- NOM --}}
                     <div class="field">
                         <label for="nom" class="label">Nom</label>
                         <input id="nom" name="nom" type="text"
@@ -31,13 +30,18 @@
                         @enderror
                     </div>
 
+                    {{-- ROL (dinámico desde base_roles) --}}
                     <div class="field">
                         <label for="rol" class="label">Rol</label>
+
                         <select id="rol" name="rol" class="input" required>
-                            <option value="admin" @selected(old('rol') === 'admin')>Administrador/a</option>
-                            <option value="professor" @selected(old('rol', 'professor') === 'professor')>Professor/a</option>
-                            <option value="informatic" @selected(old('rol') === 'informatic')>Informàtic/a</option>
+                            @foreach(\App\Models\BaseRole::all() as $rol)
+                                <option value="{{ $rol->nom }}" @selected(old('rol', 'professor') === $rol->nom)>
+                                    {{ ucfirst($rol->nom) }}
+                                </option>
+                            @endforeach
                         </select>
+
                         @error('rol')
                             <div class="error">{{ $message }}</div>
                         @enderror
@@ -61,9 +65,10 @@
                             Cancel·lar
                         </a>
                     </div>
-                </form>
 
+                </form>
             </div>
+
         </div>
     </div>
 

@@ -36,7 +36,9 @@
                         <label for="rol">Rol</label>
                         <select name="rol" id="rol">
                             <option value="">Tots</option>
-                            @foreach(\App\Models\UsuariEspai::ROLS as $rol)
+
+                            {{-- ✔️ Roles dinámicos desde base_roles --}}
+                            @foreach(\App\Models\BaseRole::pluck('nom') as $rol)
                                 <option value="{{ $rol }}" {{ request('rol') === $rol ? 'selected' : '' }}>
                                     {{ ucfirst($rol) }}
                                 </option>
@@ -62,14 +64,19 @@
                         </div>
 
                         <div class="user-actions">
+
+                            <a class="btn btn-secondary" href="{{ route('espai.usuaris.roles', $usuari) }}">
+                                <i class="bi bi-shield-check"></i>
+                            </a>
+
                             <a class="btn btn-secondary" href="{{ route('espai.usuaris.edit', $usuari) }}">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
 
                             <form class="inline-form"
-                                  method="POST"
-                                  action="{{ route('espai.usuaris.destroy', $usuari) }}"
-                                  onsubmit="return confirm('Segur que vols eliminar aquest usuari?');">
+                                method="POST"
+                                action="{{ route('espai.usuaris.destroy', $usuari) }}"
+                                onsubmit="return confirm('Segur que vols eliminar aquest usuari?');">
                                 @csrf
                                 @method('DELETE')
 
@@ -77,6 +84,7 @@
                                     Eliminar
                                 </button>
                             </form>
+
                         </div>
                     </div>
                 @empty
