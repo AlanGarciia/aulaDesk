@@ -16,9 +16,10 @@ use App\Http\Controllers\EspaiShareController;
 use App\Http\Controllers\GrupController;
 use App\Http\Controllers\AulaHorarioController;
 use App\Http\Controllers\BaseRoleController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    if (auth()->check()) {
+    if (Auth::check()) {
         return redirect()->route('espais.index');
     }
 
@@ -185,7 +186,6 @@ Route::middleware('espai.session')->group(function () {
         Route::put('/{role}', [BaseRoleController::class, 'update'])->name('espai.roles.update');
         Route::delete('/{role}', [BaseRoleController::class, 'destroy'])->name('espai.roles.destroy');
     });
-
 });
 
 require __DIR__ . '/auth.php';
