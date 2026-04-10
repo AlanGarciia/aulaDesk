@@ -403,3 +403,6 @@
   justify-content:flex-end;
   margin-top: 14px;
 }
+.modal.is-open{
+  display: flex;
+}

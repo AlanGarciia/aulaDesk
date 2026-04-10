@@ -18,7 +18,6 @@ use App\Http\Controllers\AulaHorarioController;
 use App\Http\Controllers\BaseRoleController;
 use App\Http\Controllers\PermissionController;
 use Illuminate\Support\Facades\Auth;
-//ajijsaksa
 
 Route::get('/', function () {
     if (Auth::check()) {

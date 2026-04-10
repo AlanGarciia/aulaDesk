@@ -104,6 +104,7 @@
                                     <button
                                         type="button"
                                         class="tilt-action tilt-action--danger delete-btn js-no-enter"
+                                        data-no-enter="1"
                                         data-espai-name="{{ $espai->nom }}"
                                         data-form-id="deleteForm-{{ $espai->id }}"
                                         aria-label="Eliminar {{ $espai->nom }}"
@@ -209,6 +210,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('click', () => {
             userMenu.classList.remove('is-open');
+        });
+    }
+
+    /* ============================
+       MODAL ELIMINAR ESPAI
+    ============================ */
+
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmText = document.getElementById('confirmText');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    // BOTONES DE ELIMINAR
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // evita entrar a la card
+
+            const espaiName = btn.dataset.espaiName;
+            const formId = btn.dataset.formId;
+
+            // Texto del modal
+            if (confirmText) {
+                confirmText.textContent = `Segur que vols eliminar "${espaiName}"?`;
+            }
+
+            // Guardamos el form que se debe enviar
+            if (confirmBtn) {
+                confirmBtn.dataset.formId = formId;
+            }
+
+            // Mostrar modal
+            if (confirmModal) {
+                confirmModal.setAttribute('aria-hidden', 'false');
+                confirmModal.classList.add('is-open');
+            }
+        });
+    });
+
+    // CANCELAR
+    if (cancelBtn && confirmModal) {
+        cancelBtn.addEventListener('click', () => {
+            confirmModal.classList.remove('is-open');
+            confirmModal.setAttribute('aria-hidden', 'true');
+        });
+    }
+
+    // CONFIRMAR ELIMINACIÓN
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            const formId = confirmBtn.dataset.formId;
+            if (formId) {
+                const form = document.getElementById(formId);
+                if (form) form.submit();
+            }
+        });
+    }
+    /* ============================
+   MODAL COMPARTIR ESPAI
+============================ */
+
+const shareModal = document.getElementById('shareModal');
+const shareTitle = document.getElementById('shareTitle');
+const shareForm = document.getElementById('shareForm');
+const shareCancelBtn = document.getElementById('shareCancelBtn');
+
+// BOTONES COMPARTIR
+document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        const espaiName = btn.dataset.espaiName;
+        const action = btn.dataset.action;
+
+        // Título
+        if (shareTitle) {
+            shareTitle.textContent = `Compartir "${espaiName}"`;
+        }
+
+        // Action del form
+        if (shareForm) {
+            shareForm.action = action;
+        }
+
+        // Mostrar modal
+        if (shareModal) {
+            shareModal.classList.add('is-open');
+            shareModal.setAttribute('aria-hidden', 'false');
+        }
+    });
+});
+
+// CANCELAR
+    if (shareCancelBtn && shareModal) {
+        shareCancelBtn.addEventListener('click', () => {
+            shareModal.classList.remove('is-open');
+            shareModal.setAttribute('aria-hidden', 'true');
         });
     }
 
