@@ -17,9 +17,10 @@ use App\Http\Controllers\GrupController;
 use App\Http\Controllers\AulaHorarioController;
 use App\Http\Controllers\BaseRoleController;
 use App\Http\Controllers\PermissionController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    if (auth()->check()) {
+    if (Auth::check()) {
         return redirect()->route('espais.index');
     }
 
