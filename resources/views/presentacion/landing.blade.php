@@ -175,7 +175,7 @@
                 <li>Funcions avançades</li>
                 <li>Millor suport</li>
             </ul>
-
+            <a href="#" class="plan-btn primary">Començar</a>
         </div>
 
     </div>
