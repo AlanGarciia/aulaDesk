@@ -16,6 +16,7 @@ use App\Http\Controllers\EspaiShareController;
 use App\Http\Controllers\GrupController;
 use App\Http\Controllers\AulaHorarioController;
 use App\Http\Controllers\BaseRoleController;
+use App\Http\Controllers\PermissionController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -184,6 +185,16 @@ Route::middleware('espai.session')->group(function () {
         Route::get('/{role}/edit', [BaseRoleController::class, 'edit'])->name('espai.roles.edit');
         Route::put('/{role}', [BaseRoleController::class, 'update'])->name('espai.roles.update');
         Route::delete('/{role}', [BaseRoleController::class, 'destroy'])->name('espai.roles.destroy');
+    });
+
+    // permissos del espai
+    Route::prefix('espai/permissions')->group(function () {
+        Route::get('/', [PermissionController::class, 'index'])->name('espai.permissions.index');
+        Route::get('/create', [PermissionController::class, 'create'])->name('espai.permissions.create');
+        Route::post('/', [PermissionController::class, 'store'])->name('espai.permissions.store');
+        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('espai.permissions.edit');
+        Route::put('/{permission}', [PermissionController::class, 'update'])->name('espai.permissions.update');
+        Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('espai.permissions.destroy');
     });
 
 });

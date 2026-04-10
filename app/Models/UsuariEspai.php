@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class UsuariEspai extends Model
 {
@@ -18,9 +19,8 @@ class UsuariEspai extends Model
         'contrasenya',
     ];
 
-    protected $hidden = [
-        'contrasenya',
-    ];
+    // ❌ IMPORTANTE: NO ocultamos la contraseña
+    // protected $hidden = ['contrasenya'];
 
     public function espai()
     {
@@ -28,8 +28,7 @@ class UsuariEspai extends Model
     }
 
     /**
-     * RELACIÓN CORRECTA: roles dinámicos del usuario dentro del espai
-     * (belongsToMany con BaseRole, no Role)
+     * RELACIÓN: roles dinámicos del usuario dentro del espai
      */
     public function roles()
     {
@@ -63,12 +62,12 @@ class UsuariEspai extends Model
     }
 
     /**
-     * Mutador de contraseña
+     * Mutador de contraseña (siempre hashea)
      */
     public function setContrasenyaAttribute($value)
     {
         if (!empty($value)) {
-            $this->attributes['contrasenya'] = bcrypt($value);
+            $this->attributes['contrasenya'] = Hash::make($value);
         }
     }
 }

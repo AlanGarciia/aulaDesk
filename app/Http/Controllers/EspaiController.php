@@ -145,8 +145,10 @@ class EspaiController extends Controller
             ]
         );
 
+        $nomNormalitzat = trim(mb_strtolower($data['nom']));
+
         $usuari = UsuariEspai::where('espai_id', $espai->id)
-            ->where('nom', $data['nom'])
+            ->whereRaw('LOWER(nom) = ?', [$nomNormalitzat])
             ->first();
 
         if (!$usuari || !Hash::check($data['contrasenya'], $usuari->contrasenya)) {
@@ -161,6 +163,7 @@ class EspaiController extends Controller
 
         return redirect()->route('espai.index');
     }
+
 
     public function accesForm(Espai $espai)
     {

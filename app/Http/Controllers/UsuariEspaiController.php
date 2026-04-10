@@ -6,7 +6,6 @@ use App\Models\BaseRole;
 use App\Models\Espai;
 use App\Models\UsuariEspai;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class UsuariEspaiController extends Controller
@@ -88,11 +87,21 @@ class UsuariEspaiController extends Controller
                 ->withInput();
         }
 
-        $espai->usuaris()->create([
+        // Crear usuari (el mutator hashea la contrasenya)
+        $usuari = $espai->usuaris()->create([
             'nom' => $data['nom'],
             'rol' => $data['rol'],
-            'contrasenya' => Hash::make($data['contrasenya']),
+            'contrasenya' => $data['contrasenya'], // ← NO HASH, EL MUTATOR LO HACE
         ]);
+
+        // Asignar rol dinámico
+        $baseRole = BaseRole::where('espai_id', $espaiId)
+            ->where('nom', $data['rol'])
+            ->first();
+
+        if ($baseRole) {
+            $usuari->roles()->syncWithoutDetaching([$baseRole->id]);
+        }
 
         return redirect()
             ->route('espai.usuaris.index')
@@ -166,8 +175,9 @@ class UsuariEspaiController extends Controller
         $usuariEspai->nom = $data['nom'];
         $usuariEspai->rol = $data['rol'];
 
+        // Mutator hashea automáticamente
         if (!empty($data['contrasenya'])) {
-            $usuariEspai->contrasenya = Hash::make($data['contrasenya']);
+            $usuariEspai->contrasenya = $data['contrasenya'];
         }
 
         $usuariEspai->save();
@@ -201,10 +211,6 @@ class UsuariEspaiController extends Controller
             ->with('status', 'Usuari eliminat correctament.');
     }
 
-    /* ---------------------------------------------------------
-     *  ROLES DINÁMICOS AVANZADOS
-     * --------------------------------------------------------- */
-
     public function assignRolesForm(Request $request, UsuariEspai $usuariEspai)
     {
         $espaiId = $request->session()->get('espai_id');
@@ -220,7 +226,6 @@ class UsuariEspaiController extends Controller
             'roles' => BaseRole::where('espai_id', $espaiId)->get(),
         ]);
     }
-
 
     public function assignRoles(Request $request, UsuariEspai $usuariEspai)
     {

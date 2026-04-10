@@ -10,7 +10,7 @@ class BaseRole extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(\App\Models\Permission::class);
+        return $this->belongsToMany(Permission::class, 'base_role_permission');
     }
 
     public function espai()
