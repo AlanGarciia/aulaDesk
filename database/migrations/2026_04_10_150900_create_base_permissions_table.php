@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('base_permissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('espai_id')->constrained()->cascadeOnDelete();
             $table->string('nom');
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('base_permissions');
     }
 };
