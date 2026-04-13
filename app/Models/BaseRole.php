@@ -10,14 +10,16 @@ class BaseRole extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'base_role_permission');
+        return $this->belongsToMany(
+            BasePermission::class,
+            'base_role_permission',
+            'base_role_id',
+            'base_permission_id'
+        );
     }
 
     public function espai()
     {
-        return $this->belongsTo(\App\Models\Espai::class);
+        return $this->belongsTo(Espai::class);
     }
 }
-
-
-
