@@ -1,4 +1,0 @@
-Modal de eliminar usuarios, cambiar por el alert feo q sale
-
-Al compartir, no se ven las cosas del espai compartido - GONZALO
-

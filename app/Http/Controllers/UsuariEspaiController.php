@@ -87,14 +87,12 @@ class UsuariEspaiController extends Controller
                 ->withInput();
         }
 
-        // Crear usuari (el mutator hashea la contrasenya)
         $usuari = $espai->usuaris()->create([
             'nom' => $data['nom'],
             'rol' => $data['rol'],
-            'contrasenya' => $data['contrasenya'], // ← NO HASH, EL MUTATOR LO HACE
+            'contrasenya' => $data['contrasenya'],
         ]);
 
-        // Asignar rol dinámico
         $baseRole = BaseRole::where('espai_id', $espaiId)
             ->where('nom', $data['rol'])
             ->first();
@@ -166,7 +164,6 @@ class UsuariEspaiController extends Controller
                 ->withInput();
         }
 
-        // Admin protegido
         $isAdmin = ($usuariEspai->nom === 'admin' || $usuariEspai->rol === 'admin');
         if ($isAdmin) {
             $data['rol'] = 'admin';
