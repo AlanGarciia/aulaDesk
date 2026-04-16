@@ -19,24 +19,29 @@ class UsuariEspai extends Model
         'contrasenya',
     ];
 
-    // ❌ IMPORTANTE: NO ocultamos la contraseña
-    // protected $hidden = ['contrasenya'];
-
+    /**
+     * Relación con el espai
+     */
     public function espai()
     {
         return $this->belongsTo(Espai::class);
     }
 
     /**
-     * RELACIÓN: roles dinámicos del usuario dentro del espai
+     * Relación: roles dinámicos del usuario dentro del espai
      */
     public function roles()
     {
-        return $this->belongsToMany(BaseRole::class, 'role_usuari_espai');
+        return $this->belongsToMany(
+            BaseRole::class,
+            'role_usuari_espai',
+            'usuari_espai_id',
+            'base_role_id'
+        );
     }
 
     /**
-     * DEVOLVER SOLO LOS ROLES DEL ESPAI ACTUAL
+     * Obtener solo los roles del espai actual
      */
     public static function baseRoles($espaiId = null)
     {
@@ -59,6 +64,14 @@ class UsuariEspai extends Model
                 $q->where('nom', $permission);
             })
             ->exists();
+    }
+
+    /**
+     * Alias más semántico para Blade y middleware
+     */
+    public function canEspai(string $permission): bool
+    {
+        return $this->hasPermission($permission);
     }
 
     /**

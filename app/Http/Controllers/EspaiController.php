@@ -54,14 +54,12 @@ class EspaiController extends Controller
             ['nom' => 'nom', 'descripcio' => 'descripció']
         );
 
-        // Crear espai
         $espai = $request->user()->espais()->create([
             'nom' => $data['nom'],
             'descripcio' => $data['descripcio'] ?? null,
         ]);
 
-        // 🔥 Crear roles base del espai (CORRECTO)
-        BaseRole::create([
+        $adminRole = BaseRole::create([
             'espai_id' => $espai->id,
             'nom' => 'admin',
         ]);
@@ -71,12 +69,39 @@ class EspaiController extends Controller
             'nom' => 'professor',
         ]);
 
-        // 🔥 Crear usuari admin del espai
-        $espai->usuaris()->create([
-            'nom' => 'admin',
-            'rol' => 'admin',
-            'contrasenya' => 'admin', // el mutator la hashea
+        //Alan: permisos de todo
+        $modules = [
+            'users'       => ['view', 'create', 'update', 'delete', 'manage'],
+            'groups'      => ['view', 'create', 'update', 'delete', 'manage'],
+            'students'    => ['view', 'create', 'update', 'delete', 'import', 'export', 'manage'],
+            'aulas'       => ['view', 'create', 'update', 'delete', 'manage', 'horari.update'],
+            'noticies'    => ['view', 'create', 'update', 'delete', 'reaccionar', 'manage'],
+            'guardies'    => ['view', 'create', 'update', 'delete', 'manage'],
+            'tickets'     => ['view', 'create', 'update', 'delete', 'manage'],
+            'roles'       => ['view', 'create', 'update', 'delete', 'manage'],
+            'permissions' => ['view', 'create', 'update', 'delete', 'manage'],
+        ];
+
+        $permissionIds = [];
+        foreach ($modules as $module => $actions) {
+            foreach ($actions as $action) {
+                $perm = \App\Models\BasePermission::firstOrCreate([
+                    'espai_id' => $espai->id,
+                    'nom'      => "{$module}.{$action}",
+                ]);
+                $permissionIds[] = $perm->id;
+            }
+        }
+
+        $adminRole->permissions()->syncWithoutDetaching($permissionIds);
+
+        $adminUser = $espai->usuaris()->create([
+            'nom'        => 'admin',
+            'rol'        => 'admin',
+            'contrasenya' => 'admin',
         ]);
+
+        $adminUser->roles()->attach($adminRole->id);
 
         return redirect()
             ->route('espais.index')
