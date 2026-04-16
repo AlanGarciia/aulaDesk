@@ -15,9 +15,7 @@ class PermissionController extends Controller
         return Espai::findOrFail($espaiId);
     }
 
-    /**
-     * Genera automáticamente todos los permisos del espai
-     */
+    /* Generar permisos */
     private function generatePermissionsForEspai(Espai $espai)
     {
         $modules = [
@@ -32,7 +30,6 @@ class PermissionController extends Controller
             'permissions' => ['view', 'create', 'update', 'delete', 'manage'],
         ];
 
-        // Rol admin del espai
         $adminRole = BaseRole::firstOrCreate([
             'espai_id' => $espai->id,
             'nom' => 'admin',
@@ -54,7 +51,6 @@ class PermissionController extends Controller
             }
         }
 
-        // Admin siempre tiene todos los permisos
         $adminRole->permissions()->syncWithoutDetaching($permissionIds);
     }
 
@@ -62,7 +58,6 @@ class PermissionController extends Controller
     {
         $espai = $this->getEspai($request);
 
-        // Generar permisos automáticamente
         $this->generatePermissionsForEspai($espai);
 
         return view('espai.permissions.index', [

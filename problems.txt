@@ -1,2 +1,4 @@
 Ahora si que si, hemos arreglado muchos fallos y solo quedaria el tema roles, y permisos.
 Modal de eliminar usuarios, cambiar por el alert feo q sale
+
+Cambiar el controller para que se cree el admin automaticamente con todos los roles
