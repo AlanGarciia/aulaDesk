@@ -227,4 +227,11 @@ class EspaiController extends Controller
 
         return redirect()->route('espai.index');
     }
+
+    public function show(Espai $espai)
+    {
+        return redirect()->route('espais.index');
+    }
+
+
 }

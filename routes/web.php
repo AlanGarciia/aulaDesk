@@ -17,6 +17,7 @@ use App\Http\Controllers\GrupController;
 use App\Http\Controllers\AulaHorarioController;
 use App\Http\Controllers\BaseRoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -51,6 +52,23 @@ Route::get('/suport', fn() => view('presentacion.suport'))->name('suport');
 |--------------------------------------------------------------------------
 */
 
+/* STRIPE PLANES */
+Route::middleware('auth')->group(function () {
+    Route::get('/espais/plans', fn() => view('espais.plans.index'))->name('espais.plans.index');
+});
+
+Route::middleware('auth')->group(function () {
+
+    /* STRIPE */
+    Route::get('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
+    Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
+    Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+    Route::get('/stripe/checkout/premium', [StripeController::class, 'premium'])
+        ->name('stripe.checkout.premium');
+
+});
+
+
 Route::middleware('auth')->group(function () {
 
     Route::get('/espais', [EspaiController::class, 'index'])->name('espais.index');
@@ -74,6 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
 /*
@@ -344,6 +363,8 @@ Route::middleware('espai.session')->group(function () {
         Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('espai.permissions.destroy')->middleware('canEspai:permissions.delete');
     });
 
+
 });
+
 
 require __DIR__ . '/auth.php';
