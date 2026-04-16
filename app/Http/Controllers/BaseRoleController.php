@@ -95,19 +95,30 @@ class BaseRoleController extends Controller
     }
 
     public function edit(Request $request, BaseRole $role)
-    {
-        $espai = $this->getEspai($request);
+{
+    $espai = $this->getEspai($request);
 
-        abort_if($role->espai_id !== $espai->id, 404);
+    abort_if($role->espai_id !== $espai->id, 404);
 
-        // 🔥 Asegurar que los permisos existen
-        $this->generatePermissionsForEspai($espai);
+    // 🔥 Asegurar que los permisos existen
+    $this->generatePermissionsForEspai($espai);
 
-        return view('espai.roles.edit', [
-            'role' => $role,
-            'permissions' => BasePermission::where('espai_id', $espai->id)->get(),
-        ]);
-    }
+    // 1. Cargar permisos del espai
+    $permissions = BasePermission::where('espai_id', $espai->id)->get();
+
+    // 2. Agrupar por categoría (antes del punto)
+    $groupedPermissions = $permissions->groupBy(function ($perm) {
+        return explode('.', $perm->nom)[0]; // users.view → users
+    });
+
+    // 3. Pasar datos a la vista
+    return view('espai.roles.edit', [
+        'role' => $role,
+        'groupedPermissions' => $groupedPermissions,
+    ]);
+}
+
+
 
     public function update(Request $request, BaseRole $role)
     {
