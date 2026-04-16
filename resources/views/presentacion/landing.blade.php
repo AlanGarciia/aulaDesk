@@ -175,7 +175,11 @@
                 <li>Funcions avançades</li>
                 <li>Millor suport</li>
             </ul>
-            <a href="#" class="plan-btn primary">Començar</a>
+
+            <!-- 🔥 BOTÓN PREMIUM CON STRIPE -->
+            <a href="{{ route('stripe.checkout.premium') }}" class="plan-btn primary">
+                Començar Premium
+            </a>
         </div>
 
     </div>

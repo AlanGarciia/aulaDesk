@@ -40,11 +40,23 @@
             {{-- ============================
                  BOTÓN CREAR ESPAI
                ============================ --}}
-            <div class="actions">
-                <button class="btn btn-primary" onclick="window.location='{{ route('espais.create') }}'">
-                    <i class="bi bi-plus"></i> Crear espai
-                </button>
-            </div>
+            {{-- ============================
+     BOTÓN CREAR ESPAI + PLANS
+   ============================ --}}
+<div class="actions">
+
+    <button class="btn btn-primary" onclick="window.location='{{ route('espais.create') }}'">
+        <i class="bi bi-plus"></i> Crear espai
+    </button>
+
+    <button class="btn btn-secondary" onclick="window.location='{{ route('espais.plans.index') }}'">
+        <i class="bi bi-stars"></i> Plans
+    </button>
+
+</div>
+
+
+            
 
             {{-- ============================
                  GRID DE ESPAIS
