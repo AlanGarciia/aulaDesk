@@ -336,3 +336,44 @@
     gap: .8rem;
 }
 /* PPP */
+/* ============================
+   PAGINACIÓ BONITA
+============================ */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.pagination .page-item {
+    margin: 0 4px;
+}
+
+.pagination .page-link {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.pagination .page-link:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+}
+
+.pagination .active .page-link {
+    background: #00c896;
+    border-color: #00c896;
+    color: #000;
+    font-weight: 600;
+}
+
+.pagination .disabled .page-link {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

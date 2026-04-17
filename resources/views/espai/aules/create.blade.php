@@ -10,19 +10,19 @@
                     @csrf
                     <h1>Cració d'aula</h1>
                     <div class="field">
-                        <label>Nombre</label>
+                        <label>Nom</label>
                         <input name="nom" value="{{ old('nom') }}" required>
                         @error('nom') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="field">
-                        <label>Código</label>
+                        <label>Codi</label>
                         <input name="codi" value="{{ old('codi') }}">
                         @error('codi') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="field">
-                        <label>Capacidad</label>
+                        <label>Capacitat</label>
                         <input type="number" name="capacitat" value="{{ old('capacitat') }}" min="0">
                         @error('capacitat') <div class="error">{{ $message }}</div> @enderror
                     </div>

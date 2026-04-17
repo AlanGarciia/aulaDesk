@@ -310,7 +310,7 @@
                                     <td class="ticket-actions">
                                         <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $ticket]) }}">
                                             @csrf
-                                            @method('PATCH')
+                                            @method('PUT')
 
                                             <select name="estat" onchange="this.form.submit()">
                                                 <option value="obert" {{ $ticket->estat === 'obert' ? 'selected' : '' }}>Obert</option>
