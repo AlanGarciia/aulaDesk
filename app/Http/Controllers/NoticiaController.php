@@ -21,9 +21,8 @@ class NoticiaController extends Controller
         $espaiId = $request->session()->get('espai_id');
         abort_unless($espaiId, 403);
 
-        return Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        return Espai::findOrFail($espaiId);
+
     }
 
     private function usuariEspaiActiuId(Request $request): int

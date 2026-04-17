@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Espai;
 use App\Models\Grup;
 use Illuminate\Http\Request;
+use App\Models\UsuariExternEspai;
 
 class GrupController extends Controller
 {
@@ -17,9 +18,22 @@ class GrupController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        return Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $user = $request->user();
+
+        $espai = Espai::findOrFail($espaiId);
+        if ($espai->user_id == $user->id) {
+            return $espai;
+        }
+
+        $tieneAcceso = UsuariExternEspai::where('espai_id', $espaiId)
+            ->where('user_id', $user->id)
+            ->exists();
+
+        if ($tieneAcceso) {
+            return $espai;
+        }
+
+        abort(404);
     }
 
     public function index(Request $request)
@@ -60,7 +74,6 @@ class GrupController extends Controller
             abort(404);
         }
 
-        // 🔵 BÚSQUEDA
         $query = $espai->alumnes()->orderBy('nom');
 
         if ($request->filled('search')) {
@@ -128,5 +141,4 @@ class GrupController extends Controller
 
         return view('espai.grups.veure', compact('espai', 'grup', 'alumnes'));
     }
-
 }

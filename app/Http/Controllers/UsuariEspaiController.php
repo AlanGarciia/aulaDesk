@@ -19,9 +19,7 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        $espai = Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $espai = Espai::findOrFail($espaiId);
 
         $query = $espai->usuaris();
 
@@ -52,9 +50,7 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        $espai = Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $espai = Espai::findOrFail($espaiId);
 
         return view('espai.usuaris.create', [
             'espai' => $espai,
@@ -71,9 +67,7 @@ class UsuariEspaiController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        $espai = Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $espai = Espai::findOrFail($espaiId);
 
         $data = $request->validate([
             'nom' => ['required', 'string', 'max:255'],
@@ -119,9 +113,7 @@ class UsuariEspaiController extends Controller
             abort(404);
         }
 
-        $espai = Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $espai = Espai::findOrFail($espaiId);
 
         return view('espai.usuaris.edit', [
             'espai' => $espai,
@@ -143,9 +135,7 @@ class UsuariEspaiController extends Controller
             abort(404);
         }
 
-        $espai = Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $espai = Espai::findOrFail($espaiId);
 
         $data = $request->validate([
             'nom' => ['required', 'string', 'max:255'],
@@ -197,9 +187,7 @@ class UsuariEspaiController extends Controller
             abort(404);
         }
 
-        Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $espai = Espai::findOrFail($espaiId);
 
         $usuariEspai->delete();
 

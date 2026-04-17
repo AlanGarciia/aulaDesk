@@ -42,6 +42,16 @@
                 </div>
             @endif
 
+            <div class="stats" style="margin-bottom: 15px;">
+                <p>
+                    Total alumnes: <strong>{{ $totalAlumnes }}</strong>
+
+                    @if(request()->filled('nom') || request()->filled('idalu'))
+                        — Resultats filtrats: <strong>{{ $filtrats }}</strong>
+                    @endif
+                </p>
+            </div>
+
             <form method="GET" action="{{ route('espai.alumnes.index') }}" class="filters-form">
                 <div class="filters-grid">
 

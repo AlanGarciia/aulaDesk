@@ -542,3 +542,117 @@
   padding: 0.4rem 0.6rem;
   font-size: 0.8rem;
 }
+
+/* ============================
+   MODAL OSCURO BONITO
+============================ */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.modal-content {
+    background: #1f1f1f;
+    color: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    width: 95%;
+    max-width: 420px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.08);
+    animation: popIn 0.25s ease-out;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+#buscadorGrups {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 8px;
+}
+
+.grup-option {
+    background: #2d8cff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.15s ease;
+}
+
+.grup-option:hover {
+    background: #1b6edc;
+}
+
+#tancarModalGrups {
+    margin-top: 12px;
+    width: 100%;
+    background: #444;
+    border-radius: 8px;
+    transition: 0.15s ease;
+}
+
+#tancarModalGrups:hover {
+    background: #555;
+}
+
+/* ============================
+   SELECT OSCURO UNIVERSAL
+============================ */
+
+select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+
+    background-color: #1f1f1f !important;
+    color: #fff !important;
+    border: 1px solid #444 !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+}
+
+/* Hover */
+select:hover {
+    background-color: #2a2a2a !important;
+    border-color: #666 !important;
+}
+
+/* Focus */
+select:focus {
+    outline: none !important;
+    border-color: #00c896 !important;
+    box-shadow: 0 0 0 2px rgba(0,200,150,0.25) !important;
+}
+
+/* Opciones del desplegable */
+select option {
+    background-color: #1f1f1f !important;
+    color: #fff !important;
+}

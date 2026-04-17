@@ -18,9 +18,8 @@ class AlumneController extends Controller
                 ->with('status', 'Selecciona un espai per continuar.');
         }
 
-        return Espai::where('id', $espaiId)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        return Espai::findOrFail($espaiId);
+
     }
 
     public function index(Request $request)
@@ -37,13 +36,19 @@ class AlumneController extends Controller
             $query->where('idalu', 'like', '%' . $request->idalu . '%');
         }
 
+        $totalAlumnes = $espai->alumnes()->count();
+        $filtrats = $query->count();
+
         $alumnes = $query
             ->orderByRaw('LOWER(nom) ASC')
-            ->paginate(20);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('espai.alumnes.index', [
             'espai' => $espai,
             'alumnes' => $alumnes,
+            'totalAlumnes' => $totalAlumnes,
+            'filtrats' => $filtrats,
         ]);
     }
 
