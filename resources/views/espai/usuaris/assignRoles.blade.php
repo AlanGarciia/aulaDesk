@@ -12,7 +12,7 @@
         <div class="actions" style="display:flex; gap:1rem;">
 
             <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i>
+                 <i class="bi bi-box-arrow-right me-1"></i>
                 Tornar
             </a>
 

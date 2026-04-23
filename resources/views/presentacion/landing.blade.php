@@ -176,7 +176,6 @@
                 <li>Millor suport</li>
             </ul>
 
-            <!-- 🔥 BOTÓN PREMIUM CON STRIPE -->
             <a href="{{ route('stripe.checkout.premium') }}" class="plan-btn primary">
                 Començar Premium
             </a>
