@@ -5,7 +5,6 @@
 <x-app-layout>
     <div class="page">
         <div class="container">
-
             <div class="page-header">
                 <h2 class="page-title">Aules</h2>
 
@@ -33,17 +32,14 @@
                         <label for="nom">Nom</label>
                         <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="Buscar per nom">
                     </div>
-
                     <div class="filter-group">
                         <label for="codi">Codi</label>
                         <input type="text" name="codi" id="codi" value="{{ request('codi') }}" placeholder="Buscar per codi">
                     </div>
-
                     <div class="filter-group">
                         <label for="planta">Planta</label>
                         <input type="text" name="planta" id="planta" value="{{ request('planta') }}" placeholder="Buscar per planta">
                     </div>
-
                     <div class="filter-actions">
                         <button type="submit" class="btn btn-primary">Filtrar</button>
                         <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">Netejar</a>
@@ -60,18 +56,16 @@
                         <div class="aula-meta">Planta: {{ $aula->planta }}</div>
 
                         <div class="aula-actions">
-                            <a class="btn btn-secondary" href="{{ route('espai.aules.admin', $aula) }}">
+                            <a class="btn btn-secondary @cantEspaiClass('aulas.manage')" href="{{ route('espai.aules.admin', $aula) }}">
                                 Administrar
                             </a>
-
-                            <a class="btn btn-secondary btn-icon" href="{{ route('espai.aules.edit', $aula) }}">
+                            <a class="btn btn-secondary btn-icon @cantEspaiClass('aulas.update')" href="{{ route('espai.aules.edit', $aula) }}">
                                 <i class="bi bi-pencil"></i>
                             </a>
-
                             <form class="inline-form" method="POST" action="{{ route('espai.aules.destroy', $aula) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger btn-icon" type="submit">
+                                <button class="btn btn-danger btn-icon @cantEspaiClass('aulas.delete')" type="submit">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
@@ -80,7 +74,7 @@
                 @empty
                     <div class="empty-state">
                         <div>No hi ha aules disponibles.</div>
-                        <a class="btn btn-primary" href="{{ route('espai.aules.create') }}">Crear primera aula</a>
+                        <a class="btn btn-primary @cantEspaiClass('aulas.create')" href="{{ route('espai.aules.create') }}">Crear primera aula</a>
                     </div>
                 @endforelse
             </div>
@@ -91,4 +85,5 @@
 
         </div>
     </div>
+    
 </x-app-layout>
