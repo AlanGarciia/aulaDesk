@@ -5,7 +5,6 @@
 <x-app-layout>
     <div class="page">
         <div class="container">
-
             <div class="page-header">
                 <h2 class="page-title">Aules</h2>
 
