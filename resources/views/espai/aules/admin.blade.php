@@ -6,7 +6,10 @@
             <div class="page-header">
                 <h2 class="page-title">Administrar aula: {{ $aula->nom }}</h2>
                 <div class="top-actions">
-                    <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">Tornar</a>
+                    <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        Tornar
+                    </a>
                 </div>
             </div>
 
