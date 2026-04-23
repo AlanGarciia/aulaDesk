@@ -22,31 +22,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // 🔥 Activar paginación con números (Bootstrap 5)
         Paginator::useBootstrapFive();
-
-        /**
-         * Helper Blade: @canEspai('permiso')
-         * Comprueba permisos usando el usuario del espai guardado en sesión.
-         */
+ 
         Blade::if('canEspai', function ($permission) {
-
-            // ID del usuario interno del espai
+ 
             $espaiUserId = session('usuari_espai_id');
-
+ 
             if (!$espaiUserId) {
                 return false;
             }
-
-            // Recuperar el usuario del espai
+ 
             $espaiUser = UsuariEspai::find($espaiUserId);
-
+ 
             if (!$espaiUser) {
                 return false;
             }
-
-            // Comprobar permiso
+ 
             return $espaiUser->canEspai($permission);
+        });
+ 
+        Blade::directive('cantEspaiClass', function ($expression) {
+            return "<?php
+                \$_espaiUserId = session('usuari_espai_id');
+                \$_espaiUser   = \$_espaiUserId ? \\App\\Models\\UsuariEspai::find(\$_espaiUserId) : null;
+                echo (\$_espaiUser && \$_espaiUser->canEspai({$expression})) ? '' : 'btn-disabled';
+            ?>";
         });
     }
 }

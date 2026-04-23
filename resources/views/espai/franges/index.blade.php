@@ -1,17 +1,13 @@
+@push('styles')
+    @vite('resources/css/espai/franges/frangesIndex.css')
+@endpush
+
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="page-title">Franges horàries</h2>
-    </x-slot>
-
-    @push('styles')
-        @vite('resources/css/espai/franges/frangesIndex.css')
-    @endpush
-
     <div class="page">
         <div class="container">
             <p>
                 <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">Tornar a Aules</a>
-                <a class="btn" href="{{ route('espai.franges.create') }}">Nova franja</a>
+                <a class="btn btn-primary @cantEspaiClass('aulas.manage')" href="{{ route('espai.franges.create') }}">Nova franja</a>
             </p>
 
             @if(session('ok'))
@@ -22,11 +18,7 @@
                 <table border="1" cellpadding="8" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>Ordre</th>
-                            <th>Nom</th>
-                            <th>Inici</th>
-                            <th>Fi</th>
-                            <th>Accions</th>
+                            <th>Ordre</th><th>Nom</th><th>Inici</th><th>Fi</th><th>Accions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,12 +29,14 @@
                                 <td>{{ substr($f->inici,0,5) }}</td>
                                 <td>{{ substr($f->fi,0,5) }}</td>
                                 <td>
-                                    <a class="btn" href="{{ route('espai.franges.edit', $f) }}"><i class="bi bi-pencil-square"></i></a>
-
+                                    <a class="btn @cantEspaiClass('aulas.manage')" href="{{ route('espai.franges.edit', $f) }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
                                     <form method="POST" action="{{ route('espai.franges.destroy', $f) }}" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn danger" type="submit" onclick="return confirm('Eliminar aquesta franja?')">
+                                        <button class="btn danger @cantEspaiClass('aulas.manage')" type="submit"
+                                                onclick="return confirm('Eliminar aquesta franja?')">
                                             Eliminar
                                         </button>
                                     </form>
