@@ -341,9 +341,13 @@ Route::middleware('espai.session')->group(function () {
     */
     Route::prefix('espai/roles')->middleware('canEspai:roles.view')->group(function () {
         Route::get('/', [BaseRoleController::class, 'index'])->name('espai.roles.index');
-        Route::get('/create', [BaseRoleController::class, 'create'])->name('espai.roles.create')->middleware('canEspai:roles.create');
+        Route::get('/create/{from_user?}', [BaseRoleController::class, 'create'])
+            ->name('espai.roles.create')
+            ->middleware('canEspai:roles.create');
         Route::post('/', [BaseRoleController::class, 'store'])->name('espai.roles.store')->middleware('canEspai:roles.create');
-        Route::get('/{role}/edit', [BaseRoleController::class, 'edit'])->name('espai.roles.edit')->middleware('canEspai:roles.update');
+        Route::get('/{role}/edit/{from_user?}', [BaseRoleController::class, 'edit'])
+            ->name('espai.roles.edit')
+            ->middleware('canEspai:roles.update');
         Route::put('/{role}', [BaseRoleController::class, 'update'])->name('espai.roles.update')->middleware('canEspai:roles.update');
         Route::delete('/{role}', [BaseRoleController::class, 'destroy'])->name('espai.roles.destroy')->middleware('canEspai:roles.delete');
     });

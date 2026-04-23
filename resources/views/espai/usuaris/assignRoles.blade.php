@@ -16,13 +16,9 @@
                 Tornar
             </a>
 
-            <a href="{{ route('espai.roles.index') }}" class="btn btn-primary">
-                <i class="bi bi-gear"></i>
-                Gestionar rols
-            </a>
 
             <!-- ⭐ NUEVO: crear rol -->
-            <a href="{{ route('espai.roles.create') }}" class="btn btn-primary">
+            <a href="{{ route('espai.roles.create', $usuari->id) }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i>
                 Crear rol
             </a>
@@ -48,10 +44,9 @@
                         </label>
 
                         <!-- ⭐ NUEVO: editar rol -->
-                        <a href="{{ route('espai.roles.edit', $role) }}"
-                           class="btn btn-secondary"
-                           style="padding:.25rem .75rem;">
-                            Editar
+                       <a href="{{ route('espai.roles.edit', ['role' => $role->id, 'from_user' => $usuari->id]) }}"class="btn btn-secondary">
+                                <i class="bi bi-gear me-1"></i>
+                            Gestionar rol
                         </a>
 
                     </div>

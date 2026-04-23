@@ -69,7 +69,7 @@ class BaseRoleController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $from_user = null)
     {
         $espai = $this->getEspai($request);
 
@@ -78,8 +78,10 @@ class BaseRoleController extends Controller
 
         return view('espai.roles.create', [
             'permissions' => BasePermission::where('espai_id', $espai->id)->get(),
+            'from_user' => $from_user,
         ]);
     }
+    
 
     public function store(Request $request)
     {
@@ -94,7 +96,7 @@ class BaseRoleController extends Controller
         return redirect()->route('espai.roles.index');
     }
 
-    public function edit(Request $request, BaseRole $role)
+    public function edit(Request $request, BaseRole $role, $from_user = null)
 {
     $espai = $this->getEspai($request);
 
@@ -115,8 +117,10 @@ class BaseRoleController extends Controller
     return view('espai.roles.edit', [
         'role' => $role,
         'groupedPermissions' => $groupedPermissions,
+        'from_user' => $from_user,
     ]);
 }
+    
 
 
 
