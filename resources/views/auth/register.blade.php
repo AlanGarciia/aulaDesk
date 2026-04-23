@@ -12,7 +12,9 @@
     <canvas id="particles" class="absolute inset-0 w-full h-full z-0"></canvas>
 
     <!-- Botón Tornar fijo esquina superior izquierda -->
-    <a href="{{ url('/') }}" class="back-link" aria-label="Tornar a l'inici">← Tornar</a>
+    <a href="{{ url('/') }}" class="back-link" aria-label="Tornar a l'inici">
+        <i class="bi bi-box-arrow-right"></i> Tornar
+    </a>
 
     <!-- Card registro -->
     <div class="login-card z-10">

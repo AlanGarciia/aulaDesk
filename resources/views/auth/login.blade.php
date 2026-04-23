@@ -9,7 +9,10 @@
     @endpush
 
     <!-- Botón Tornar fijo en la esquina superior izquierda -->
-    <a href="{{ url('/') }}" class="back-link" aria-label="Tornar a l'inici">← Tornar</a>
+        <a href="{{ url('/') }}" class="back-link" aria-label="Tornar a l'inici">
+            <i class="bi bi-box-arrow-right"></i> Tornar
+        </a>
+
 
     <!-- Canvas para partículas -->
     <canvas id="particles" class="absolute inset-0 w-full h-full z-0"></canvas>
