@@ -10,129 +10,81 @@
         </div>
 
         <div class="actions">
-
-            <a href="{{ route('espai.alumnes.create') }}" class="btn btn-primary">
+            <a href="{{ route('espai.alumnes.create') }}" class="btn btn-primary @cantEspaiClass('students.create')">
                 + Afegir alumne
             </a>
-
-            <a href="{{ route('espai.alumnes.import.form') }}" class="btn btn-secondary">
+            <a href="{{ route('espai.alumnes.import.form') }}" class="btn btn-secondary @cantEspaiClass('students.import')">
                 Importar CSV
             </a>
-
-            <a href="{{ route('espai.alumnes.export') }}" class="btn btn-secondary">
+            <a href="{{ route('espai.alumnes.export') }}" class="btn btn-secondary @cantEspaiClass('students.export')">
                 Exportar CSV
             </a>
-
-            <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary">
-                <i class="bi bi-people"></i>
-                Veure grups
+            <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary @cantEspaiClass('groups.view')">
+                <i class="bi bi-people"></i> Veure grups
             </a>
-
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
                 Tornar a l'espai
             </a>
-
         </div>
 
         <div class="container">
-
             @if (session('ok'))
-                <div class="alert-success">
-                    {{ session('ok') }}
-                </div>
+                <div class="alert-success">{{ session('ok') }}</div>
             @endif
-
-            <div class="stats" style="margin-bottom: 15px;">
-                <p>
-                    Total alumnes: <strong>{{ $totalAlumnes }}</strong>
-
-                    @if(request()->filled('nom') || request()->filled('idalu'))
-                        — Resultats filtrats: <strong>{{ $filtrats }}</strong>
-                    @endif
-                </p>
-            </div>
 
             <form method="GET" action="{{ route('espai.alumnes.index') }}" class="filters-form">
                 <div class="filters-grid">
-
                     <div class="filter-group">
                         <label for="nom">Nom</label>
-                        <input type="text"
-                               name="nom"
-                               id="nom"
-                               value="{{ request('nom') }}"
-                               placeholder="Buscar per nom">
+                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="Buscar per nom">
                     </div>
-
                     <div class="filter-group">
                         <label for="idalu">IDALU</label>
-                        <input type="text"
-                               name="idalu"
-                               id="idalu"
-                               value="{{ request('idalu') }}"
-                               placeholder="Buscar per IDALU">
+                        <input type="text" name="idalu" id="idalu" value="{{ request('idalu') }}" placeholder="Buscar per IDALU">
                     </div>
-
                     <div class="filter-actions">
                         <button type="submit" class="btn btn-primary">Filtrar</button>
                         <a href="{{ route('espai.alumnes.index') }}" class="btn btn-secondary">Netejar</a>
                     </div>
-
                 </div>
             </form>
 
             <div class="card">
                 @forelse ($alumnes as $alumne)
                     <div class="user-row">
-
                         <div class="user-info">
-                            <div class="user-name">
-                                {{ $alumne->nom }} {{ $alumne->cognoms }}
-                            </div>
-
+                            <div class="user-name">{{ $alumne->nom }} {{ $alumne->cognoms }}</div>
                             <div class="user-meta">
                                 IDALU: {{ $alumne->idalu }}<br>
-                                @if($alumne->correu)
-                                    Correu: {{ $alumne->correu }}<br>
-                                @endif
-                                @if($alumne->telefon)
-                                    Telèfon: {{ $alumne->telefon }}
-                                @endif
+                                @if($alumne->correu) Correu: {{ $alumne->correu }}<br> @endif
+                                @if($alumne->telefon) Telèfon: {{ $alumne->telefon }} @endif
                             </div>
                         </div>
-
                         <div class="user-actions">
-                            <a href="{{ route('espai.alumnes.edit', $alumne) }}" class="btn btn-secondary">
+                            <a href="{{ route('espai.alumnes.edit', $alumne) }}" class="btn btn-secondary @cantEspaiClass('students.update')">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a href="{{ route('espai.alumnes.info', $alumne) }}" class="btn btn-secondary">
+                            <a href="{{ route('espai.alumnes.info', $alumne) }}" class="btn btn-secondary @cantEspaiClass('students.view')">
                                 <i class="bi bi-info-circle"></i>
                             </a>
-
                             <form class="inline-form"
                                   method="POST"
                                   action="{{ route('espai.alumnes.destroy', $alumne) }}"
                                   onsubmit="return confirm('Segur que vols eliminar aquest alumne?');">
                                 @csrf
                                 @method('DELETE')
-
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-danger @cantEspaiClass('students.delete')">
                                     Eliminar
                                 </button>
                             </form>
-
                         </div>
-
                     </div>
                 @empty
                     <p class="empty-state">No hi ha alumnes creats en aquest espai.</p>
                 @endforelse
             </div>
 
-            <div class="pagination">
-                {{ $alumnes->links() }}
-            </div>
-
+            <div class="pagination">{{ $alumnes->links() }}</div>
         </div>
     </div>
 </x-app-layout>
