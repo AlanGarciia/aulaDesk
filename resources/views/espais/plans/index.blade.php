@@ -49,7 +49,6 @@
                     <li>Millor suport</li>
                 </ul>
 
-                <!-- 🔥 Botón Stripe -->
                 <a href="{{ route('stripe.checkout.premium') }}" class="plan-btn primary">
                     Començar Premium
                 </a>
