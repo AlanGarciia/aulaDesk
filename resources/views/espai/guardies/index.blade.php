@@ -36,8 +36,9 @@
                     </div>
 
                     <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Tornar a l'Espai
+                        <i class="bi bi-box-arrow-right me-1"></i> Tornar a l'espai
                     </a>
+
                 </div>
 
                 @php

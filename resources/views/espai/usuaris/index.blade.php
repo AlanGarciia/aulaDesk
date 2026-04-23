@@ -17,7 +17,7 @@
             </a>
 
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                Tornar a l'espai
+                <i class="bi bi-box-arrow-right"></i>Tornar a l'espai
             </a>
         </div>
 
