@@ -10,8 +10,9 @@
                 <h2 class="page-title">Aules</h2>
 
                 <div class="top-actions">
-                    <a class="btn btn-secondary" href="{{ route('espai.index') }}"><i class="bi bi-box-arrow-right"></i>Tornar a l'espai</a>                    <a class="btn btn-primary @cantEspaiClass('aulas.create')" href="{{ route('espai.aules.create') }}">Nova aula</a>
-                    <a class="btn btn-secondary @cantEspaiClass('aulas.view')" href="{{ route('espai.franges.index') }}">Veure franges</a>
+                    <a class="btn btn-secondary" href="{{ route('espai.index') }}"><i class="bi bi-box-arrow-right"></i>Tornar a l'espai</a>
+                    <a class="btn btn-primary" href="{{ route('espai.aules.create') }}">Nova aula</a>
+                    <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">Veure franges</a>
                 </div>
             </div>
 
