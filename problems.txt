@@ -2,7 +2,11 @@ CSS de grstionar / crear roles - GONZALO
 
 Acabar lo de los permisos - ALAN
 
+Si un professor ya está en una hora en una aula, no puede dejar ponerlo
+La vista admin no puede dejar tocar los desplegables si no hay permisos
+Vista ver de noticias le faltan boton de volver
+
+//SEGUIR A PARTIR DE NOTICIAS
+
 PASOS STRIPE:
 composer require stripe/stripe-php
-
-Si un professor ya está en una hora en una aula, no puede dejar ponerlo
