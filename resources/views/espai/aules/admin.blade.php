@@ -3,53 +3,64 @@
 <x-app-layout>
     <div class="page">
         <div class="container">
+
             <div class="page-header">
                 <h2 class="page-title">Administrar aula: {{ $aula->nom }}</h2>
                 <div class="top-actions">
-                    <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">
-                        <i class="bi bi-box-arrow-right me-2"></i>
-                        Tornar
-                    </a>
+                    <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">Tornar</a>
                 </div>
             </div>
 
+            {{-- ── Modal conflicte de professor ── --}}
             @php $conflicts = session('conflicts'); $hasConflicts = is_array($conflicts) && count($conflicts); @endphp
             @if($hasConflicts)
-                <div class="conflict-backdrop" id="conflictModal">
+                <div class="conflict-backdrop" id="conflictModal" style="display:flex;">
                     <div class="conflict-card">
                         <div class="conflict-head">
-                            <h3 class="conflict-title">Conflicte d'horari</h3>
-                            <button type="button" class="btn btn-secondary" id="closeConflictModal">Tancar</button>
+                            <h3 class="conflict-title">⚠️ Conflicte d'horari</h3>
                         </div>
                         <div class="conflict-body">
-                            <p>No s'ha pogut desar perquè el professor ja està assignat a una altra aula en el mateix moment.</p>
+                            <p>Els professors següents <strong>no s'han pogut assignar</strong> perquè ja estan en una altra aula en el mateix horari:</p>
                             <ul class="conflict-list">
                                 @foreach($conflicts as $c)
                                     <li>
                                         <span class="conflict-tag">{{ $c['professor'] }}</span>
-                                        <span>{{ $c['dia'] }}, {{ $c['franja'] }}</span>
+                                        <span>Dia {{ $c['dia'] }} — {{ $c['franja'] }}</span>
                                         <span class="conflict-extra">Ja està a: <strong>{{ $c['aula'] }}</strong></span>
                                     </li>
                                 @endforeach
                             </ul>
+                            <p style="margin-top:.75rem;font-size:.85rem;opacity:.7;">La resta de l'horari s'ha desat correctament.</p>
                         </div>
                         <div class="conflict-foot">
-                            <button type="button" class="btn btn-primary" id="closeConflictModal2">Entes</button>
+                            <button type="button" class="btn btn-primary" id="closeConflictModal">D'acord</button>
                         </div>
                     </div>
                 </div>
                 <script>
                     document.getElementById('closeConflictModal').onclick =
-                    document.getElementById('closeConflictModal2').onclick =
                         () => document.getElementById('conflictModal').style.display = 'none';
                 </script>
             @endif
 
-            {{-- Horari --}}
+            @if(session('ok'))
+                <div class="alert-success" style="margin-bottom:1rem;padding:.75rem 1rem;border-radius:8px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.4);color:#d1fae5;">
+                    ✅ {{ session('ok') }}
+                </div>
+            @endif
+
+            {{-- ── Horari ── --}}
             <div class="panel-card">
                 <div class="section-header">
                     <h3 class="section-title">Horari de l'aula</h3>
                 </div>
+
+                @php
+                    // Comprova si l'usuari actual pot editar l'horari
+                    $_espaiUserId = session('usuari_espai_id');
+                    $_espaiUser   = $_espaiUserId ? \App\Models\UsuariEspai::find($_espaiUserId) : null;
+                    $potEditar    = $_espaiUser && $_espaiUser->canEspai('aulas.horari.update');
+                @endphp
 
                 <form method="POST" action="{{ route('espai.aules.horari.update', $aula) }}">
                     @csrf
@@ -77,8 +88,11 @@
                                         @endphp
                                         <td>
                                             <div class="horari-cell {{ $isGuardia ? 'guardia' : '' }}">
+
                                                 <select class="input-control select-control"
-                                                        name="assignacions[{{ $diaNum }}][{{ $franja->id }}]">
+                                                        name="assignacions[{{ $diaNum }}][{{ $franja->id }}]"
+                                                        {{ $potEditar ? '' : 'disabled' }}
+                                                        title="{{ $potEditar ? '' : 'No tens permís per modificar l\'horari' }}">
                                                     <option value="">-- lliure --</option>
                                                     @foreach($professors as $p)
                                                         <option value="{{ $p->id }}" {{ (string)$professorId === (string)$p->id ? 'selected' : '' }}>
@@ -86,16 +100,28 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+
+                                                {{-- Si no pot editar, preservem el valor en un input hidden --}}
+                                                @unless($potEditar)
+                                                    <input type="hidden"
+                                                           name="assignacions[{{ $diaNum }}][{{ $franja->id }}]"
+                                                           value="{{ $professorId }}">
+                                                @endunless
+
                                                 <button type="button"
-                                                        class="btn btn-small btn-secondary open-grup-modal"
+                                                        class="btn btn-small btn-secondary open-grup-modal {{ $potEditar ? '' : 'btn-disabled' }}"
                                                         data-dia="{{ $diaNum }}"
                                                         data-franja="{{ $franja->id }}"
-                                                        style="margin-top:4px;">
+                                                        {{ $potEditar ? '' : 'disabled' }}
+                                                        style="margin-top:4px;"
+                                                        title="{{ $potEditar ? '' : 'No tens permís per modificar l\'horari' }}">
                                                     Assignar grup
                                                 </button>
+
                                                 <input type="hidden" class="input-grup"
                                                        name="grups[{{ $diaNum }}][{{ $franja->id }}]"
                                                        value="{{ $grupId }}">
+
                                                 <div class="grup-label" style="margin-top:4px;font-size:13px;color:#444;">
                                                     {{ $grupNom ? "Grup: $grupNom" : "Sense grup" }}
                                                 </div>
@@ -108,18 +134,36 @@
                         </table>
                     </div>
                     <div class="form-actions">
-                        <button class="btn btn-primary @cantEspaiClass('aulas.horari.update')" type="submit">Desar horari</button>
+                        <button class="btn btn-primary @cantEspaiClass('aulas.horari.update')" type="submit">
+                            Desar horari
+                        </button>
                     </div>
                 </form>
             </div>
 
+            {{-- ── Estilos inline ── --}}
             <style>
                 .modal { position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);display:none;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(3px); }
                 .modal-content { background:linear-gradient(180deg,#fff 0%,#f3f3f3 100%);padding:22px;border-radius:10px;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,.35);border:1px solid #d0d0d0; }
                 .horari-cell.guardia { background-color:#ffeb3b; }
                 .grup-label { display:inline-block;padding:4px 10px;margin-top:4px;font-size:12px;color:#555;background:#f3f4f6;border-radius:999px; }
+                select:disabled { opacity:.45;cursor:not-allowed;background:rgba(0,0,0,.05); }
+
+                /* Modal de conflicte */
+                .conflict-backdrop { position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:10000;backdrop-filter:blur(4px); }
+                .conflict-card { background:#1a1f35;border:1px solid rgba(239,68,68,.4);border-radius:14px;padding:1.5rem;max-width:500px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.5); }
+                .conflict-head { margin-bottom:1rem; }
+                .conflict-title { color:#fca5a5;font-size:1.15rem;font-weight:700;margin:0; }
+                .conflict-body { color:#e2e8f0;font-size:.9rem; }
+                .conflict-body p { margin:0 0 .5rem; }
+                .conflict-list { margin:.5rem 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:.5rem; }
+                .conflict-list li { background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:.5rem .75rem;display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:center;font-size:.85rem; }
+                .conflict-tag { background:rgba(239,68,68,.25);color:#fca5a5;border-radius:99px;padding:2px 10px;font-weight:600; }
+                .conflict-extra { color:#94a3b8; }
+                .conflict-foot { margin-top:1.25rem;text-align:right; }
             </style>
 
+            {{-- ── Modal grups ── --}}
             <div id="modalGrups" class="modal">
                 <div class="modal-content">
                     <h3>Selecciona un grup</h3>
@@ -131,29 +175,33 @@
                                     style="width:100%;margin-bottom:5px;">{{ $g->nom }}</button>
                         @endforeach
                     </div>
-                    <button class="btn btn-secondary" id="tancarModalGrups">Tancar</button>
+                    <button class="btn btn-secondary" id="tancarModalGrups" style="margin-top:.5rem;">Tancar</button>
                 </div>
             </div>
 
             <script>
             document.addEventListener('DOMContentLoaded', function () {
-                let modal = document.getElementById('modalGrups');
-                let buscador = document.getElementById('buscadorGrups');
+                const modal    = document.getElementById('modalGrups');
+                const buscador = document.getElementById('buscadorGrups');
                 let currentHiddenInput = null, currentLabel = null;
-                document.querySelectorAll('.open-grup-modal').forEach(btn => {
+
+                document.querySelectorAll('.open-grup-modal:not([disabled])').forEach(btn => {
                     btn.addEventListener('click', function () {
-                        let dia = this.dataset.dia, franja = this.dataset.franja;
+                        const dia = this.dataset.dia, franja = this.dataset.franja;
                         currentHiddenInput = document.querySelector(`input[name="grups[${dia}][${franja}]"]`);
                         currentLabel = this.parentElement.querySelector('.grup-label');
                         buscador.value = ''; filtrarGrups(''); modal.style.display = 'flex';
                     });
                 });
-                buscador.addEventListener('input', function () { filtrarGrups(this.value.toLowerCase()); });
+
+                buscador.addEventListener('input', () => filtrarGrups(buscador.value.toLowerCase()));
+
                 function filtrarGrups(t) {
                     document.querySelectorAll('.grup-option').forEach(b => {
                         b.style.display = b.dataset.grupNom.toLowerCase().includes(t) ? 'block' : 'none';
                     });
                 }
+
                 document.querySelectorAll('.grup-option').forEach(btn => {
                     btn.addEventListener('click', function () {
                         currentHiddenInput.value = this.dataset.grupId;
@@ -161,11 +209,12 @@
                         modal.style.display = 'none';
                     });
                 });
+
                 document.getElementById('tancarModalGrups').onclick = () => modal.style.display = 'none';
             });
             </script>
 
-            {{-- Tickets --}}
+            {{-- ── Tickets ── --}}
             <div class="panel-card">
                 <div class="section-header">
                     <h3 class="section-title">Tickets de l'aula</h3>
@@ -211,10 +260,11 @@
                                         <td class="ticket-actions">
                                             <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $ticket]) }}">
                                                 @csrf @method('PATCH')
-                                                <select name="estat" class="@cantEspaiClass('tickets.update')" onchange="this.form.submit()">
-                                                    <option value="obert"    {{ $ticket->estat === 'obert'    ? 'selected' : '' }}>Obert</option>
-                                                    <option value="en_proces"{{ $ticket->estat === 'en_proces'? 'selected' : '' }}>En procés</option>
-                                                    <option value="tancat"   {{ $ticket->estat === 'tancat'   ? 'selected' : '' }}>Tancat</option>
+                                                <select name="estat" onchange="this.form.submit()"
+                                                        {{ ($_espaiUser && $_espaiUser->canEspai('tickets.update')) ? '' : 'disabled' }}>
+                                                    <option value="obert"     {{ $ticket->estat === 'obert'     ? 'selected' : '' }}>Obert</option>
+                                                    <option value="en_proces" {{ $ticket->estat === 'en_proces' ? 'selected' : '' }}>En procés</option>
+                                                    <option value="tancat"    {{ $ticket->estat === 'tancat'    ? 'selected' : '' }}>Tancat</option>
                                                 </select>
                                             </form>
                                             <form method="POST" action="{{ route('espai.aules.tickets.destroy', [$aula, $ticket]) }}">

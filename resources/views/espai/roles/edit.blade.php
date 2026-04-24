@@ -5,44 +5,58 @@
 <x-app-layout>
     <div class="page">
 
-        <!-- HEADER -->
         <div class="page-title-container">
             <h2 class="page-title">Editar rol</h2>
         </div>
 
-        <!-- ACTIONS -->
         <div class="actions">
-            <a href="{{ $from_user ? route('espai.usuaris.roles', $from_user) : route('espai.roles.index') }}"class="btn btn-secondary">
-                 <i class="bi bi-box-arrow-right me-2"></i>
-                Tornar
-            </a>
+            <a href="{{ route('espai.roles.index') }}" class="btn btn-secondary">← Tornar</a>
         </div>
 
-        <!-- FORM -->
         <form method="POST" action="{{ route('espai.roles.update', $role) }}" class="form-card">
             @csrf
             @method('PUT')
 
-            <!-- ROLE NAME -->
             <div class="form-group">
                 <label>Nom del rol</label>
                 <input type="text" name="nom" value="{{ $role->nom }}" required>
             </div>
 
-            <!-- HEADER -->
             <div class="permissions-header">
                 <h3>Permisos del rol</h3>
                 <span>Selecciona els permisos que tindrà aquest rol</span>
             </div>
 
-            <!-- ACCORDION -->
+            {{-- Botó seleccionar-ho tot --}}
+            <div style="margin-bottom:1rem;">
+                <button type="button" id="btnTotsElsPermisos" class="btn btn-secondary">
+                    ✅ Tots els permisos
+                </button>
+                <button type="button" id="btnCapPermis" class="btn btn-secondary" style="margin-left:.5rem;">
+                    ☐ Cap permís
+                </button>
+            </div>
+
             <div class="permissions-accordion">
-
                 @foreach($groupedPermissions as $category => $perms)
-                    <div class="permission-category">
+                    @php
+                        $moduleNames = [
+                            'users'       => 'Usuaris',
+                            'groups'      => 'Grups',
+                            'students'    => 'Alumnes',
+                            'aulas'       => 'Aules',
+                            'noticies'    => 'Notícies',
+                            'guardies'    => 'Guardies',
+                            'tickets'     => 'Tiquets',
+                            'roles'       => 'Rols',
+                            'permissions' => 'Permisos',
+                        ];
+                        $categoryLabel = $moduleNames[$category] ?? ucfirst($category);
+                    @endphp
 
+                    <div class="permission-category">
                         <button type="button" class="category-toggle">
-                            <span>{{ ucfirst($category) }}</span>
+                            <span>{{ $categoryLabel }}</span>
                             <span class="arrow">▸</span>
                         </button>
 
@@ -53,36 +67,41 @@
                                            name="permissions[]"
                                            value="{{ $permission->id }}"
                                            {{ $role->permissions->contains($permission->id) ? 'checked' : '' }}>
-                                    <span>{{ ucfirst(str_replace('.', ' ', $permission->nom)) }}</span>
+                                    <span>{{ $permission->nom_format }}</span>
                                 </label>
                             @endforeach
                         </div>
-
                     </div>
                 @endforeach
-
             </div>
 
-            <button class="btn btn-primary">
-                Guardar canvis
-            </button>
+            <button class="btn btn-primary" style="margin-top:1.5rem;">Guardar canvis</button>
         </form>
-
     </div>
-   @push('scripts')
-<script>
-document.addEventListener('click', function (e) {
-    const btn = e.target.closest('.category-toggle');
-    if (!btn) return;
 
-    const content = btn.nextElementSibling;
+    @push('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Accordion
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.category-toggle');
+            if (!btn) return;
+            btn.nextElementSibling.classList.toggle('open');
+            btn.classList.toggle('open');
+        });
 
-    content.classList.toggle('open');
-    btn.classList.toggle('open');
-});
-</script>
-@endpush
+        // Tots els permisos
+        document.getElementById('btnTotsElsPermisos').addEventListener('click', function () {
+            document.querySelectorAll('.permissions-accordion input[type="checkbox"]')
+                .forEach(cb => cb.checked = true);
+        });
 
+        // Cap permís
+        document.getElementById('btnCapPermis').addEventListener('click', function () {
+            document.querySelectorAll('.permissions-accordion input[type="checkbox"]')
+                .forEach(cb => cb.checked = false);
+        });
+    });
+    </script>
+    @endpush
 </x-app-layout>
-
-
