@@ -10,7 +10,9 @@
         </div>
 
         <div class="actions">
-            <a href="{{ route('espai.roles.index') }}" class="btn btn-secondary">← Tornar</a>
+           <a href="{{ $from_user ? route('espai.usuaris.roles', $from_user) : route('espai.roles.index') }}" class="btn btn-secondary">
+               <i class="bi bi-box-arrow-right me-2" ></i> Tornar
+           </a>
         </div>
 
         <form method="POST" action="{{ route('espai.roles.update', $role) }}" class="form-card">
