@@ -6,7 +6,11 @@
     <div class="page">
 
         <div style="width:min(780px,100%);margin:0 auto 1rem;">
-            <a href="{{ route('espai.roles.index') }}" class="btn btn-secondary">Tornar</a>
+            <a href="{{ isset($from_user) ? route('espai.usuaris.roles', $from_user) : route('espai.roles.index') }}" 
+                class="btn btn-secondary">
+                <i class="bi bi-box-arrow-right"></i> Tornar
+            </a>
+
         </div>
 
         <form method="POST" action="{{ route('espai.roles.store') }}" class="form-card">
