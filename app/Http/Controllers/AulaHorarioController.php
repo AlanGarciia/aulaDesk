@@ -11,26 +11,59 @@ class AulaHorarioController extends Controller
     public function update(Request $request, Aula $aula)
     {
         $assignacions = $request->input('assignacions', []);
-        $grups = $request->input('grups', []);
+        $grups        = $request->input('grups', []);
+        $espaiId      = $aula->espai_id;
+
+        $conflicts = [];
 
         foreach ($assignacions as $dia => $franges) {
             foreach ($franges as $franjaId => $profId) {
 
                 $grupId = $grups[$dia][$franjaId] ?? null;
 
-            AulaHorario::updateOrCreate(
-            [
-                'aula_id' => $aula->id,
-                'dia_setmana' => $dia,
-                'franja_horaria_id' => $franjaId,
-            ],
-            [
-                'espai_id' => $aula->espai_id,
-                'usuari_espai_id' => $profId ?: null,
-                'grup_id' => $grupId ?: null,
-            ]
-        );
+                // ── Comprovació de conflicte ──────────────────────────────
+                if ($profId) {
+                    $conflict = AulaHorario::where('espai_id',          $espaiId)
+                        ->where('dia_setmana',       $dia)
+                        ->where('franja_horaria_id', $franjaId)
+                        ->where('usuari_espai_id',   $profId)
+                        ->where('aula_id',           '!=', $aula->id)
+                        ->with(['aula', 'professor', 'franja'])
+                        ->first();
+
+                    if ($conflict) {
+                        $conflicts[] = [
+                            'professor' => $conflict->professor->nom  ?? "Professor #{$profId}",
+                            'dia'       => $conflict->dia_setmana,
+                            'franja'    => ($conflict->franja->nom ?? '') . ' ' .
+                                           substr($conflict->franja->inici ?? '', 0, 5) . '-' .
+                                           substr($conflict->franja->fi    ?? '', 0, 5),
+                            'aula'      => $conflict->aula->nom ?? "Aula #{$conflict->aula_id}",
+                        ];
+                        continue; // no desar aquesta assignació conflictiva
+                    }
+                }
+                // ─────────────────────────────────────────────────────────
+
+                AulaHorario::updateOrCreate(
+                    [
+                        'aula_id'           => $aula->id,
+                        'dia_setmana'       => $dia,
+                        'franja_horaria_id' => $franjaId,
+                    ],
+                    [
+                        'espai_id'        => $espaiId,
+                        'usuari_espai_id' => $profId ?: null,
+                        'grup_id'         => $grupId ?: null,
+                    ]
+                );
             }
+        }
+
+        if (!empty($conflicts)) {
+            return back()
+                ->with('conflicts', $conflicts)
+                ->with('warning', 'Alguns professors ja estaven assignats en una altra aula en el mateix horari.');
         }
 
         return back()->with('ok', 'Horari guardat correctament');
