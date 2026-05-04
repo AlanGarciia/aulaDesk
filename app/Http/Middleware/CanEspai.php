@@ -24,7 +24,6 @@ class CanEspai
             abort(403, 'Usuari d\'espai no trobat.');
         }
 
-        // 3. Comprobar permiso
         if (!$espaiUser->canEspai($permission)) {
             abort(403, 'No tens permís per accedir aquí.');
         }

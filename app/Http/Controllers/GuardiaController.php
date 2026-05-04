@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\UsuariEspai;
 use App\Models\GuardiaSolicitud;
 use App\Models\Noticia;
+use App\Models\Notificacio;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
@@ -215,219 +216,261 @@ class GuardiaController extends Controller
     }
 
     public function guardarSolicitud(Request $request)
-{
-    $espaiId = (int) session('espai_id');
-    abort_unless($espaiId, 403);
+    {
+        $espaiId = (int) session('espai_id');
+        abort_unless($espaiId, 403);
 
-    $usuariEspaiId = (int) session('usuari_espai_id');
-    abort_unless($usuariEspaiId, 403);
+        $usuariEspaiId = (int) session('usuari_espai_id');
+        abort_unless($usuariEspaiId, 403);
 
-    $data = $request->validate([
-        'dia' => ['required', 'integer', 'min:1', 'max:5'],
-        'franja_id' => ['required', 'integer', 'min:1'],
-        'tipus' => ['nullable', 'string', 'max:50'],
-        'comentari' => ['nullable', 'string', 'max:1000'],
-    ]);
-
-    $dia = (int) $data['dia'];
-    $franjaId = (int) $data['franja_id'];
-
-    $franja = FranjaHoraria::query()
-        ->where('espai_id', $espaiId)
-        ->where('id', $franjaId)
-        ->first();
-
-    abort_unless($franja, 404, 'Franja no trobada.');
-
-
-    $inici = substr($franja->inici, 0, 5);
-    $fi = substr($franja->fi, 0, 5);
-
-    $franjaNom = $franja->nom
-        ? $franja->nom . " ($inici - $fi)"
-        : "$inici - $fi";
-
-    $horari = AulaHorario::query()
-        ->where('usuari_espai_id', $usuariEspaiId)
-        ->where('dia_setmana', $dia)
-        ->where('franja_horaria_id', $franjaId)
-        ->first();
-
-    abort_unless($horari, 422, 'No tens cap aula assignada en aquesta franja.');
-
-    $aulaId = null;
-    if (isset($horari->aula_id) && $horari->aula_id) {
-        $aulaId = (int) $horari->aula_id;
-    }
-
-    $aulaNom = $horari->aula->nom ?? '-';
-    $tipus = null;
-    if (isset($data['tipus']) && $data['tipus'] !== '') {
-        $tipus = (string) $data['tipus'];
-    }
-
-    $comentari = null;
-    if (isset($data['comentari']) && trim((string) $data['comentari']) !== '') {
-        $comentari = (string) $data['comentari'];
-    }
-
-    DB::transaction(function () use (
-        $espaiId,
-        $usuariEspaiId,
-        $aulaId,
-        $dia,
-        $franjaId,
-        $tipus,
-        $comentari,
-        $franjaNom,
-        $aulaNom
-    ) {
-        $sol = GuardiaSolicitud::query()->create([
-            'espai_id' => $espaiId,
-            'solicitant_usuari_espai_id' => $usuariEspaiId,
-            'cobridor_usuari_espai_id' => null,
-            'noticia_id' => null,
-            'aula_id' => $aulaId,
-            'dia_setmana' => $dia,
-            'franja_horaria_id' => $franjaId,
-            'tipus' => $tipus,
-            'comentari' => $comentari,
-            'estat' => 'pendent',
+        $data = $request->validate([
+            'dia' => ['required', 'integer', 'min:1', 'max:5'],
+            'franja_id' => ['required', 'integer', 'min:1'],
+            'tipus' => ['nullable', 'string', 'max:50'],
+            'comentari' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $dies = [
-            1 => 'Dilluns',
-            2 => 'Dimarts',
-            3 => 'Dimecres',
-            4 => 'Dijous',
-            5 => 'Divendres',
-        ];
+        $dia = (int) $data['dia'];
+        $franjaId = (int) $data['franja_id'];
 
-        $diaTxt = 'Dia ' . (string) $dia;
-        if (isset($dies[$dia])) {
-            $diaTxt = (string) $dies[$dia];
-        }
+        $franja = FranjaHoraria::query()
+            ->where('espai_id', $espaiId)
+            ->where('id', $franjaId)
+            ->first();
 
-        $titol = 'Guàrdia pendent (' . $diaTxt . ')';
-
-        $cont = "S'ha solicitat una guàrdia.\n";
-        $cont .= "(" . "Dia: " . $diaTxt . "\n" . ") ";
-        $cont .= "(" . "Franja: " . $franjaNom . ") ";
-        $cont .= "(" . "Aula: " . $aulaNom . ") ";
-
-        if ($tipus) {
-            $cont .= "Tipus: " . $tipus . "\n";
-        }
-        if ($comentari) {
-            $cont .= "Comentari: " . $comentari . "\n";
-        }
-
-        $cont .= "\nUn altre professor pot acceptar-la des del tauló de notícies.";
-
-        $noticia = Noticia::query()->create([
-            'espai_id' => $espaiId,
-            'usuari_espai_id' => $usuariEspaiId,
-            'tipus' => 'guardia',
-            'titol' => $titol,
-            'contingut' => $cont,
-            'imatge_path' => null,
-            'publicat_el' => now(),
-        ]);
-
-        $sol->noticia_id = (int) $noticia->id;
-        $sol->save();
-    });
-
-    return redirect()
-        ->route('espai.guardies.index')
-        ->with('ok', 'Sol·licitud de guàrdia enviada i publicada al tauló.');
-}
+        abort_unless($franja, 404, 'Franja no trobada.');
 
 
+        $inici = substr($franja->inici, 0, 5);
+        $fi = substr($franja->fi, 0, 5);
 
-public function acceptar(Request $request, GuardiaSolicitud $solicitud)
-{
-    $espaiId = (int) session('espai_id');
-    abort_unless($espaiId, 403);
+        $franjaNom = $franja->nom
+            ? $franja->nom . " ($inici - $fi)"
+            : "$inici - $fi";
 
-    $usuariEspaiId = (int) session('usuari_espai_id');
-    abort_unless($usuariEspaiId, 403);
-
-    abort_if((int) $solicitud->espai_id !== $espaiId, 403);
-    abort_if((int) $solicitud->solicitant_usuari_espai_id === $usuariEspaiId, 422, 'No pots acceptar la teva pròpia guàrdia.');
-
-    $result = DB::transaction(function () use ($solicitud, $usuariEspaiId, $espaiId) {
-
-        $sol = GuardiaSolicitud::query()
-            ->where('id', (int) $solicitud->id)
-            ->lockForUpdate()
-            ->firstOrFail();
-
-        if ((string) $sol->estat !== 'pendent') {
-            return ['ok' => false, 'msg' => 'Aquesta guàrdia ja ha estat gestionada.'];
-        }
-
-        $dia = (int) $sol->dia_setmana;
-        $franjaId = (int) $sol->franja_horaria_id;
-        $aulaId = (int) $sol->aula_id;
-
-        $ocupat = AulaHorario::query()
-            ->where('dia_setmana', $dia)
-            ->where('franja_horaria_id', $franjaId)
+        $horari = AulaHorario::query()
             ->where('usuari_espai_id', $usuariEspaiId)
-            ->where('aula_id', '!=', $aulaId)
-            ->whereHas('aula', function ($q) use ($espaiId) {
-                $q->where('espai_id', $espaiId);
-            })
-            ->first();
-
-        abort_if($ocupat, 422, 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.');
-
-        $slot = AulaHorario::query()
-            ->where('aula_id', $aulaId)
             ->where('dia_setmana', $dia)
             ->where('franja_horaria_id', $franjaId)
-            ->lockForUpdate()
             ->first();
 
-        if (!$slot) {
-            $slot = AulaHorario::query()->create([
+        abort_unless($horari, 422, 'No tens cap aula assignada en aquesta franja.');
+
+        $aulaId = null;
+        if (isset($horari->aula_id) && $horari->aula_id) {
+            $aulaId = (int) $horari->aula_id;
+        }
+
+        $aulaNom = $horari->aula->nom ?? '-';
+        $tipus = null;
+        if (isset($data['tipus']) && $data['tipus'] !== '') {
+            $tipus = (string) $data['tipus'];
+        }
+
+        $comentari = null;
+        if (isset($data['comentari']) && trim((string) $data['comentari']) !== '') {
+            $comentari = (string) $data['comentari'];
+        }
+
+        DB::transaction(function () use (
+            $espaiId,
+            $usuariEspaiId,
+            $aulaId,
+            $dia,
+            $franjaId,
+            $tipus,
+            $comentari,
+            $franjaNom,
+            $aulaNom
+        ) {
+            $sol = GuardiaSolicitud::query()->create([
+                'espai_id' => $espaiId,
+                'solicitant_usuari_espai_id' => $usuariEspaiId,
+                'cobridor_usuari_espai_id' => null,
+                'noticia_id' => null,
                 'aula_id' => $aulaId,
                 'dia_setmana' => $dia,
                 'franja_horaria_id' => $franjaId,
+                'tipus' => $tipus,
+                'comentari' => $comentari,
+                'estat' => 'pendent',
             ]);
-        }
 
-        if (isset($slot->dia_setwana)) {
-        }
+            $dies = [
+                1 => 'Dilluns',
+                2 => 'Dimarts',
+                3 => 'Dimecres',
+                4 => 'Dijous',
+                5 => 'Divendres',
+            ];
 
-        $originalId = $slot ? (int) $slot->usuari_espai_id : null;
+            $diaTxt = 'Dia ' . (string) $dia;
+            if (isset($dies[$dia])) {
+                $diaTxt = (string) $dies[$dia];
+            }
 
-        AulaHorario::updateOrCreate(
-            [
-                'aula_id' => $aulaId,
-                'dia_setmana' => $dia,
-                'franja_horaria_id' => $franjaId,
-            ],
-            [
+            $titol = 'Guàrdia pendent (' . $diaTxt . ')';
+
+            $cont = "S'ha solicitat una guàrdia.\n";
+            $cont .= "(" . "Dia: " . $diaTxt . "\n" . ") ";
+            $cont .= "(" . "Franja: " . $franjaNom . ") ";
+            $cont .= "(" . "Aula: " . $aulaNom . ") ";
+
+            if ($tipus) {
+                $cont .= "Tipus: " . $tipus . "\n";
+            }
+            if ($comentari) {
+                $cont .= "Comentari: " . $comentari . "\n";
+            }
+
+            $cont .= "\nUn altre professor pot acceptar-la des del tauló de notícies.";
+
+            $noticia = Noticia::query()->create([
+                'espai_id' => $espaiId,
                 'usuari_espai_id' => $usuariEspaiId,
-            ]
-        );
+                'tipus' => 'guardia',
+                'titol' => $titol,
+                'contingut' => $cont,
+                'imatge_path' => null,
+                'publicat_el' => now(),
+            ]);
 
-        // Dura 7 dias
-        $sol->estat = 'acceptada';
-        $sol->cobridor_usuari_espai_id = $usuariEspaiId;
-        $sol->original_usuari_espai_id = $originalId ?: (int) $sol->solicitant_usuari_espai_id;
-        $sol->revertir_el = Carbon::now()->addDays(7);
-        $sol->updated_at = now();
-        $sol->save();
+            $sol->noticia_id = (int) $noticia->id;
+            $sol->save();
 
-        return ['ok' => true, 'msg' => 'Has acceptat la guàrdia i s’ha actualitzat l’horari.'];
-    });
+            // Notificar a la resta de membres del espai (campaneta)
+            $solicitantNom = optional(UsuariEspai::find($usuariEspaiId))->nom ?? 'Un professor';
 
-    return redirect()
-        ->route('espai.noticies.index', ['tipus' => 'guardia'])
-        ->with('ok', $result['msg']);
-}
+            Notificacio::notifyEspai(
+                (int) $espaiId,
+                'guardia_solicitada',
+                [
+                    'titol' => $solicitantNom . ' ha demanat una guàrdia (' . $diaTxt . ')',
+                    'missatge' => 'Aula ' . $aulaNom . ' · ' . $franjaNom,
+                    'url' => route('espai.noticies.index', ['tipus' => 'guardia']),
+                    'related_type' => GuardiaSolicitud::class,
+                    'related_id' => (int) $sol->id,
+                ],
+                $usuariEspaiId,
+                true
+            );
+        });
+
+        return redirect()
+            ->route('espai.guardies.index')
+            ->with('ok', 'Sol·licitud de guàrdia enviada i publicada al tauló.');
+    }
+
+
+    public function acceptar(Request $request, GuardiaSolicitud $solicitud)
+    {
+        $espaiId = (int) session('espai_id');
+        abort_unless($espaiId, 403);
+
+        $usuariEspaiId = (int) session('usuari_espai_id');
+        abort_unless($usuariEspaiId, 403);
+
+        abort_if((int) $solicitud->espai_id !== $espaiId, 403);
+        abort_if((int) $solicitud->solicitant_usuari_espai_id === $usuariEspaiId, 422, 'No pots acceptar la teva pròpia guàrdia.');
+
+        $result = DB::transaction(function () use ($solicitud, $usuariEspaiId, $espaiId) {
+
+            $sol = GuardiaSolicitud::query()
+                ->where('id', (int) $solicitud->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ((string) $sol->estat !== 'pendent') {
+                return ['ok' => false, 'msg' => 'Aquesta guàrdia ja ha estat gestionada.'];
+            }
+
+            $dia = (int) $sol->dia_setmana;
+            $franjaId = (int) $sol->franja_horaria_id;
+            $aulaId = (int) $sol->aula_id;
+
+            $ocupat = AulaHorario::query()
+                ->where('dia_setmana', $dia)
+                ->where('franja_horaria_id', $franjaId)
+                ->where('usuari_espai_id', $usuariEspaiId)
+                ->where('aula_id', '!=', $aulaId)
+                ->whereHas('aula', function ($q) use ($espaiId) {
+                    $q->where('espai_id', $espaiId);
+                })
+                ->first();
+
+            abort_if($ocupat, 422, 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.');
+
+            $slot = AulaHorario::query()
+                ->where('aula_id', $aulaId)
+                ->where('dia_setmana', $dia)
+                ->where('franja_horaria_id', $franjaId)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$slot) {
+                $slot = AulaHorario::query()->create([
+                    'aula_id' => $aulaId,
+                    'dia_setmana' => $dia,
+                    'franja_horaria_id' => $franjaId,
+                ]);
+            }
+
+            $originalId = $slot ? (int) $slot->usuari_espai_id : null;
+
+            AulaHorario::updateOrCreate(
+                [
+                    'aula_id' => $aulaId,
+                    'dia_setmana' => $dia,
+                    'franja_horaria_id' => $franjaId,
+                ],
+                [
+                    'usuari_espai_id' => $usuariEspaiId,
+                ]
+            );
+
+            // Dura 7 dias
+            $sol->estat = 'acceptada';
+            $sol->cobridor_usuari_espai_id = $usuariEspaiId;
+            $sol->original_usuari_espai_id = $originalId ?: (int) $sol->solicitant_usuari_espai_id;
+            $sol->revertir_el = Carbon::now()->addDays(7);
+            $sol->updated_at = now();
+            $sol->save();
+
+            return [
+                'ok' => true,
+                'msg' => 'Has acceptat la guàrdia i s’ha actualitzat l’horari.',
+                'sol' => $sol,
+            ];
+        });
+
+        // Si l'acceptació ha estat correcta, notifiquem
+        if (isset($result['ok']) && $result['ok'] && isset($result['sol'])) {
+            $sol = $result['sol'];
+
+            $cobridorNom = optional(UsuariEspai::find($usuariEspaiId))->nom ?? 'Un professor';
+            $solicitantNom = optional(UsuariEspai::find((int) $sol->solicitant_usuari_espai_id))->nom ?? 'el professor';
+
+            $diesLabels = [1 => 'Dilluns', 2 => 'Dimarts', 3 => 'Dimecres', 4 => 'Dijous', 5 => 'Divendres'];
+            $diaTxt = $diesLabels[(int) $sol->dia_setmana] ?? ('Dia ' . (int) $sol->dia_setmana);
+
+            Notificacio::notifyEspai(
+                (int) $espaiId,
+                'guardia_acceptada',
+                [
+                    'titol' => $cobridorNom . ' cobrirà la guàrdia de ' . $solicitantNom,
+                    'missatge' => $diaTxt . ' · suplència acceptada',
+                    'url' => route('espai.noticies.index', ['tipus' => 'guardia']),
+                    'related_type' => GuardiaSolicitud::class,
+                    'related_id' => (int) $sol->id,
+                ],
+                $usuariEspaiId,
+                true
+            );
+        }
+
+        return redirect()
+            ->route('espai.noticies.index', ['tipus' => 'guardia'])
+            ->with('ok', $result['msg']);
+    }
 
 }

@@ -33,6 +33,8 @@
         {{ $slot }}
     </main>
 
+    <x-notification-bell />
+
 </div>
 
 {{-- Modales específicos de cada vista --}}

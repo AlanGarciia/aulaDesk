@@ -23,7 +23,6 @@
 
             <nav class="icon-btns" aria-label="Opcions de l'espai">
 
-                {{-- 🔵 GRUPS --}}
                 @canEspai('groups.view')
                 <a href="{{ route('espai.grups.index') }}" class="icon-btn" aria-label="Grups">
                     <span class="icon-btn__back bg-blue" aria-hidden="true"></span>
@@ -36,7 +35,6 @@
                 </a>
                 @endcanEspai
 
-                {{-- 🟣 USUARIS --}}
                 @canEspai('users.view')
                 <a href="{{ route('espai.usuaris.index') }}" class="icon-btn" aria-label="Veure usuaris">
                     <span class="icon-btn__back bg-purple" aria-hidden="true"></span>
@@ -49,7 +47,6 @@
                 </a>
                 @endcanEspai
 
-                {{-- 🔴 NOTÍCIES --}}
                 @canEspai('noticies.view')
                 <a href="{{ route('espai.noticies.index') }}" class="icon-btn" aria-label="Tauló de notícies">
                     <span class="icon-btn__back bg-red" aria-hidden="true"></span>
@@ -62,7 +59,6 @@
                 </a>
                 @endcanEspai
 
-                {{-- 🟦 AULES --}}
                 @canEspai('aulas.view')
                 <a href="{{ route('espai.aules.index') }}" class="icon-btn" aria-label="Aules">
                     <span class="icon-btn__back bg-indigo" aria-hidden="true"></span>
@@ -75,7 +71,6 @@
                 </a>
                 @endcanEspai
 
-                {{-- 🟧 ALUMNES --}}
                 @canEspai('students.view')
                 <a href="{{ route('espai.alumnes.index') }}" class="icon-btn" aria-label="Alumnes">
                     <span class="icon-btn__back bg-orange" aria-hidden="true"></span>
@@ -88,7 +83,6 @@
                 </a>
                 @endcanEspai
 
-                {{-- 🟩 GUARDIES --}}
                 @canEspai('guardies.view')
                 <a href="{{ route('espai.guardies.index') }}" class="icon-btn" aria-label="Guardies">
                     <span class="icon-btn__back bg-green" aria-hidden="true"></span>
@@ -97,7 +91,7 @@
                             <i class="bi bi-calendar-check" aria-hidden="true"></i>
                         </span>
                     </span>
-                    <span class="icon-btn__label">Guardies</span>
+                    <span class="icon-btn__label">Calendari</span>
                 </a>
                 @endcanEspai
 

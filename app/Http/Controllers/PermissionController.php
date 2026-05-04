@@ -15,7 +15,7 @@ class PermissionController extends Controller
         return Espai::findOrFail($espaiId);
     }
 
-    /* Generar permisos */
+    //crear permisos
     private function generatePermissionsForEspai(Espai $espai)
     {
         $modules = [

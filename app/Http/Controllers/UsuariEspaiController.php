@@ -7,6 +7,8 @@ use App\Models\Espai;
 use App\Models\UsuariEspai;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\Notificacio;
+
 
 class UsuariEspaiController extends Controller
 {
@@ -94,6 +96,23 @@ class UsuariEspaiController extends Controller
         if ($baseRole) {
             $usuari->roles()->syncWithoutDetaching([$baseRole->id]);
         }
+
+        // Notificar a la resta de membres que s'ha unit un usuari nou
+        $actorId = (int) $request->session()->get('usuari_espai_id');
+
+        Notificacio::notifyEspai(
+            (int) $espai->id,
+            'usuari_nou',
+            [
+                'titol' => 'Nou usuari a l\'espai: ' . $usuari->nom,
+                'missatge' => 'Rol: ' . $usuari->rol,
+                'url' => route('espai.usuaris.index'),
+                'related_type' => UsuariEspai::class,
+                'related_id' => (int) $usuari->id,
+            ],
+            $actorId ?: null,
+            true
+        );
 
         return redirect()
             ->route('espai.usuaris.index')
