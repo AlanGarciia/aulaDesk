@@ -19,17 +19,11 @@ class UsuariEspai extends Model
         'contrasenya',
     ];
 
-    /**
-     * Relación con el espai
-     */
     public function espai()
     {
         return $this->belongsTo(Espai::class);
     }
 
-    /**
-     * Relación: roles dinámicos del usuario dentro del espai
-     */
     public function roles()
     {
         return $this->belongsToMany(
@@ -40,9 +34,6 @@ class UsuariEspai extends Model
         );
     }
 
-    /**
-     * Obtener solo los roles del espai actual
-     */
     public static function baseRoles($espaiId = null)
     {
         if (!$espaiId) {
@@ -54,9 +45,6 @@ class UsuariEspai extends Model
             ->toArray();
     }
 
-    /**
-     * Comprobar si el usuario tiene un permiso dinámico
-     */
     public function hasPermission(string $permission): bool
     {
         return $this->roles()
@@ -66,17 +54,11 @@ class UsuariEspai extends Model
             ->exists();
     }
 
-    /**
-     * Alias más semántico para Blade y middleware
-     */
     public function canEspai(string $permission): bool
     {
         return $this->hasPermission($permission);
     }
 
-    /**
-     * Mutador de contraseña (siempre hashea)
-     */
     public function setContrasenyaAttribute($value)
     {
         if (!empty($value)) {

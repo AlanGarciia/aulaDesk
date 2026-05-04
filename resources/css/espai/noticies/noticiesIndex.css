@@ -278,7 +278,7 @@ html, body{
 .btn-top-right {
     position: fixed;
     top: 20px;
-    right: 20px;
+    right: 76px;
     z-index: 2000;
 }
 .btn-create-fixed {

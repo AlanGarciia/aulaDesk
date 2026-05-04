@@ -18,6 +18,7 @@ use App\Http\Controllers\AulaHorarioController;
 use App\Http\Controllers\BaseRoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\NotificacioController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -95,21 +96,26 @@ Route::middleware('auth')->group(function () {
 
 });
 
-/*
-|--------------------------------------------------------------------------
-| ESPAI (requiere sesión dentro del espai)
-|--------------------------------------------------------------------------
-*/
-
+//espai(requireix sesio dins l'espai)
 Route::middleware('espai.session')->group(function () {
 
     Route::get('/espai', fn() => view('espai.index'))->name('espai.index');
 
-    /*
-    |--------------------------------------------------------------------------
-    | USUARIS
-    |--------------------------------------------------------------------------
-    */
+    //notis
+    Route::get('/espai/notificacions', [NotificacioController::class, 'index'])
+        ->name('espai.notificacions.index');
+
+    Route::get('/espai/notificacions/poll', [NotificacioController::class, 'poll'])
+        ->name('espai.notificacions.poll');
+
+    Route::post('/espai/notificacions/read-all', [NotificacioController::class, 'markAllRead'])
+        ->name('espai.notificacions.readAll');
+
+    Route::post('/espai/notificacions/{id}/read', [NotificacioController::class, 'markRead'])
+        ->whereNumber('id')
+        ->name('espai.notificacions.read');
+
+    //usuaris
     Route::get('/espai/usuaris', [UsuariEspaiController::class, 'index'])
         ->name('espai.usuaris.index')
         ->middleware('canEspai:users.view');
@@ -135,11 +141,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:users.delete');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | NOTÍCIES
-    |--------------------------------------------------------------------------
-    */
+    //noticies
     Route::resource('/espai/noticies', NoticiaController::class)
         ->parameters(['noticies' => 'noticia'])
         ->names('espai.noticies')
@@ -154,11 +156,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:noticies.reaccionar');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | AULES
-    |--------------------------------------------------------------------------
-    */
+    //aules
     Route::resource('/espai/aules', AulaController::class)
         ->parameters(['aules' => 'aula'])
         ->names('espai.aules')
@@ -177,11 +175,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:aulas.horari.update');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | ALUMNES
-    |--------------------------------------------------------------------------
-    */
+    //alumnes
     Route::get('/espai/alumnes', [AlumneController::class, 'index'])
         ->name('espai.alumnes.index')
         ->middleware('canEspai:students.view');
@@ -223,11 +217,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:students.export');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | GRUPS
-    |--------------------------------------------------------------------------
-    */
+    //grups
     Route::get('/espai/grups', [GrupController::class, 'index'])
         ->name('espai.grups.index')
         ->middleware('canEspai:groups.view');
@@ -257,11 +247,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:groups.view');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | GUARDIES
-    |--------------------------------------------------------------------------
-    */
+    //guardies
     Route::get('/espai/guardies', [GuardiaController::class, 'index'])
         ->name('espai.guardies.index')
         ->middleware('canEspai:guardies.view');
@@ -279,11 +265,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:guardies.manage');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | FRANGES HORÀRIES
-    |--------------------------------------------------------------------------
-    */
+    //franjes horaries
     Route::prefix('espai/franges')->middleware('canEspai:aulas.view')->group(function () {
         Route::get('/',              [FranjaHorariaController::class, 'index'])->name('espai.franges.index');
         Route::get('/create',        [FranjaHorariaController::class, 'create'])->name('espai.franges.create')->middleware('canEspai:aulas.manage');
@@ -294,11 +276,7 @@ Route::middleware('espai.session')->group(function () {
     });
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | ASSIGNACIÓ DE ROLS A USUARIS
-    |--------------------------------------------------------------------------
-    */
+    //rols a usuaris
     Route::get('/espai/usuaris/{usuariEspai}/roles', [UsuariEspaiController::class, 'assignRolesForm'])
         ->name('espai.usuaris.roles')
         ->middleware('canEspai:users.update');
@@ -312,11 +290,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:users.update');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | TICKETS D'AULA
-    |--------------------------------------------------------------------------
-    */
+    //tickets
     Route::get('/espai/tickets', [AulaTicketController::class, 'index'])
         ->name('espai.tickets.index')
         ->middleware('canEspai:tickets.view');
@@ -334,11 +308,7 @@ Route::middleware('espai.session')->group(function () {
         ->middleware('canEspai:tickets.delete');
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | ROLES
-    |--------------------------------------------------------------------------
-    */
+    //rols
     Route::prefix('espai/roles')->middleware('canEspai:roles.view')->group(function () {
         Route::get('/', [BaseRoleController::class, 'index'])->name('espai.roles.index');
         Route::get('/create/{from_user?}', [BaseRoleController::class, 'create'])
@@ -353,11 +323,7 @@ Route::middleware('espai.session')->group(function () {
     });
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | PERMISSIONS
-    |--------------------------------------------------------------------------
-    */
+   //permisos
     Route::prefix('espai/permissions')->middleware('canEspai:permissions.view')->group(function () {
         Route::get('/', [PermissionController::class, 'index'])->name('espai.permissions.index');
         Route::get('/create', [PermissionController::class, 'create'])->name('espai.permissions.create')->middleware('canEspai:permissions.create');
@@ -365,7 +331,11 @@ Route::middleware('espai.session')->group(function () {
         Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('espai.permissions.edit')->middleware('canEspai:permissions.update');
         Route::put('/{permission}', [PermissionController::class, 'update'])->name('espai.permissions.update')->middleware('canEspai:permissions.update');
         Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('espai.permissions.destroy')->middleware('canEspai:permissions.delete');
-    });
+    
+    
+        });
+
+
 
 
 });

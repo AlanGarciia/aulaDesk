@@ -1,17 +1,6 @@
 CSS de grstionar / crear roles - GONZALO
 
-Acabar lo de los permisos - ALAN
-
-Si un professor ya está en una hora en una aula, no puede dejar ponerlo
-La vista admin no puede dejar tocar los desplegables si no hay permisos
-Vista ver de noticias le faltan boton de volver
-
 Cuando se cambia un rol, en la vista de usuarios no se cambia el rol (se cambia internamente pero no lo muestra)
-
-Arreglar error:
-Symfony\Component\Routing\Exception\RouteNotFoundException
-vendor\laravel\framework\src\Illuminate\Routing\UrlGenerator.php:526
-Route [espai.guardies.acceptar] not defined.
 
 //SEGUIR A PARTIR DE NOTICIAS
 

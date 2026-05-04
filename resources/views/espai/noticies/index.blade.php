@@ -165,7 +165,7 @@
 
                                 {{-- Botó acceptar guardia --}}
                                 @if($isGuardia && $sol && $solPendent && !$esMeva)
-                                    <form method="POST" action="{{ route('espai.guardies.acceptar', $sol) }}" class="inline-form">
+                                    <form method="POST" action="{{ route('espai.guardia.acceptar', $sol) }}" class="inline-form">
                                         @csrf
                                         <button type="submit" class="btn btn-primary">
                                             Acceptar guàrdia
