@@ -52,17 +52,27 @@ class IncidenciaController extends Controller
             ? Carbon::parse($request->query('data'))->toDateString()
             : Carbon::today()->toDateString();
 
-        $incidencies = Incidencia::query()
+        // whereDate per evitar problemes de format datetime/date
+        $rows = Incidencia::query()
             ->where('aula_horari_id', $aulaHorari->id)
-            ->where('data', $data)
+            ->whereDate('data', $data)
             ->orderBy('created_at')
-            ->get()
-            ->groupBy('alumne_id');
+            ->get();
+
+        // Construeix taula plana [alumne_id_int][tipus] per evitar problemes de tipus de clau
+        $incidenciesIdx = [];
+        foreach ($rows as $inc) {
+            $aid = (int) $inc->alumne_id;
+            if (!isset($incidenciesIdx[$aid])) {
+                $incidenciesIdx[$aid] = [];
+            }
+            $incidenciesIdx[$aid][(string) $inc->tipus] = $inc;
+        }
 
         return view('espai.incidencies.index', [
             'aulaHorari' => $aulaHorari,
             'alumnes' => $alumnes,
-            'incidencies' => $incidencies,
+            'incidenciesIdx' => $incidenciesIdx,
             'data' => $data,
             'tipusLabels' => Incidencia::TIPUS_LABELS,
             'tipusIcones' => Incidencia::TIPUS_ICONES,
@@ -153,11 +163,9 @@ class IncidenciaController extends Controller
 
         $selections = $payload['selections'] ?? [];
 
-        // IDs vàlids del grup
-        $alumnesIds = $aulaHorari->grup->alumnes()->pluck('alumnes.id')->toArray();
+        $alumnesIds = $aulaHorari->grup->alumnes()->pluck('alumnes.id')->map(fn($v) => (int) $v)->toArray();
         $alumnesIdsSet = array_flip($alumnesIds);
 
-        // Construir el set seleccionat: [alumne_id][tipus] => true
         $seleccionatsIdx = [];
         foreach ($selections as $alumneId => $tipusArr) {
             $alumneId = (int) $alumneId;
@@ -170,10 +178,9 @@ class IncidenciaController extends Controller
             }
         }
 
-        // Incidències actuals d'aquesta hora i dia
         $existents = Incidencia::query()
             ->where('aula_horari_id', $aulaHorari->id)
-            ->where('data', $data)
+            ->whereDate('data', $data)
             ->get();
 
         $existentsIdx = [];
@@ -181,12 +188,10 @@ class IncidenciaController extends Controller
             $existentsIdx[(int) $inc->alumne_id][(string) $inc->tipus] = $inc;
         }
 
-        // Sync: afegir noves, eliminar les que ja no estan
         DB::transaction(function () use (
             $espaiId, $usuariEspaiId, $aulaHorari, $data,
             $existentsIdx, $seleccionatsIdx
         ) {
-            // Eliminar les desmarcades
             foreach ($existentsIdx as $alumneId => $tipusMap) {
                 foreach ($tipusMap as $tipus => $inc) {
                     if (!isset($seleccionatsIdx[$alumneId][$tipus])) {
@@ -195,7 +200,6 @@ class IncidenciaController extends Controller
                 }
             }
 
-            // Afegir les noves
             foreach ($seleccionatsIdx as $alumneId => $tipusMap) {
                 foreach ($tipusMap as $tipus => $_) {
                     if (!isset($existentsIdx[$alumneId][$tipus])) {
@@ -221,7 +225,6 @@ class IncidenciaController extends Controller
             ])
             ->with('ok', 'Llista guardada correctament.');
     }
-
     public function pdf(Request $request, AulaHorario $aulaHorari)
     {
         [$espaiId, $usuariEspaiId] = $this->checkAccess($request, $aulaHorari);
@@ -252,7 +255,6 @@ class IncidenciaController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        // Index per [alumne_id][tipus] => count
         $resumIdx = [];
         foreach ($alumnes as $a) {
             $resumIdx[$a->id] = [
@@ -313,9 +315,7 @@ class IncidenciaController extends Controller
                 'aula',
                 'franja',
                 'grup.alumnes' => fn ($q) => $q->orderBy('cognoms')->orderBy('nom'),
-            ])
-            ->whereHas('aula', fn ($q) => $q->where('espai_id', $espaiId))
-            ->get();
+            ])->whereHas('aula', fn ($q) => $q->where('espai_id', $espaiId))->get();
 
         $horariData = [];
         foreach ($horaris as $h) {
