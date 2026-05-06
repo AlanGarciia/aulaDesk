@@ -60,7 +60,7 @@
             <div class="att-list">
                 @forelse($alumnes as $alumne)
                     @php
-                        $tipusActius = $incidencies->get($alumne->id, collect())->pluck('tipus')->toArray();
+                        $tipusActius = array_keys($incidenciesIdx[(int) $alumne->id] ?? []);
                     @endphp
                     <div class="att-row">
                         <div class="att-avatar">

@@ -1,9 +1,10 @@
 @php
     $usuariEspaiId = session('usuari_espai_id');
     $espaiId = session('espai_id');
+    $dinsEspai = request()->routeIs('espai.*');
 @endphp
 
-@if($usuariEspaiId && $espaiId)
+@if($usuariEspaiId && $espaiId && $dinsEspai)
 
 <style>
     .notif-bell-wrap {
