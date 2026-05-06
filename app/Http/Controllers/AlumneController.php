@@ -219,10 +219,6 @@ class AlumneController extends Controller
             ->with('ok', 'Alumnes importats correctament.');
     }
 
-    /* ---------------------------------------------------------
-     *  EXPORT CSV
-     * --------------------------------------------------------- */
-
     public function export(Request $request)
     {
         $espai = $this->getEspai($request);

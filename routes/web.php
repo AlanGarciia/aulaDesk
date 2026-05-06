@@ -19,6 +19,7 @@ use App\Http\Controllers\BaseRoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\NotificacioController;
+use App\Http\Controllers\IncidenciaController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -331,14 +332,33 @@ Route::middleware('espai.session')->group(function () {
         Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('espai.permissions.edit')->middleware('canEspai:permissions.update');
         Route::put('/{permission}', [PermissionController::class, 'update'])->name('espai.permissions.update')->middleware('canEspai:permissions.update');
         Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('espai.permissions.destroy')->middleware('canEspai:permissions.delete');
-    
-    
-        });
+    });
+
+    //incidencies
+    Route::get('/espai/incidencies/{aulaHorari}', [IncidenciaController::class, 'index'])
+        ->whereNumber('aulaHorari')
+        ->name('espai.incidencies.index');
+
+    Route::post('/espai/incidencies/{aulaHorari}', [IncidenciaController::class, 'store'])
+        ->whereNumber('aulaHorari')
+        ->name('espai.incidencies.store');
+
+    Route::delete('/espai/incidencies/{incidencia}', [IncidenciaController::class, 'destroy'])
+        ->whereNumber('incidencia')
+        ->name('espai.incidencies.destroy');
 
 
+    Route::post('/espai/incidencies/{aulaHorari}/save', [IncidenciaController::class, 'saveBulk'])
+    ->whereNumber('aulaHorari')
+    ->name('espai.incidencies.save');
 
+    Route::get('/espai/incidencies/{aulaHorari}/pdf', [IncidenciaController::class, 'pdf'])
+    ->whereNumber('aulaHorari')
+    ->name('espai.incidencies.pdf');
 
-});
+    Route::get('/espai/incidencies-global/pdf', [IncidenciaController::class, 'globalPdf'])->name('espai.incidencies.globalPdf');
+
+    });
 
 
 require __DIR__ . '/auth.php';

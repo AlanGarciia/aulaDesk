@@ -1,0 +1,305 @@
+.att-page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 20px 16px 80px;
+}
+
+.att-head {
+    background: linear-gradient(135deg, #1976d2, #0d47a1);
+    color: #fff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 18px rgba(13, 71, 161, 0.25);
+}
+.att-head h1 {
+    font-size: 1.15rem;
+    margin: 0 0 3px;
+    font-weight: 700;
+}
+.att-head__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: .82rem;
+    opacity: .92;
+}
+.att-head__meta i {
+    margin-right: 4px;
+}
+
+/* ===== Barra de filtres / accions ===== */
+.att-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.att-bar label {
+    font-size: .85rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+.att-bar input[type=date] {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: .9rem;
+    background: #fff;
+}
+
+.att-pdf-btn {
+    background: #dc2626;
+    color: #fff;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: .82rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, .30);
+    transition: background .12s, transform .08s, box-shadow .12s;
+}
+.att-pdf-btn:hover {
+    background: #b91c1c;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, .40);
+}
+
+.att-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: .72rem;
+    color: #6b7280;
+    margin-left: auto;
+}
+.att-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.att-legend i {
+    font-size: .9rem;
+}
+.att-legend .lg-as { color: #ef4444; }
+.att-legend .lg-de { color: #f59e0b; }
+.att-legend .lg-ma { color: #6366f1; }
+.att-legend .lg-am { color: #ec4899; }
+
+/* ===== Flash ===== */
+.att-flash {
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: .9rem;
+}
+
+/* ===== Llista d'alumnes ===== */
+.att-list {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.att-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.att-row:last-child {
+    border-bottom: 0;
+}
+.att-row:nth-child(odd) {
+    background: #fafafa;
+}
+
+.att-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: .88rem;
+    flex: 0 0 36px;
+}
+
+.att-name {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+    color: #111827;
+    font-size: .92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.att-toggles {
+    display: flex;
+    gap: 4px;
+    flex: 0 0 auto;
+}
+
+/* ===== Toggles ===== */
+.toggle {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+}
+.toggle input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+.toggle__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 36px;
+    padding: 0 8px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #9ca3af;
+    border-radius: 8px;
+    font-size: .72rem;
+    font-weight: 700;
+    transition: background .12s, border-color .12s, color .12s, transform .08s;
+}
+.toggle__btn i {
+    font-size: 1.05rem;
+}
+.toggle:hover .toggle__btn {
+    border-color: #d1d5db;
+    background: #e5e7eb;
+    color: #6b7280;
+}
+.toggle:active .toggle__btn {
+    transform: scale(.92);
+}
+
+/* Estats actius per tipus */
+.toggle[data-tipus="assistencia"] input:checked ~ .toggle__btn {
+    background: #ef4444;
+    border-color: #b91c1c;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, .40);
+}
+.toggle[data-tipus="deures"] input:checked ~ .toggle__btn {
+    background: #f59e0b;
+    border-color: #b45309;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, .40);
+}
+.toggle[data-tipus="material"] input:checked ~ .toggle__btn {
+    background: #6366f1;
+    border-color: #4338ca;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, .40);
+}
+.toggle[data-tipus="amonestacio"] input:checked ~ .toggle__btn {
+    background: #ec4899;
+    border-color: #be185d;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, .40);
+}
+
+/* ===== Barra de guardar enganxada a baix ===== */
+.att-savebar {
+    position: sticky;
+    bottom: 0;
+    margin-top: 16px;
+    padding: 14px 0 4px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .95) 50%);
+    backdrop-filter: blur(6px);
+}
+.att-save {
+    background: #16a34a;
+    color: #fff;
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 20px rgba(22, 163, 74, .40);
+    transition: background .12s, transform .08s;
+}
+.att-save:hover {
+    background: #15803d;
+}
+.att-save:active {
+    transform: scale(.97);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 540px) {
+    .att-toggles {
+        gap: 3px;
+    }
+    .toggle__btn {
+        min-width: 34px;
+        padding: 0 6px;
+    }
+    .att-row {
+        gap: 8px;
+        padding: 8px 10px;
+    }
+    .att-name {
+        font-size: .85rem;
+    }
+    .att-legend {
+        display: none;
+    }
+    .att-pdf-btn {
+        font-size: .75rem;
+        padding: 6px 10px;
+    }
+}
+
+/* ===== Dark mode ===== */
+@media (prefers-color-scheme: dark) {
+    .att-list {
+        background: #1f1f22;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+    .att-row:nth-child(odd) {
+        background: #25262a;
+    }
+    .att-name {
+        color: #f3f4f6;
+    }
+    .att-toggles .toggle__btn {
+        background: #2a2b30;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+    .att-bar input[type=date] {
+        background: #2a2b30;
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.10);
+    }
+}

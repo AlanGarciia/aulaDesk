@@ -15,7 +15,7 @@
         <div class="container">
             <div class="guardies-card">
                 <div class="guardies-head">
-                    <div>
+                     <div>
                         @php
                             $nomUsuari = '';
                             if (isset($usuariEspai) && isset($usuariEspai->nom)) {
@@ -31,32 +31,52 @@
                         </h3>
 
                         <p class="guardies-sub">
-                            Aquest és el teu horari segons les hores assignades a les aules.
+                            Clica "Llista" per passar llista, o descarrega un informe.
                         </p>
                     </div>
 
-                    <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                        <i class="bi bi-box-arrow-right me-1"></i> Tornar a l'espai
-                    </a>
+                    @php
+                        $weekStart = \Carbon\Carbon::today()->startOfWeek()->toDateString();
+                        $weekEnd = \Carbon\Carbon::today()->startOfWeek()->addDays(4)->toDateString();
+                        $monthStart = \Carbon\Carbon::today()->startOfMonth()->toDateString();
+                        $monthEnd = \Carbon\Carbon::today()->endOfMonth()->toDateString();
+                    @endphp
 
+                    <div class="guardies-actions">
+                        <a href="{{ route('espai.incidencies.globalPdf', ['from' => $weekStart, 'to' => $weekEnd, 'tipus' => 'setmanal']) }}"
+                        class="btn-informe btn-informe--week" target="_blank">
+                            <i class="bi bi-calendar-week"></i> Informe setmanal
+                        </a>
+
+                        <a href="{{ route('espai.incidencies.globalPdf', ['from' => $monthStart, 'to' => $monthEnd, 'tipus' => 'mensual']) }}"
+                        class="btn-informe btn-informe--month" target="_blank">
+                            <i class="bi bi-calendar-month"></i> Informe mensual
+                        </a>
+
+                        <a href="{{ route('espai.index') }}" class="btn btn-secondary">
+                            <i class="bi bi-box-arrow-right me-1"></i> Tornar
+                        </a>
+                    </div>
                 </div>
 
                 @php
                     $hasData = isset($franjes) && $franjes->count() && isset($dies) && count($dies);
+                    $weekStart = \Carbon\Carbon::today()->startOfWeek()->toDateString();
+                    $weekEnd = \Carbon\Carbon::today()->startOfWeek()->addDays(4)->toDateString();
                 @endphp
 
                 @if(!$hasData)
                     <div class="p-3">
                         <div class="alert alert-info mb-0">
-                            Encara no hi ha franjes o dies configurats per mostrar l’horari.
+                            Encara no hi ha franjes o dies configurats per mostrar l'horari.
                         </div>
                     </div>
                 @else
-                    <div class="table-responsive">
+                    <div class="timetable-wrap">
                         <table class="timetable">
                             <thead>
                                 <tr>
-                                    <th style="width: 1%;">Hora</th>
+                                    <th class="th-hora">Hora</th>
                                     @foreach($dies as $dia)
                                         <th>{{ $diesLabels[$dia] ?? 'Dia ' . $dia }}</th>
                                     @endforeach
@@ -66,7 +86,13 @@
                             <tbody>
                                 @foreach($franjes as $franja)
                                     <tr>
-                                        <td class="timecell">{{ $franja->inici }} - {{ $franja->fi }}</td>
+                                        <td class="timecell">
+                                            <div class="timecell-inner">
+                                                <span class="timecell-inici">{{ substr($franja->inici, 0, 5) }}</span>
+                                                <span class="timecell-sep">–</span>
+                                                <span class="timecell-fi">{{ substr($franja->fi, 0, 5) }}</span>
+                                            </div>
+                                        </td>
 
                                         @foreach($dies as $dia)
                                             @php
@@ -76,43 +102,57 @@
                                                 $solEsMeva = $sol['es_meva'] ?? false;
                                                 $solSocCobridor = $sol['soc_cobridor'] ?? false;
 
-                                                $amagarBoto = $sol && ($solEsMeva || $solSocCobridor);
-                                                $aulaNom = $cell['aula'] ?? 'Aula';
+                                                $aulaNom = $cell['aula'] ?? '';
+                                                $horariId = $cell['horari_id'] ?? 0;
+                                                $estatSol = $sol['estat'] ?? 'pendent';
                                             @endphp
 
-                                            <td>
+                                            <td class="daycell">
                                                 @if(!$cell)
-                                                    <span class="slot-empty">—</span>
+                                                    <div class="slot slot--empty">
+                                                        <span>—</span>
+                                                    </div>
                                                 @else
                                                     <div class="slot">
-                                                        <div class="slot-row">
-                                                            <div class="slot-aula">
-                                                                <i class="bi bi-door-open"></i> {{ $aulaNom }}
-                                                            </div>
-
-                                                            @unless($amagarBoto)
-                                                                <a class="btn-guardia"
-                                                                   href="{{ route('espai.guardia.solicitaGuardia', ['dia' => $dia, 'franja' => $franja->id]) }}">
-                                                                    Solicitar guàrdia
-                                                                </a>
-                                                            @endunless
+                                                        <div class="slot-aula" title="{{ $aulaNom }}">
+                                                            <i class="bi bi-door-open"></i>
+                                                            <span>{{ $aulaNom }}</span>
                                                         </div>
 
-                                                        @if($solEsMeva)
-                                                            <span class="badge-guardia badge-guardia--{{ $sol['estat'] ?? 'pendent' }}">
-                                                                Guàrdia {{ $sol['estat'] ?? 'pendent' }}
-                                                            </span>
-                                                        @endif
+                                                        <div class="slot-actions">
+                                                            @if($horariId)
+                                                                <a class="btn-llista"
+                                                                   href="{{ route('espai.incidencies.index', ['aulaHorari' => $horariId]) }}"
+                                                                   title="Passar llista">
+                                                                    <i class="bi bi-list-check"></i> Llista
+                                                                </a>
+                                                            @endif
 
-                                                        @if($solSocCobridor)
-                                                            <span class="badge-guardia badge-guardia--cobridor">
-                                                                Cobreixes tu
-                                                            </span>
-                                                        @endif
+                                                            @if($solEsMeva)
+                                                                <span class="badge-guardia badge-guardia--{{ $estatSol }}">
+                                                                    {{ ucfirst($estatSol) }}
+                                                                </span>
+                                                            @elseif($solSocCobridor)
+                                                                <span class="badge-guardia badge-guardia--cobridor">
+                                                                    <i class="bi bi-shield-check"></i> Cobr.
+                                                                </span>
+                                                            @else
+                                                                <a class="btn-guardia"
+                                                                   href="{{ route('espai.guardia.solicitaGuardia', ['dia' => $dia, 'franja' => $franja->id]) }}"
+                                                                   title="Sol·licitar guàrdia">
+                                                                    <i class="bi bi-plus-circle"></i> Guàrdia
+                                                                </a>
+                                                            @endif
 
-                                                        @if(!empty($cell['meta']))
-                                                            <div class="slot-meta">{{ $cell['meta'] }}</div>
-                                                        @endif
+                                                            @if($horariId)
+                                                                <a class="btn-pdf-mini"
+                                                                   href="{{ route('espai.incidencies.pdf', ['aulaHorari' => $horariId, 'from' => $weekStart, 'to' => $weekEnd]) }}"
+                                                                   title="PDF setmana"
+                                                                   target="_blank">
+                                                                    <i class="bi bi-file-earmark-pdf"></i>
+                                                                </a>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 @endif
                                             </td>
