@@ -77,6 +77,7 @@ class GuardiaController extends Controller
             $slots[$dia][$franjaId] = [
                 'aula' => $aulaNom,
                 'aula_id' => $aulaId,
+                'horari_id' => (int) $h->id,
             ];
         }
 
@@ -395,10 +396,14 @@ class GuardiaController extends Controller
                 ->where('aula_id', '!=', $aulaId)
                 ->whereHas('aula', function ($q) use ($espaiId) {
                     $q->where('espai_id', $espaiId);
-                })
-                ->first();
+                })->first();
 
-            abort_if($ocupat, 422, 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.');
+                if ($ocupat) {
+                    return [
+                        'ok' => false,
+                        'msg' => 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.',
+                    ];
+                }
 
             $slot = AulaHorario::query()
                 ->where('aula_id', $aulaId)
@@ -468,9 +473,14 @@ class GuardiaController extends Controller
             );
         }
 
+        if (isset($result['ok']) && $result['ok']) {
+            return redirect()
+                ->route('espai.noticies.index', ['tipus' => 'guardia'])
+                ->with('ok', $result['msg']);
+        }
+
         return redirect()
             ->route('espai.noticies.index', ['tipus' => 'guardia'])
-            ->with('ok', $result['msg']);
-    }
-
+            ->with('error_modal', $result['msg'] ?? 'No s\'ha pogut acceptar la guàrdia.');
+            }
 }

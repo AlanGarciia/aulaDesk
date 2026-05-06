@@ -58,14 +58,8 @@ class NoticiaController extends Controller
         if ($tipusSeleccionat !== '') {
             $noticiesQuery->where('tipus', $tipusSeleccionat);
         }
-
         $noticies = $noticiesQuery->get();
-
-        // Mapa solicitud por noticia_id (para botón aceptar en la vista)
         $solByNoticiaId = [];
-
-        // Solo tiene sentido si estamos viendo guardias o si quieres pintarlo siempre
-        // (lo dejo siempre porque cuesta poco y simplifica la vista)
         $sols = GuardiaSolicitud::query()
             ->where('espai_id', $espai->id)
             ->whereNotNull('noticia_id')
@@ -89,10 +83,7 @@ class NoticiaController extends Controller
     public function create(Request $request)
     {
         $this->espaiActiu($request);
-
-        // Solo los creables manualmente (NO guardia)
         $tipus = self::TIPUS_CREABLES;
-
         return view('espai.noticies.create', compact('tipus'));
     }
 
@@ -134,8 +125,6 @@ class NoticiaController extends Controller
 
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
         $this->assertCreador($request, $noticia);
-
-        // solo tipos creables
         $tipusDisponibles = self::TIPUS_CREABLES;
 
         return view('espai.noticies.edit', compact('noticia', 'tipusDisponibles'));
@@ -157,8 +146,6 @@ class NoticiaController extends Controller
 
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
         $this->assertCreador($request, $noticia);
-
-        // Si es noticia de guardia, no permitas editarla como noticia normal
         abort_if((string) $noticia->tipus === 'guardia', 403, 'Aquesta notícia de guàrdia no es pot editar manualment.');
 
         $data = $request->validate([
@@ -197,9 +184,6 @@ class NoticiaController extends Controller
 
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
         $this->assertCreador($request, $noticia);
-
-        // Si es guardia, no borrar desde aquí (que se gestione por guardias)
-        abort_if((string) $noticia->tipus === 'guardia', 403, 'Aquesta notícia de guàrdia no es pot eliminar manualment.');
 
         if ($noticia->imatge_path) {
             Storage::disk('public')->delete($noticia->imatge_path);

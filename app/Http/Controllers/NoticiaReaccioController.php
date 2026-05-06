@@ -45,4 +45,3 @@ class NoticiaReaccioController extends Controller
         return back();
     }
 }
-
