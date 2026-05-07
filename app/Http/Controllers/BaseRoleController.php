@@ -15,9 +15,6 @@ class BaseRoleController extends Controller
         return Espai::findOrFail($espaiId);
     }
 
-    /**
-     * Genera automáticamente todos los permisos del espai
-     */
     private function generatePermissionsForEspai(Espai $espai)
     {
         $modules = [
@@ -32,7 +29,6 @@ class BaseRoleController extends Controller
             'permissions' => ['view', 'create', 'update', 'delete', 'manage'],
         ];
 
-        // Crear rol admin si no existe
         $adminRole = BaseRole::firstOrCreate([
             'espai_id' => $espai->id,
             'nom' => 'admin',
@@ -52,7 +48,6 @@ class BaseRoleController extends Controller
             }
         }
 
-        // Admin siempre tiene todos los permisos
         $adminRole->permissions()->syncWithoutDetaching($permissionIds);
     }
 
@@ -60,7 +55,6 @@ class BaseRoleController extends Controller
     {
         $espai = $this->getEspai($request);
 
-        // 🔥 Asegurar que los permisos existen
         $this->generatePermissionsForEspai($espai);
 
         return view('espai.roles.index', [
@@ -73,7 +67,6 @@ class BaseRoleController extends Controller
     {
         $espai = $this->getEspai($request);
 
-        // 🔥 Asegurar que los permisos existen
         $this->generatePermissionsForEspai($espai);
 
         return view('espai.roles.create', [
@@ -97,33 +90,26 @@ class BaseRoleController extends Controller
     }
 
     public function edit(Request $request, BaseRole $role, $from_user = null)
-{
-    $espai = $this->getEspai($request);
+    {
+        $espai = $this->getEspai($request);
 
-    abort_if($role->espai_id !== $espai->id, 404);
+        abort_if($role->espai_id !== $espai->id, 404);
 
-    // 🔥 Asegurar que los permisos existen
-    $this->generatePermissionsForEspai($espai);
+        $this->generatePermissionsForEspai($espai);
 
-    // 1. Cargar permisos del espai
-    $permissions = BasePermission::where('espai_id', $espai->id)->get();
+        $permissions = BasePermission::where('espai_id', $espai->id)->get();
 
-    // 2. Agrupar por categoría (antes del punto)
-    $groupedPermissions = $permissions->groupBy(function ($perm) {
-        return explode('.', $perm->nom)[0]; // users.view → users
-    });
+        $groupedPermissions = $permissions->groupBy(function ($perm) {
+            return explode('.', $perm->nom)[0]; // users.view → users
+        });
 
-    // 3. Pasar datos a la vista
-    return view('espai.roles.edit', [
-        'role' => $role,
-        'groupedPermissions' => $groupedPermissions,
-        'from_user' => $from_user,
-    ]);
-}
+        return view('espai.roles.edit', [
+            'role' => $role,
+            'groupedPermissions' => $groupedPermissions,
+            'from_user' => $from_user,
+        ]);
+    }
     
-
-
-
     public function update(Request $request, BaseRole $role)
     {
         $role->update(['nom' => $request->nom]);

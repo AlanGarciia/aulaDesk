@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class NoticiaController extends Controller
 {
-    // Tipos que el usuario puede CREAR manualmente
     private const TIPUS_CREABLES = ['noticia', 'avis', 'urgent', 'event'];
-
-    // Tipos que se pueden FILTRAR en el index (incluye guardia)
     private const TIPUS_FILTRE = ['noticia', 'avis', 'urgent', 'event', 'guardia'];
 
     private function espaiActiu(Request $request): Espai
@@ -43,7 +40,6 @@ class NoticiaController extends Controller
     {
         $espai = $this->espaiActiu($request);
 
-        // Para la UI: tipos disponibles para filtrar (incluye guardia)
         $tipusDisponibles = self::TIPUS_FILTRE;
 
         $tipusSeleccionat = (string) $request->query('tipus', '');

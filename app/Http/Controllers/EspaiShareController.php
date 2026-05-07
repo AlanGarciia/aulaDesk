@@ -11,7 +11,7 @@ class EspaiShareController extends Controller
 {
     public function store(Request $request, Espai $espai)
     {
-        // només el propietari pot compartir
+        // solo el propietari pot compartir
         if ((int) $espai->user_id !== (int) auth()->id()) {
             abort(403);
         }

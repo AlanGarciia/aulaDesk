@@ -21,7 +21,6 @@ class AulaHorarioController extends Controller
 
                 $grupId = $grups[$dia][$franjaId] ?? null;
 
-                // ── Comprovació de conflicte ──────────────────────────────
                 if ($profId) {
                     $conflict = AulaHorario::where('espai_id',          $espaiId)
                         ->where('dia_setmana',       $dia)
@@ -40,10 +39,9 @@ class AulaHorarioController extends Controller
                                            substr($conflict->franja->fi    ?? '', 0, 5),
                             'aula'      => $conflict->aula->nom ?? "Aula #{$conflict->aula_id}",
                         ];
-                        continue; // no desar aquesta assignació conflictiva
+                        continue;
                     }
                 }
-                // ─────────────────────────────────────────────────────────
 
                 AulaHorario::updateOrCreate(
                     [

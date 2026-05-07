@@ -19,18 +19,37 @@ class IncidenciaController extends Controller
 
         $aulaHorari->load(['aula', 'franja', 'grup']);
 
-        abort_if(
-            (int) ($aulaHorari->aula->espai_id ?? 0) !== $espaiId,
-            403
-        );
+        $aulaEspaiId = 0;
+        if ($aulaHorari->aula && $aulaHorari->aula->espai_id) {
+            $aulaEspaiId = (int) $aulaHorari->aula->espai_id;
+        }
 
-        abort_if(
-            (int) $aulaHorari->usuari_espai_id !== $usuariEspaiId,
-            403,
-            'Aquesta hora no és teva.'
-        );
+        abort_if($aulaEspaiId !== $espaiId, 403);
+        abort_if((int) $aulaHorari->usuari_espai_id !== $usuariEspaiId, 403, 'Aquesta hora no és teva.');
 
         return [$espaiId, $usuariEspaiId];
+    }
+
+    /** Construeix [alumne_id => [tipus => count, ...]] inicialitzat a 0 */
+    private function buildResumIdx($alumnes, $incidencies): array
+    {
+        $idx = [];
+        foreach ($alumnes as $a) {
+            $idx[$a->id] = ['assistencia' => 0, 'deures' => 0, 'material' => 0, 'amonestacio' => 0];
+        }
+        foreach ($incidencies as $inc) {
+            if (isset($idx[$inc->alumne_id][$inc->tipus])) {
+                $idx[$inc->alumne_id][$inc->tipus]++;
+            }
+        }
+        return $idx;
+    }
+
+    /** Resol grup_id de l'aula_horari a int o null */
+    private function grupIdOrNull(AulaHorario $aulaHorari): ?int
+    {
+        if ($aulaHorari->grup_id) return (int) $aulaHorari->grup_id;
+        return null;
     }
 
     public function index(Request $request, AulaHorario $aulaHorari)
@@ -38,34 +57,26 @@ class IncidenciaController extends Controller
         [$espaiId, $usuariEspaiId] = $this->checkAccess($request, $aulaHorari);
 
         if (!$aulaHorari->grup) {
-            return redirect()
-                ->route('espai.guardies.index')
+            return redirect()->route('espai.guardies.index')
                 ->with('error_modal', 'Aquesta hora no té cap grup assignat.');
         }
 
-        $alumnes = $aulaHorari->grup->alumnes()
-            ->orderBy('cognoms')
-            ->orderBy('nom')
-            ->get();
+        $alumnes = $aulaHorari->grup->alumnes()->orderBy('cognoms')->orderBy('nom')->get();
 
-        $data = $request->query('data')
-            ? Carbon::parse($request->query('data'))->toDateString()
-            : Carbon::today()->toDateString();
+        $data = Carbon::today()->toDateString();
+        if ($request->query('data')) {
+            $data = Carbon::parse($request->query('data'))->toDateString();
+        }
 
-        // whereDate per evitar problemes de format datetime/date
-        $rows = Incidencia::query()
-            ->where('aula_horari_id', $aulaHorari->id)
+        $rows = Incidencia::where('aula_horari_id', $aulaHorari->id)
             ->whereDate('data', $data)
             ->orderBy('created_at')
             ->get();
 
-        // Construeix taula plana [alumne_id_int][tipus] per evitar problemes de tipus de clau
+        // Taula plana [alumne_id_int][tipus] => incidencia
         $incidenciesIdx = [];
         foreach ($rows as $inc) {
             $aid = (int) $inc->alumne_id;
-            if (!isset($incidenciesIdx[$aid])) {
-                $incidenciesIdx[$aid] = [];
-            }
             $incidenciesIdx[$aid][(string) $inc->tipus] = $inc;
         }
 
@@ -91,32 +102,35 @@ class IncidenciaController extends Controller
             'data' => ['nullable', 'date'],
         ]);
 
-        $perteany = $aulaHorari->grup
-            ? $aulaHorari->grup->alumnes()->where('alumnes.id', $payload['alumne_id'])->exists()
-            : false;
-
+        $perteany = false;
+        if ($aulaHorari->grup) {
+            $perteany = $aulaHorari->grup->alumnes()
+                ->where('alumnes.id', $payload['alumne_id'])
+                ->exists();
+        }
         abort_unless($perteany, 422, 'L\'alumne no pertany al grup d\'aquesta hora.');
 
-        $data = isset($payload['data'])
-            ? Carbon::parse($payload['data'])->toDateString()
-            : Carbon::today()->toDateString();
+        $data = Carbon::today()->toDateString();
+        if (isset($payload['data'])) {
+            $data = Carbon::parse($payload['data'])->toDateString();
+        }
+
+        $observacions = null;
+        if (isset($payload['observacions'])) $observacions = $payload['observacions'];
 
         Incidencia::create([
             'espai_id' => $espaiId,
             'alumne_id' => (int) $payload['alumne_id'],
-            'grup_id' => (int) ($aulaHorari->grup_id ?? 0) ?: null,
+            'grup_id' => $this->grupIdOrNull($aulaHorari),
             'aula_horari_id' => (int) $aulaHorari->id,
             'usuari_espai_id' => $usuariEspaiId,
             'tipus' => (string) $payload['tipus'],
             'data' => $data,
-            'observacions' => $payload['observacions'] ?? null,
+            'observacions' => $observacions,
         ]);
 
         return redirect()
-            ->route('espai.incidencies.index', [
-                'aulaHorari' => $aulaHorari->id,
-                'data' => $data,
-            ])
+            ->route('espai.incidencies.index', ['aulaHorari' => $aulaHorari->id, 'data' => $data])
             ->with('ok', 'Incidència afegida.');
     }
 
@@ -135,10 +149,7 @@ class IncidenciaController extends Controller
         $incidencia->delete();
 
         return redirect()
-            ->route('espai.incidencies.index', [
-                'aulaHorari' => $aulaHorariId,
-                'data' => $data,
-            ])
+            ->route('espai.incidencies.index', ['aulaHorari' => $aulaHorariId, 'data' => $data])
             ->with('ok', 'Incidència eliminada.');
     }
 
@@ -147,8 +158,7 @@ class IncidenciaController extends Controller
         [$espaiId, $usuariEspaiId] = $this->checkAccess($request, $aulaHorari);
 
         if (!$aulaHorari->grup) {
-            return redirect()
-                ->route('espai.guardies.index')
+            return redirect()->route('espai.guardies.index')
                 ->with('error_modal', 'Aquesta hora no té cap grup assignat.');
         }
 
@@ -157,15 +167,22 @@ class IncidenciaController extends Controller
             'selections' => ['nullable', 'array'],
         ]);
 
-        $data = isset($payload['data'])
-            ? Carbon::parse($payload['data'])->toDateString()
-            : Carbon::today()->toDateString();
+        $data = Carbon::today()->toDateString();
+        if (isset($payload['data'])) {
+            $data = Carbon::parse($payload['data'])->toDateString();
+        }
 
-        $selections = $payload['selections'] ?? [];
+        $selections = [];
+        if (isset($payload['selections'])) $selections = $payload['selections'];
 
-        $alumnesIds = $aulaHorari->grup->alumnes()->pluck('alumnes.id')->map(fn($v) => (int) $v)->toArray();
+        // IDs vàlids del grup
+        $alumnesIds = [];
+        foreach ($aulaHorari->grup->alumnes as $a) {
+            $alumnesIds[] = (int) $a->id;
+        }
         $alumnesIdsSet = array_flip($alumnesIds);
 
+        // Construir el set seleccionat: [alumne_id][tipus] => true
         $seleccionatsIdx = [];
         foreach ($selections as $alumneId => $tipusArr) {
             $alumneId = (int) $alumneId;
@@ -178,8 +195,7 @@ class IncidenciaController extends Controller
             }
         }
 
-        $existents = Incidencia::query()
-            ->where('aula_horari_id', $aulaHorari->id)
+        $existents = Incidencia::where('aula_horari_id', $aulaHorari->id)
             ->whereDate('data', $data)
             ->get();
 
@@ -188,10 +204,13 @@ class IncidenciaController extends Controller
             $existentsIdx[(int) $inc->alumne_id][(string) $inc->tipus] = $inc;
         }
 
+        $grupId = $this->grupIdOrNull($aulaHorari);
+
         DB::transaction(function () use (
-            $espaiId, $usuariEspaiId, $aulaHorari, $data,
+            $espaiId, $usuariEspaiId, $aulaHorari, $data, $grupId,
             $existentsIdx, $seleccionatsIdx
         ) {
+
             foreach ($existentsIdx as $alumneId => $tipusMap) {
                 foreach ($tipusMap as $tipus => $inc) {
                     if (!isset($seleccionatsIdx[$alumneId][$tipus])) {
@@ -202,76 +221,53 @@ class IncidenciaController extends Controller
 
             foreach ($seleccionatsIdx as $alumneId => $tipusMap) {
                 foreach ($tipusMap as $tipus => $_) {
-                    if (!isset($existentsIdx[$alumneId][$tipus])) {
-                        Incidencia::create([
-                            'espai_id' => $espaiId,
-                            'alumne_id' => (int) $alumneId,
-                            'grup_id' => (int) ($aulaHorari->grup_id ?? 0) ?: null,
-                            'aula_horari_id' => (int) $aulaHorari->id,
-                            'usuari_espai_id' => $usuariEspaiId,
-                            'tipus' => (string) $tipus,
-                            'data' => $data,
-                            'observacions' => null,
-                        ]);
-                    }
+                    if (isset($existentsIdx[$alumneId][$tipus])) continue;
+
+                    Incidencia::create([
+                        'espai_id' => $espaiId,
+                        'alumne_id' => (int) $alumneId,
+                        'grup_id' => $grupId,
+                        'aula_horari_id' => (int) $aulaHorari->id,
+                        'usuari_espai_id' => $usuariEspaiId,
+                        'tipus' => (string) $tipus,
+                        'data' => $data,
+                        'observacions' => null,
+                    ]);
                 }
             }
         });
 
         return redirect()
-            ->route('espai.incidencies.index', [
-                'aulaHorari' => $aulaHorari->id,
-                'data' => $data,
-            ])
+            ->route('espai.incidencies.index', ['aulaHorari' => $aulaHorari->id, 'data' => $data])
             ->with('ok', 'Llista guardada correctament.');
     }
+
     public function pdf(Request $request, AulaHorario $aulaHorari)
     {
         [$espaiId, $usuariEspaiId] = $this->checkAccess($request, $aulaHorari);
 
         if (!$aulaHorari->grup) {
-            return redirect()
-                ->route('espai.guardies.index')
+            return redirect()->route('espai.guardies.index')
                 ->with('error_modal', 'Aquesta hora no té cap grup assignat.');
         }
 
-        // Període: per defecte la setmana actual (dilluns-divendres)
-        $from = $request->query('from')
-            ? Carbon::parse($request->query('from'))->startOfDay()
-            : Carbon::today()->startOfWeek();
-        $to = $request->query('to')
-            ? Carbon::parse($request->query('to'))->endOfDay()
-            : Carbon::today()->startOfWeek()->addDays(4); // divendres
+        $from = Carbon::today()->startOfWeek();
+        if ($request->query('from')) $from = Carbon::parse($request->query('from'))->startOfDay();
 
-        $alumnes = $aulaHorari->grup->alumnes()
-            ->orderBy('cognoms')
-            ->orderBy('nom')
-            ->get();
+        $to = Carbon::today()->startOfWeek()->addDays(4);
+        if ($request->query('to')) $to = Carbon::parse($request->query('to'))->endOfDay();
 
-        $incidencies = Incidencia::query()
-            ->where('aula_horari_id', $aulaHorari->id)
+        $alumnes = $aulaHorari->grup->alumnes()->orderBy('cognoms')->orderBy('nom')->get();
+
+        $incidencies = Incidencia::where('aula_horari_id', $aulaHorari->id)
             ->whereBetween('data', [$from->toDateString(), $to->toDateString()])
-            ->orderBy('data')
-            ->orderBy('created_at')
-            ->get();
+            ->orderBy('data')->orderBy('created_at')->get();
 
-        $resumIdx = [];
-        foreach ($alumnes as $a) {
-            $resumIdx[$a->id] = [
-                'assistencia' => 0,
-                'deures' => 0,
-                'material' => 0,
-                'amonestacio' => 0,
-            ];
-        }
-        foreach ($incidencies as $inc) {
-            if (isset($resumIdx[$inc->alumne_id][$inc->tipus])) {
-                $resumIdx[$inc->alumne_id][$inc->tipus]++;
-            }
-        }
+        $resumIdx = $this->buildResumIdx($alumnes, $incidencies);
 
-        // Detall per dia
-        $perDia = $incidencies->groupBy(fn ($i) => $i->data->toDateString());
+        $perDia = $incidencies->groupBy(function ($i) {
+            return $i->data->toDateString();
+        });
 
         $pdf = Pdf::loadView('espai.incidencies.pdf', [
             'aulaHorari' => $aulaHorari,
@@ -283,11 +279,10 @@ class IncidenciaController extends Controller
             'tipusLabels' => Incidencia::TIPUS_LABELS,
         ])->setPaper('a4', 'portrait');
 
-        $nomFile = 'llista-'
-            . ($aulaHorari->grup->nom ?? 'grup') . '-'
-            . $from->format('Y-m-d') . '_'
-            . $to->format('Y-m-d')
-            . '.pdf';
+        $nomGrup = 'grup';
+        if ($aulaHorari->grup->nom) $nomGrup = $aulaHorari->grup->nom;
+
+        $nomFile = 'llista-' . $nomGrup . '-' . $from->format('Y-m-d') . '_' . $to->format('Y-m-d') . '.pdf';
 
         return $pdf->download($nomFile);
     }
@@ -298,64 +293,55 @@ class IncidenciaController extends Controller
         $usuariEspaiId = (int) $request->session()->get('usuari_espai_id');
         abort_unless($espaiId && $usuariEspaiId, 403);
 
-        $from = $request->query('from')
-            ? Carbon::parse($request->query('from'))->startOfDay()
-            : Carbon::today()->startOfWeek();
-        $to = $request->query('to')
-            ? Carbon::parse($request->query('to'))->endOfDay()
-            : Carbon::today()->startOfWeek()->addDays(4);
+        $from = Carbon::today()->startOfWeek();
+        if ($request->query('from')) $from = Carbon::parse($request->query('from'))->startOfDay();
 
-        $tipus = $request->query('tipus', 'setmanal'); // 'setmanal' | 'mensual'
+        $to = Carbon::today()->startOfWeek()->addDays(4);
+        if ($request->query('to')) $to = Carbon::parse($request->query('to'))->endOfDay();
 
-        // Totes les hores de l'usuari amb grup
-        $horaris = AulaHorario::query()
-            ->where('usuari_espai_id', $usuariEspaiId)
+        $tipus = $request->query('tipus', 'setmanal');
+
+        $horaris = AulaHorario::where('usuari_espai_id', $usuariEspaiId)
             ->whereNotNull('grup_id')
             ->with([
                 'aula',
                 'franja',
-                'grup.alumnes' => fn ($q) => $q->orderBy('cognoms')->orderBy('nom'),
-            ])->whereHas('aula', fn ($q) => $q->where('espai_id', $espaiId))->get();
+                'grup.alumnes' => function ($q) {
+                    $q->orderBy('cognoms')->orderBy('nom');
+                },
+            ])
+            ->whereHas('aula', function ($q) use ($espaiId) {
+                $q->where('espai_id', $espaiId);
+            })
+            ->get();
 
         $horariData = [];
         foreach ($horaris as $h) {
             if (!$h->grup) continue;
 
-            $incs = Incidencia::query()
-                ->where('aula_horari_id', $h->id)
+            $incs = Incidencia::where('aula_horari_id', $h->id)
                 ->whereBetween('data', [$from->toDateString(), $to->toDateString()])
                 ->orderBy('data')
                 ->get();
 
-            $resumIdx = [];
-            foreach ($h->grup->alumnes as $a) {
-                $resumIdx[$a->id] = [
-                    'assistencia' => 0,
-                    'deures' => 0,
-                    'material' => 0,
-                    'amonestacio' => 0,
-                ];
-            }
-            foreach ($incs as $inc) {
-                if (isset($resumIdx[$inc->alumne_id][$inc->tipus])) {
-                    $resumIdx[$inc->alumne_id][$inc->tipus]++;
-                }
-            }
-
             $horariData[] = [
                 'horari' => $h,
                 'incidencies' => $incs,
-                'resumIdx' => $resumIdx,
+                'resumIdx' => $this->buildResumIdx($h->grup->alumnes, $incs),
             ];
         }
 
-        // Ordena per dia + hora
         usort($horariData, function ($a, $b) {
             $da = (int) $a['horari']->dia_setmana;
             $db = (int) $b['horari']->dia_setmana;
             if ($da !== $db) return $da <=> $db;
-            $fa = (string) ($a['horari']->franja->inici ?? '');
-            $fb = (string) ($b['horari']->franja->inici ?? '');
+
+            $fa = '';
+            if ($a['horari']->franja) $fa = (string) $a['horari']->franja->inici;
+
+            $fb = '';
+            if ($b['horari']->franja) $fb = (string) $b['horari']->franja->inici;
+
             return strcmp($fa, $fb);
         });
 
@@ -367,9 +353,7 @@ class IncidenciaController extends Controller
             'tipusLabels' => Incidencia::TIPUS_LABELS,
         ])->setPaper('a4', 'portrait');
 
-        $nomFile = 'informe-' . $tipus . '-'
-            . $from->format('Y-m-d') . '_'
-            . $to->format('Y-m-d') . '.pdf';
+        $nomFile = 'informe-' . $tipus . '-' . $from->format('Y-m-d') . '_' . $to->format('Y-m-d') . '.pdf';
 
         return $pdf->download($nomFile);
     }
