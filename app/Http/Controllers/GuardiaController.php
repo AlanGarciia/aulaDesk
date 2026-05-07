@@ -38,7 +38,11 @@ class GuardiaController extends Controller
             ->orderBy('ordre')->orderBy('inici')->get();
 
         $dies = [1, 2, 3, 4, 5];
+<<<<<<< HEAD
         $diesLabels = [1 => 'Dl', 2 => 'Dt', 3 => 'Dc', 4 => 'Dj', 5 => 'Dv'];
+=======
+        $diesLabels = [1=>'Dl', 2=>'Dt', 3=>'Dc', 4=>'Dj', 5=>'Dv'];
+>>>>>>> 1335408ba9cb59a6c44bf24b6005013e524ba1d9
 
         $horaris = AulaHorario::where('usuari_espai_id', $usuariEspaiId)
             ->whereIn('dia_setmana', $dies)
@@ -70,7 +74,7 @@ class GuardiaController extends Controller
         $sols = GuardiaSolicitud::where('espai_id', $espaiId)
             ->where(function ($q) use ($usuariEspaiId) {
                 $q->where('solicitant_usuari_espai_id', $usuariEspaiId)
-                    ->orWhere('cobridor_usuari_espai_id', $usuariEspaiId);
+                  ->orWhere('cobridor_usuari_espai_id', $usuariEspaiId);
             })
             ->get();
 
@@ -100,13 +104,7 @@ class GuardiaController extends Controller
         }
 
         return view('espai.guardies.index', compact(
-            'espai',
-            'usuariEspai',
-            'franjes',
-            'dies',
-            'diesLabels',
-            'slots',
-            'solSlots'
+            'espai', 'usuariEspai', 'franjes', 'dies', 'diesLabels', 'slots', 'solSlots'
         ));
     }
 
@@ -127,7 +125,11 @@ class GuardiaController extends Controller
         $usuariEspai = UsuariEspai::findOrFail($usuariEspaiId);
         $espai = Espai::findOrFail($espaiId);
 
+<<<<<<< HEAD
         $diesLabels = [1 => 'Dilluns', 2 => 'Dimarts', 3 => 'Dimecres', 4 => 'Dijous', 5 => 'Divendres'];
+=======
+        $diesLabels = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
+>>>>>>> 1335408ba9cb59a6c44bf24b6005013e524ba1d9
 
         $diaLabel = '';
         if (isset($diesLabels[$dia])) $diaLabel = (string) $diesLabels[$dia];
@@ -217,15 +219,8 @@ class GuardiaController extends Controller
         if (isset($data['comentari']) && trim((string) $data['comentari']) !== '') $comentari = (string) $data['comentari'];
 
         DB::transaction(function () use (
-            $espaiId,
-            $usuariEspaiId,
-            $aulaId,
-            $dia,
-            $franjaId,
-            $tipus,
-            $comentari,
-            $franjaNom,
-            $aulaNom
+            $espaiId, $usuariEspaiId, $aulaId, $dia, $franjaId,
+            $tipus, $comentari, $franjaNom, $aulaNom
         ) {
             $sol = GuardiaSolicitud::create([
                 'espai_id' => $espaiId,
@@ -240,7 +235,11 @@ class GuardiaController extends Controller
                 'estat' => 'pendent',
             ]);
 
+<<<<<<< HEAD
             $dies = [1 => 'Dilluns', 2 => 'Dimarts', 3 => 'Dimecres', 4 => 'Dijous', 5 => 'Divendres'];
+=======
+            $dies = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
+>>>>>>> 1335408ba9cb59a6c44bf24b6005013e524ba1d9
 
             $diaTxt = 'Dia ' . $dia;
             if (isset($dies[$dia])) $diaTxt = (string) $dies[$dia];
@@ -375,12 +374,21 @@ class GuardiaController extends Controller
             $cobridor = UsuariEspai::find($usuariEspaiId);
             $cobridorNom = 'Un professor';
             if ($cobridor && $cobridor->nom) $cobridorNom = $cobridor->nom;
+<<<<<<< HEAD
 
             $solicitant = UsuariEspai::find((int) $sol->solicitant_usuari_espai_id);
             $solicitantNom = 'el professor';
             if ($solicitant && $solicitant->nom) $solicitantNom = $solicitant->nom;
 
             $diesLabels = [1 => 'Dilluns', 2 => 'Dimarts', 3 => 'Dimecres', 4 => 'Dijous', 5 => 'Divendres'];
+=======
+
+            $solicitant = UsuariEspai::find((int) $sol->solicitant_usuari_espai_id);
+            $solicitantNom = 'el professor';
+            if ($solicitant && $solicitant->nom) $solicitantNom = $solicitant->nom;
+
+            $diesLabels = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
+>>>>>>> 1335408ba9cb59a6c44bf24b6005013e524ba1d9
             $diaTxt = 'Dia ' . (int) $sol->dia_setmana;
             if (isset($diesLabels[(int) $sol->dia_setmana])) $diaTxt = $diesLabels[(int) $sol->dia_setmana];
 
@@ -410,4 +418,8 @@ class GuardiaController extends Controller
         return redirect()->route('espai.noticies.index', ['tipus' => 'guardia'])
             ->with('error_modal', $msg);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1335408ba9cb59a6c44bf24b6005013e524ba1d9

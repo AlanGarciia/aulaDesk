@@ -1,6 +1,11 @@
 CSS de grstionar / crear roles - GONZALO
 
-Cuando se cambia un rol, en la vista de usuarios no se cambia el rol (se cambia internamente pero no lo muestra)
+Modal buscar Grups no se ve bien. 
+Asignar grupos masivamente en un aula?
+Complicado el meter profesores en cada aula, demasiada faena
+
+//GONZALO
+Vista fantasma
 
 //SEGUIR A PARTIR DE NOTICIAS
 

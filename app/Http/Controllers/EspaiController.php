@@ -253,4 +253,9 @@ class EspaiController extends Controller
     {
         return redirect()->route('espais.index');
     }
+<<<<<<< HEAD
 }
+=======
+
+}
+>>>>>>> 1335408ba9cb59a6c44bf24b6005013e524ba1d9
