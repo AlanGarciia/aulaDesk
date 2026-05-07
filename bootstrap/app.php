@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'espai.session' => \App\Http\Middleware\EspaiSessionMiddleware::class,
             'canEspai'      => \App\Http\Middleware\CanEspai::class,
+            'checkPremium' => \App\Http\Middleware\CheckPremiumSubscription::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

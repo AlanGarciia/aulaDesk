@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AulaController extends Controller
 {
-    
+
     private function currentEspaiId(): ?int
     {
         $espaiId = session('espai_id');
@@ -78,6 +78,26 @@ class AulaController extends Controller
         $data['espai_id'] = $espaiId;
 
         Aula::create($data);
+
+        if (
+
+            auth()->user()->plan === 'free'
+
+            &&
+
+            Aula::where(
+                'espai_id',
+                $espai->id
+            )->count() >= 10
+
+        ) {
+
+            return back()->withErrors([
+
+                'plan' =>
+                'Funció Premium'
+            ]);
+        }
 
         return redirect()->route('espai.aules.index');
     }

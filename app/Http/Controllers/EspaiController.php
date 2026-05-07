@@ -1,3 +1,5 @@
+espaicontroller:
+
 <?php
 
 namespace App\Http\Controllers;
@@ -46,6 +48,25 @@ class EspaiController extends Controller
 
     public function store(Request $request)
     {
+
+        if (
+
+            auth()->user()->plan === 'free'
+
+            &&
+
+            auth()->user()
+            ->espais()
+            ->count() >= 5
+
+        ) {
+
+            return back()->withErrors([
+
+                'plan' =>
+                'Has arribat al límit gratuït'
+            ]);
+        }
         $data = $request->validate(
             [
                 'nom' => ['required', 'string', 'max:255'],
@@ -232,6 +253,4 @@ class EspaiController extends Controller
     {
         return redirect()->route('espais.index');
     }
-
-
 }

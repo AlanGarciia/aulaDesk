@@ -113,6 +113,25 @@ class UsuariEspaiController extends Controller
             $actorId ?: null,
             true
         );
+        if (
+
+            auth()->user()->plan === 'free'
+
+            &&
+
+            UsuariEspai::where(
+                'espai_id',
+                $espai->id
+            )->count() >= 15
+
+        ) {
+
+            return back()->withErrors([
+
+                'plan' =>
+                'Límit gratuït assolit'
+            ]);
+        }
 
         return redirect()
             ->route('espai.usuaris.index')
