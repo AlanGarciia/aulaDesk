@@ -19,7 +19,6 @@ class AlumneController extends Controller
         }
 
         return Espai::findOrFail($espaiId);
-
     }
 
     public function index(Request $request)
@@ -73,7 +72,11 @@ class AlumneController extends Controller
             'telefon' => ['nullable', 'string', 'max:20'],
         ]);
 
-        if ($espai->alumnes()->where('idalu', $data['idalu'])->exists()) {
+        $jaExisteix = $espai->alumnes()
+            ->where('idalu', $data['idalu'])
+            ->exists();
+
+        if ($jaExisteix) {
             return back()
                 ->withErrors(['idalu' => 'Aquest IDALU ja existeix dins d’aquest espai.'])
                 ->withInput();
@@ -131,11 +134,12 @@ class AlumneController extends Controller
             'telefon' => ['nullable', 'string', 'max:20'],
         ]);
 
-        if ($espai->alumnes()
+        $idaluRepetit = $espai->alumnes()
             ->where('idalu', $data['idalu'])
             ->where('id', '!=', $alumne->id)
-            ->exists()) 
-        {
+            ->exists();
+
+        if ($idaluRepetit) {
             return back()
                 ->withErrors(['idalu' => 'Aquest IDALU ja existeix dins d’aquest espai.'])
                 ->withInput();
@@ -148,9 +152,7 @@ class AlumneController extends Controller
             ->with('ok', 'Alumne actualitzat correctament.');
     }
 
-    /* ---------------------------------------------------------
-     *  IMPORT CSV
-     * --------------------------------------------------------- */
+   //CSV
 
     public function importForm(Request $request)
     {
@@ -169,8 +171,13 @@ class AlumneController extends Controller
         $file = fopen($request->file('csv')->getRealPath(), 'r');
 
         $header = fgetcsv($file);
-        $normalized = array_map(fn($h) => strtolower(trim($h)), $header);
 
+        $normalized = [];
+        foreach ($header as $h) {
+            $normalized[] = strtolower(trim($h));
+        }
+
+        // Mapa de noms acceptats per cada camp
         $map = [
             'nom'      => ['nom', 'nombre', 'name', 'first name'],
             'cognoms'  => ['cognoms', 'apellidos', 'surname', 'last name'],
@@ -180,8 +187,8 @@ class AlumneController extends Controller
             'grup'     => ['grup', 'grupo', 'group', 'class'],
         ];
 
+        // Per cada camp busquem en quina columna del CSV està
         $index = [];
-
         foreach ($map as $campo => $posibles) {
             foreach ($posibles as $nombre) {
                 $col = array_search($nombre, $normalized);
@@ -194,15 +201,45 @@ class AlumneController extends Controller
 
         while ($row = fgetcsv($file)) {
 
+            // Llegim cada camp comprovant si la columna existeix
+            $nom = '';
+            if (isset($index['nom']) && isset($row[$index['nom']])) {
+                $nom = $row[$index['nom']];
+            }
+
+            $cognoms = '';
+            if (isset($index['cognoms']) && isset($row[$index['cognoms']])) {
+                $cognoms = $row[$index['cognoms']];
+            }
+
+            $correu = null;
+            if (isset($index['correu']) && isset($row[$index['correu']])) {
+                $correu = $row[$index['correu']];
+            }
+
+            $idalu = null;
+            if (isset($index['idalu']) && isset($row[$index['idalu']])) {
+                $idalu = $row[$index['idalu']];
+            }
+
+            $telefon = null;
+            if (isset($index['telefon']) && isset($row[$index['telefon']])) {
+                $telefon = $row[$index['telefon']];
+            }
+
             $alumne = $espai->alumnes()->create([
-                'nom'      => $row[$index['nom']]      ?? '',
-                'cognoms'  => $row[$index['cognoms']]  ?? '',
-                'correu'   => $row[$index['correu']]   ?? null,
-                'idalu'    => $row[$index['idalu']]    ?? null,
-                'telefon'  => $row[$index['telefon']]  ?? null,
+                'nom'      => $nom,
+                'cognoms'  => $cognoms,
+                'correu'   => $correu,
+                'idalu'    => $idalu,
+                'telefon'  => $telefon,
             ]);
 
-            $grupNom = $row[$index['grup']] ?? null;
+            // Si hi ha grup, l'assignem (creant-lo si no existeix)
+            $grupNom = null;
+            if (isset($index['grup']) && isset($row[$index['grup']])) {
+                $grupNom = $row[$index['grup']];
+            }
 
             if ($grupNom) {
                 $grupNom = trim($grupNom);
@@ -235,10 +272,17 @@ class AlumneController extends Controller
         $callback = function () use ($alumnes) {
             $output = fopen('php://output', 'w');
 
+            // Capçalera
             fputcsv($output, ['nom', 'cognoms', 'correu', 'idalu', 'telefon', 'grups']);
 
             foreach ($alumnes as $alumne) {
-                $grups = $alumne->grups->pluck('nom')->join(', ');
+
+                // Llista de noms de grups separats per coma
+                $nomsGrups = [];
+                foreach ($alumne->grups as $g) {
+                    $nomsGrups[] = $g->nom;
+                }
+                $grups = implode(', ', $nomsGrups);
 
                 fputcsv($output, [
                     $alumne->nom,
@@ -260,5 +304,4 @@ class AlumneController extends Controller
     {
         return view('espai.alumnes.info', compact('alumne'));
     }
-
 }
