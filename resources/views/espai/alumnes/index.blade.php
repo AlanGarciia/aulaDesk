@@ -13,12 +13,31 @@
             <a href="{{ route('espai.alumnes.create') }}" class="btn btn-primary @cantEspaiClass('students.create')">
                 + Afegir alumne
             </a>
-            <a href="{{ route('espai.alumnes.import.form') }}" class="btn btn-secondary @cantEspaiClass('students.import')">
-                Importar CSV
+
+            @if(auth()->user()->plan === 'premium')
+
+                <a href="{{ route('espai.alumnes.import.form') }}"class="btn btn-primary">
+                    Importar CSV
+                </a>
+
+            @else
+
+                <button class="btn btn-secondary" disabled>
+                    Importar CSV 🔒 PREMIUM
+                </button>
+
+            @endif
             </a>
-            <a href="{{ route('espai.alumnes.export') }}" class="btn btn-secondary @cantEspaiClass('students.export')">
-                Exportar CSV
-            </a>
+            @if(auth()->user()->plan === 'premium')
+
+                <a href="{{ route('espai.alumnes.export') }}"class="btn btn-success">Exportar CSV </a>
+
+            @else
+
+                <button class="btn btn-secondary" disabled> Exportar CSV 🔒 PREMIUM </button>
+
+            @endif
+
             <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary @cantEspaiClass('groups.view')">
                 <i class="bi bi-people"></i> Veure grups
             </a>

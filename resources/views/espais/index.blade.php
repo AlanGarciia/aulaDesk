@@ -7,9 +7,6 @@
     <div class="page">
         <div class="container">
 
-            {{-- ============================
-                 HEADER INTEGRADO
-               ============================ --}}
             <div class="page-header">
                 <h2 class="page-title">Els meus espais</h2>
 

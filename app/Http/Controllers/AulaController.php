@@ -62,55 +62,35 @@ class AulaController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+{
+    $espaiId = $this->currentEspaiId();
+    if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
 
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'codi' => ['nullable', 'string', 'max:50'],
-                'capacitat' => ['nullable', 'integer', 'min:0'],
-                'planta' => ['nullable', 'string', 'max:50'],
-            ]
-        );
-
-        $data['espai_id'] = $espaiId;
-
-        Aula::create($data);
-
-        if (
-
-            auth()->user()->plan === 'free'
-
-            &&
-
-            Aula::where(
-                'espai_id',
-                $espai->id
-            )->count() >= 10
-
-        ) {
-
-            return back()->withErrors([
-
-                'plan' =>
-                'Funció Premium'
-            ]);
-        }
-
-        return redirect()->route('espai.aules.index');
+    // 🔒 CHECK LÍMITE ANTES DE CREAR
+    if (
+        auth()->user()->plan === 'free'
+        && Aula::where('espai_id', $espaiId)->count() >= 10
+    ) {
+        return redirect()
+            ->route('espai.aules.index')
+            ->with('showLimitModal', true);
     }
 
-    public function edit(Aula $aula)
-    {
-        $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+    $data = $request->validate([
+        'nom' => ['required', 'string', 'max:255'],
+        'codi' => ['nullable', 'string', 'max:50'],
+        'capacitat' => ['nullable', 'integer', 'min:0'],
+        'planta' => ['nullable', 'string', 'max:50'],
+    ]);
 
-        abort_if($aula->espai_id !== $espaiId, 403);
+    $data['espai_id'] = $espaiId;
 
-        return view('espai.aules.edit', compact('aula'));
-    }
+    Aula::create($data);
+
+    return redirect()
+        ->route('espai.aules.index')
+        ->with('ok', 'Aula creada correctament.');
+}
 
     public function update(Request $request, Aula $aula)
     {
