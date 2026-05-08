@@ -162,6 +162,11 @@ class AlumneController extends Controller
 
     public function import(Request $request)
     {
+
+     if (auth()->user()->plan !== 'premium') {
+
+        abort(403, 'Funció Premium');
+    }
         $espai = $this->getEspai($request);
 
         $request->validate([
@@ -258,6 +263,10 @@ class AlumneController extends Controller
 
     public function export(Request $request)
     {
+        if (auth()->user()->plan !== 'premium') {
+
+        abort(403, 'Funció Premium');
+    }
         $espai = $this->getEspai($request);
 
         $alumnes = $espai->alumnes()->with('grups')->get();
