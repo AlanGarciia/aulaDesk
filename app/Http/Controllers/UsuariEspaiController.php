@@ -61,63 +61,73 @@ class UsuariEspaiController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $espaiId = $request->session()->get('espai_id');
+{
+    $espaiId = $request->session()->get('espai_id');
 
-        if (!$espaiId) {
-            return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
-        }
-
-        $espai = Espai::findOrFail($espaiId);
-
-        $data = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
-            'rol' => ['required', Rule::in(BaseRole::where('espai_id', $espaiId)->pluck('nom')->toArray())],
-            'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
-        ]);
-
-        if ($espai->usuaris()->where('nom', $data['nom'])->exists()) {
-            return back()
-                ->withErrors(['nom' => 'Aquest nom ja existeix dins d’aquest espai.'])
-                ->withInput();
-        }
-
-        $usuari = $espai->usuaris()->create([
-            'nom' => $data['nom'],
-            'rol' => $data['rol'],
-            'contrasenya' => $data['contrasenya'],
-        ]);
-
-        $baseRole = BaseRole::where('espai_id', $espaiId)
-            ->where('nom', $data['rol'])
-            ->first();
-
-        if ($baseRole) {
-            $usuari->roles()->syncWithoutDetaching([$baseRole->id]);
-        }
-
-        // Notificar a la resta de membres que s'ha unit un usuari nou
-        $actorId = (int) $request->session()->get('usuari_espai_id');
-
-        Notificacio::notifyEspai(
-            (int) $espai->id,
-            'usuari_nou',
-            [
-                'titol' => 'Nou usuari a l\'espai: ' . $usuari->nom,
-                'missatge' => 'Rol: ' . $usuari->rol,
-                'url' => route('espai.usuaris.index'),
-                'related_type' => UsuariEspai::class,
-                'related_id' => (int) $usuari->id,
-            ],
-            $actorId ?: null,
-            true
-        );
-
-        return redirect()
-            ->route('espai.usuaris.index')
-            ->with('status', 'Usuari creat correctament.');
+    if (!$espaiId) {
+        return redirect()->route('espais.index')
+            ->with('status', 'Selecciona un espai per continuar.');
     }
+
+    $espai = Espai::findOrFail($espaiId);
+
+    // LIMIT PLAN FREE
+    if (
+        auth()->user()->plan === 'free'
+        &&
+        UsuariEspai::where('espai_id', $espai->id)->count() >= 3
+    ) {
+        return redirect()->route('espai.usuaris.index')->with('showPlanModal', true);
+    }
+
+    $data = $request->validate([
+        'nom' => ['required', 'string', 'max:255'],
+        'rol' => ['required', Rule::in(
+            BaseRole::where('espai_id', $espaiId)->pluck('nom')->toArray()
+        )],
+        'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
+    ]);
+
+    if ($espai->usuaris()->where('nom', $data['nom'])->exists()) {
+        return back()
+            ->withErrors(['nom' => 'Aquest nom ja existeix dins d’aquest espai.'])
+            ->withInput();
+    }
+
+    $usuari = $espai->usuaris()->create([
+        'nom' => $data['nom'],
+        'rol' => $data['rol'],
+        'contrasenya' => $data['contrasenya'],
+    ]);
+
+    $baseRole = BaseRole::where('espai_id', $espaiId)
+        ->where('nom', $data['rol'])
+        ->first();
+
+    if ($baseRole) {
+        $usuari->roles()->syncWithoutDetaching([$baseRole->id]);
+    }
+
+    $actorId = (int) $request->session()->get('usuari_espai_id');
+
+    Notificacio::notifyEspai(
+        (int) $espai->id,
+        'usuari_nou',
+        [
+            'titol' => 'Nou usuari a l\'espai: ' . $usuari->nom,
+            'missatge' => 'Rol: ' . $usuari->rol,
+            'url' => route('espai.usuaris.index'),
+            'related_type' => UsuariEspai::class,
+            'related_id' => (int) $usuari->id,
+        ],
+        $actorId ?: null,
+        true
+    );
+
+    return redirect()
+        ->route('espai.usuaris.index')
+        ->with('status', 'Usuari creat correctament.');
+}
 
     public function edit(Request $request, UsuariEspai $usuariEspai)
     {

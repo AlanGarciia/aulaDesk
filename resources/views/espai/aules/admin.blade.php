@@ -11,7 +11,6 @@
                 </div>
             </div>
 
-            {{-- ── Modal conflicte de professor ── --}}
             @php $conflicts = session('conflicts'); $hasConflicts = is_array($conflicts) && count($conflicts); @endphp
             @if($hasConflicts)
                 <div class="conflict-backdrop" id="conflictModal" style="display:flex;">
@@ -45,18 +44,17 @@
 
             @if(session('ok'))
                 <div class="alert-success" style="margin-bottom:1rem;padding:.75rem 1rem;border-radius:8px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.4);color:#d1fae5;">
-                    ✅ {{ session('ok') }}
+                    {{ session('ok') }}
                 </div>
             @endif
 
-            {{-- ── Horari ── --}}
+            {{-- Horari --}}
             <div class="panel-card">
                 <div class="section-header">
                     <h3 class="section-title">Horari de l'aula</h3>
                 </div>
 
                 @php
-                    // Comprova si l'usuari actual pot editar l'horari
                     $_espaiUserId = session('usuari_espai_id');
                     $_espaiUser   = $_espaiUserId ? \App\Models\UsuariEspai::find($_espaiUserId) : null;
                     $potEditar    = $_espaiUser && $_espaiUser->canEspai('aulas.horari.update');
@@ -101,7 +99,6 @@
                                                     @endforeach
                                                 </select>
 
-                                                {{-- Si no pot editar, preservem el valor en un input hidden --}}
                                                 @unless($potEditar)
                                                     <input type="hidden"
                                                            name="assignacions[{{ $diaNum }}][{{ $franja->id }}]"
@@ -141,15 +138,13 @@
                 </form>
             </div>
 
-            {{-- ── Estilos inline ── --}}
+            {{-- Modals --}}
             <style>
                 .modal { position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);display:none;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(3px); }
                 .modal-content { background:linear-gradient(180deg,#fff 0%,#f3f3f3 100%);padding:22px;border-radius:10px;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,.35);border:1px solid #d0d0d0; }
                 .horari-cell.guardia { background-color:#ffeb3b; }
                 .grup-label { display:inline-block;padding:4px 10px;margin-top:4px;font-size:12px;color:#555;background:#f3f4f6;border-radius:999px; }
                 select:disabled { opacity:.45;cursor:not-allowed;background:rgba(0,0,0,.05); }
-
-                /* Modal de conflicte */
                 .conflict-backdrop { position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:10000;backdrop-filter:blur(4px); }
                 .conflict-card { background:#1a1f35;border:1px solid rgba(239,68,68,.4);border-radius:14px;padding:1.5rem;max-width:500px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.5); }
                 .conflict-head { margin-bottom:1rem; }
@@ -163,7 +158,6 @@
                 .conflict-foot { margin-top:1.25rem;text-align:right; }
             </style>
 
-            {{-- ── Modal grups ── --}}
             <div id="modalGrups" class="modal">
                 <div class="modal-content">
                     <h3>Selecciona un grup</h3>
@@ -213,72 +207,6 @@
                 document.getElementById('tancarModalGrups').onclick = () => modal.style.display = 'none';
             });
             </script>
-
-            {{-- ── Tickets ── --}}
-            <div class="panel-card">
-                <div class="section-header">
-                    <h3 class="section-title">Tickets de l'aula</h3>
-                </div>
-
-                <form method="POST" action="{{ route('espai.aules.tickets.store', $aula) }}" class="ticket-form">
-                    @csrf
-                    <input type="text" name="titol" class="input-control" placeholder="Títol..." required>
-                    <input type="text" name="descripcio" class="input-control" placeholder="Descripció...">
-                    <select name="prioritat" class="input-control select-small">
-                        <option value="baixa">Baixa</option>
-                        <option value="mitja" selected>Mitja</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                    <button class="btn btn-primary @cantEspaiClass('tickets.create')">Crear</button>
-                </form>
-
-                @if($tickets->isEmpty())
-                    <div class="empty-state">No hi ha tickets</div>
-                @else
-                    <div class="table-wrap">
-                        <table class="data-table ticket-table">
-                            <thead>
-                                <tr><th>Títol</th><th>Prioritat</th><th>Estat</th><th>Accions</th></tr>
-                            </thead>
-                            <tbody>
-                                @foreach($tickets as $ticket)
-                                    <tr>
-                                        <td>
-                                            <strong>{{ $ticket->titol }}</strong>
-                                            @if($ticket->descripcio)<div class="ticket-desc">{{ $ticket->descripcio }}</div>@endif
-                                        </td>
-                                        <td>
-                                            @if($ticket->prioritat === 'alta') <span class="badge badge-alta">Alta</span>
-                                            @elseif($ticket->prioritat === 'mitja') <span class="badge badge-mitja">Mitja</span>
-                                            @else <span class="badge badge-baixa">Baixa</span> @endif
-                                        </td>
-                                        <td>
-                                            @if($ticket->estat === 'obert') <span class="badge badge-obert">Obert</span>
-                                            @elseif($ticket->estat === 'en_proces') <span class="badge badge-proces">En procés</span>
-                                            @else <span class="badge badge-tancat">Tancat</span> @endif
-                                        </td>
-                                        <td class="ticket-actions">
-                                            <form method="POST" action="{{ route('espai.aules.tickets.update', [$aula, $ticket]) }}">
-                                                @csrf @method('PATCH')
-                                                <select name="estat" onchange="this.form.submit()"
-                                                        {{ ($_espaiUser && $_espaiUser->canEspai('tickets.update')) ? '' : 'disabled' }}>
-                                                    <option value="obert"     {{ $ticket->estat === 'obert'     ? 'selected' : '' }}>Obert</option>
-                                                    <option value="en_proces" {{ $ticket->estat === 'en_proces' ? 'selected' : '' }}>En procés</option>
-                                                    <option value="tancat"    {{ $ticket->estat === 'tancat'    ? 'selected' : '' }}>Tancat</option>
-                                                </select>
-                                            </form>
-                                            <form method="POST" action="{{ route('espai.aules.tickets.destroy', [$aula, $ticket]) }}">
-                                                @csrf @method('DELETE')
-                                                <button class="btn btn-danger btn-small @cantEspaiClass('tickets.delete')">🗑</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @endif
-            </div>
 
         </div>
     </div>

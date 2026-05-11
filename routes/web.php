@@ -67,11 +67,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
     Route::get('/stripe/checkout/premium', [StripeController::class, 'premium'])
         ->name('stripe.checkout.premium');
-
 });
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','checkPremium'])->group(function () {
 
     Route::get('/espais', [EspaiController::class, 'index'])->name('espais.index');
     Route::get('/espais/create', [EspaiController::class, 'create'])->name('espais.create');
@@ -94,7 +93,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
 
 //espai(requireix sesio dins l'espai)
@@ -308,6 +306,10 @@ Route::middleware('espai.session')->group(function () {
         ->name('espai.aules.tickets.destroy')
         ->middleware('canEspai:tickets.delete');
 
+    Route::get('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'showAula'])
+    ->name('espai.aules.tickets.index')
+    ->middleware('canEspai:tickets.view');
+
 
     //rols
     Route::prefix('espai/roles')->middleware('canEspai:roles.view')->group(function () {
@@ -324,7 +326,7 @@ Route::middleware('espai.session')->group(function () {
     });
 
 
-   //permisos
+    //permisos
     Route::prefix('espai/permissions')->middleware('canEspai:permissions.view')->group(function () {
         Route::get('/', [PermissionController::class, 'index'])->name('espai.permissions.index');
         Route::get('/create', [PermissionController::class, 'create'])->name('espai.permissions.create')->middleware('canEspai:permissions.create');
@@ -349,16 +351,15 @@ Route::middleware('espai.session')->group(function () {
 
 
     Route::post('/espai/incidencies/{aulaHorari}/save', [IncidenciaController::class, 'saveBulk'])
-    ->whereNumber('aulaHorari')
-    ->name('espai.incidencies.save');
+        ->whereNumber('aulaHorari')
+        ->name('espai.incidencies.save');
 
     Route::get('/espai/incidencies/{aulaHorari}/pdf', [IncidenciaController::class, 'pdf'])
-    ->whereNumber('aulaHorari')
-    ->name('espai.incidencies.pdf');
+        ->whereNumber('aulaHorari')
+        ->name('espai.incidencies.pdf');
 
     Route::get('/espai/incidencies-global/pdf', [IncidenciaController::class, 'globalPdf'])->name('espai.incidencies.globalPdf');
-
-    });
-
+});
+    
 
 require __DIR__ . '/auth.php';

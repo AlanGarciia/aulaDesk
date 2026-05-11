@@ -11,3 +11,8 @@ Vista fantasma
 
 PASOS STRIPE:
 composer require stripe/stripe-php
+
+ESPAI: Botones de editar, compartir, borrar el espai
+
+Revisar q en todos los sitios diga Tornar y la flecha de salir
+

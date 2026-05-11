@@ -30,15 +30,6 @@ class EspaiController extends Controller
         ]);
     }
 
-    public function edit(Espai $espai)
-    {
-        if ($espai->user_id !== auth()->id()) {
-            abort(404);
-        }
-
-        return view('espais.edit', compact('espai'));
-    }
-
     public function create()
     {
         return view('espais.create');
@@ -46,13 +37,20 @@ class EspaiController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'descripcio' => ['nullable', 'string']
-            ],
-            ['nom' => 'nom', 'descripcio' => 'descripció']
-        );
+        // LIMIT PLAN FREE (1 espai)
+        if (
+            auth()->user()->plan === 'free'
+            && auth()->user()->espais()->count() >= 1
+        ) {
+            return redirect()
+                ->route('espais.index')
+                ->with('showLimitModal', true);
+        }
+
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'descripcio' => ['nullable', 'string']
+        ]);
 
         $espai = $request->user()->espais()->create([
             'nom' => $data['nom'],
@@ -69,7 +67,6 @@ class EspaiController extends Controller
             'nom' => 'professor',
         ]);
 
-        //Alan: permisos de todo
         $modules = [
             'users'       => ['view', 'create', 'update', 'delete', 'manage'],
             'groups'      => ['view', 'create', 'update', 'delete', 'manage'],
@@ -83,12 +80,14 @@ class EspaiController extends Controller
         ];
 
         $permissionIds = [];
+
         foreach ($modules as $module => $actions) {
             foreach ($actions as $action) {
                 $perm = \App\Models\BasePermission::firstOrCreate([
                     'espai_id' => $espai->id,
                     'nom'      => "{$module}.{$action}",
                 ]);
+
                 $permissionIds[] = $perm->id;
             }
         }
@@ -96,8 +95,8 @@ class EspaiController extends Controller
         $adminRole->permissions()->syncWithoutDetaching($permissionIds);
 
         $adminUser = $espai->usuaris()->create([
-            'nom'        => 'admin',
-            'rol'        => 'admin',
+            'nom' => 'admin',
+            'rol' => 'admin',
             'contrasenya' => 'admin',
         ]);
 
@@ -108,28 +107,27 @@ class EspaiController extends Controller
             ->with('status', 'Espai creat correctament. Usuari per defecte: admin / admin');
     }
 
+    public function edit(Espai $espai)
+    {
+        if ($espai->user_id !== auth()->id()) {
+            abort(404);
+        }
+
+        return view('espais.edit', compact('espai'));
+    }
+
     public function update(Request $request, Espai $espai)
     {
         if ($espai->user_id !== $request->user()->id) {
             abort(404);
         }
 
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'descripcio' => ['nullable', 'string'],
-            ],
-            [],
-            [
-                'nom' => 'nom',
-                'descripcio' => 'descripció',
-            ]
-        );
-
-        $espai->update([
-            'nom' => $data['nom'],
-            'descripcio' => $data['descripcio'] ?? null,
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'descripcio' => ['nullable', 'string'],
         ]);
+
+        $espai->update($data);
 
         return redirect()
             ->route('espais.index')
@@ -151,24 +149,15 @@ class EspaiController extends Controller
 
     public function entrarForm(Espai $espai)
     {
-        return view('espais.entrar', [
-            'espai' => $espai,
-        ]);
+        return view('espais.entrar', compact('espai'));
     }
 
     public function entrar(Request $request, Espai $espai)
     {
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'contrasenya' => ['required', 'string', 'max:255'],
-            ],
-            [],
-            [
-                'nom' => 'nom',
-                'contrasenya' => 'contrasenya',
-            ]
-        );
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'contrasenya' => ['required', 'string', 'max:255'],
+        ]);
 
         $nomNormalitzat = trim(mb_strtolower($data['nom']));
 
@@ -189,27 +178,17 @@ class EspaiController extends Controller
         return redirect()->route('espai.index');
     }
 
-
     public function accesForm(Espai $espai)
     {
-        return view('espais.acces', [
-            'espai' => $espai,
-        ]);
+        return view('espais.acces', compact('espai'));
     }
 
     public function acces(Request $request, Espai $espai)
     {
-        $data = $request->validate(
-            [
-                'nom' => ['required', 'string', 'max:255'],
-                'contrasenya' => ['required', 'string', 'max:255'],
-            ],
-            [],
-            [
-                'nom' => 'nom',
-                'contrasenya' => 'contrasenya',
-            ]
-        );
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'contrasenya' => ['required', 'string', 'max:255'],
+        ]);
 
         $usuari = UsuariEspai::where('espai_id', $espai->id)
             ->where('nom', $data['nom'])
@@ -232,5 +211,4 @@ class EspaiController extends Controller
     {
         return redirect()->route('espais.index');
     }
-
 }
