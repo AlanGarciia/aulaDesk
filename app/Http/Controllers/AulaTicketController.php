@@ -95,4 +95,19 @@ class AulaTicketController extends Controller
 
         return back()->with('ok', 'Ticket eliminat.');
     }
+
+    public function showAula(Aula $aula)
+    {
+        $espaiId = (int) session('espai_id');
+        abort_unless($espaiId, 403);
+        abort_if((int) $aula->espai_id !== $espaiId, 403);
+
+        $tickets = Ticket::where('espai_id', $espaiId)
+            ->where('aula_id', $aula->id)
+            ->with('creador')
+            ->latest()
+            ->get();
+
+        return view('espai.aules.tickets', compact('aula', 'tickets'));
+    }
 }

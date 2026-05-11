@@ -306,6 +306,10 @@ Route::middleware('espai.session')->group(function () {
         ->name('espai.aules.tickets.destroy')
         ->middleware('canEspai:tickets.delete');
 
+    Route::get('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'showAula'])
+    ->name('espai.aules.tickets.index')
+    ->middleware('canEspai:tickets.view');
+
 
     //rols
     Route::prefix('espai/roles')->middleware('canEspai:roles.view')->group(function () {
