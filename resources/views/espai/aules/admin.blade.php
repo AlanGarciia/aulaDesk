@@ -119,7 +119,7 @@
                                                        name="grups[{{ $diaNum }}][{{ $franja->id }}]"
                                                        value="{{ $grupId }}">
 
-                                                <div class="grup-label" style="margin-top:4px;font-size:13px;color:#444;">
+                                                <div class="grup-label">
                                                     {{ $grupNom ? "Grup: $grupNom" : "Sense grup" }}
                                                 </div>
                                             </div>
@@ -138,73 +138,105 @@
                 </form>
             </div>
 
-            {{-- Modals --}}
-            <style>
-                .modal { position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);display:none;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(3px); }
-                .modal-content { background:linear-gradient(180deg,#fff 0%,#f3f3f3 100%);padding:22px;border-radius:10px;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,.35);border:1px solid #d0d0d0; }
-                .horari-cell.guardia { background-color:#ffeb3b; }
-                .grup-label { display:inline-block;padding:4px 10px;margin-top:4px;font-size:12px;color:#555;background:#f3f4f6;border-radius:999px; }
-                select:disabled { opacity:.45;cursor:not-allowed;background:rgba(0,0,0,.05); }
-                .conflict-backdrop { position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:10000;backdrop-filter:blur(4px); }
-                .conflict-card { background:#1a1f35;border:1px solid rgba(239,68,68,.4);border-radius:14px;padding:1.5rem;max-width:500px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,.5); }
-                .conflict-head { margin-bottom:1rem; }
-                .conflict-title { color:#fca5a5;font-size:1.15rem;font-weight:700;margin:0; }
-                .conflict-body { color:#e2e8f0;font-size:.9rem; }
-                .conflict-body p { margin:0 0 .5rem; }
-                .conflict-list { margin:.5rem 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:.5rem; }
-                .conflict-list li { background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:.5rem .75rem;display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:center;font-size:.85rem; }
-                .conflict-tag { background:rgba(239,68,68,.25);color:#fca5a5;border-radius:99px;padding:2px 10px;font-weight:600; }
-                .conflict-extra { color:#94a3b8; }
-                .conflict-foot { margin-top:1.25rem;text-align:right; }
-            </style>
-
-            <div id="modalGrups" class="modal">
-                <div class="modal-content">
-                    <h3>Selecciona un grup</h3>
-                    <input type="text" id="buscadorGrups" class="input-control" placeholder="Cerca grup..." style="margin-bottom:10px;">
-                    <div id="llistaGrups">
-                        @foreach($grups as $g)
-                            <button class="btn btn-primary grup-option"
-                                    data-grup-id="{{ $g->id }}" data-grup-nom="{{ $g->nom }}"
-                                    style="width:100%;margin-bottom:5px;">{{ $g->nom }}</button>
-                        @endforeach
+            {{-- Modal --}}
+            <div id="modalGrups" class="gm-backdrop" role="dialog" aria-modal="true" aria-labelledby="gmTitle">
+                <div class="gm-card">
+                    <div class="gm-header">
+                        <div>
+                            <h3 id="gmTitle">Selecciona un grup</h3>
+                            <div class="gm-header__sub">Tria el grup d'alumnes per aquesta franja</div>
+                        </div>
+                        <button type="button" class="gm-close" id="tancarModalGrups" aria-label="Tancar">✕</button>
                     </div>
-                    <button class="btn btn-secondary" id="tancarModalGrups" style="margin-top:.5rem;">Tancar</button>
+
+                    <div class="gm-search">
+                        <span class="gm-search-ic"><i class="bi bi-search"></i></span>
+                        <input type="text" id="buscadorGrups" placeholder="Cerca grup..." autocomplete="off">
+                    </div>
+
+                    <div class="gm-list" id="llistaGrups">
+                        @forelse($grups as $g)
+                            <button type="button" class="gm-item grup-option"
+                                    data-grup-id="{{ $g->id }}"
+                                    data-grup-nom="{{ $g->nom }}">
+                                <span class="gm-icon"><i class="bi bi-people-fill"></i></span>
+                                <span>{{ $g->nom }}</span>
+                            </button>
+                        @empty
+                            <div class="gm-empty">No hi ha grups creats encara.</div>
+                        @endforelse
+                        <div class="gm-empty" id="gmNoResults" style="display:none;">
+                            Cap grup coincideix amb la cerca.
+                        </div>
+                    </div>
+
+                    <div class="gm-foot">
+                        <button type="button" class="btn btn-secondary" id="tancarModalGrupsFoot">Tancar</button>
+                    </div>
                 </div>
             </div>
 
             <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const modal    = document.getElementById('modalGrups');
-                const buscador = document.getElementById('buscadorGrups');
-                let currentHiddenInput = null, currentLabel = null;
+                const modal     = document.getElementById('modalGrups');
+                const buscador  = document.getElementById('buscadorGrups');
+                const noResults = document.getElementById('gmNoResults');
+                const closeBtn1 = document.getElementById('tancarModalGrups');
+                const closeBtn2 = document.getElementById('tancarModalGrupsFoot');
+
+                let currentHiddenInput = null;
+                let currentLabel = null;
+
+                function obrirModal() {
+                    modal.classList.add('is-open');
+                    setTimeout(() => buscador.focus(), 50);
+                }
+                function tancarModal() {
+                    modal.classList.remove('is-open');
+                }
 
                 document.querySelectorAll('.open-grup-modal:not([disabled])').forEach(btn => {
                     btn.addEventListener('click', function () {
-                        const dia = this.dataset.dia, franja = this.dataset.franja;
+                        const dia = this.dataset.dia;
+                        const franja = this.dataset.franja;
                         currentHiddenInput = document.querySelector(`input[name="grups[${dia}][${franja}]"]`);
                         currentLabel = this.parentElement.querySelector('.grup-label');
-                        buscador.value = ''; filtrarGrups(''); modal.style.display = 'flex';
+                        buscador.value = '';
+                        filtrarGrups('');
+                        obrirModal();
                     });
                 });
 
                 buscador.addEventListener('input', () => filtrarGrups(buscador.value.toLowerCase()));
 
                 function filtrarGrups(t) {
+                    let visibles = 0;
                     document.querySelectorAll('.grup-option').forEach(b => {
-                        b.style.display = b.dataset.grupNom.toLowerCase().includes(t) ? 'block' : 'none';
+                        const match = b.dataset.grupNom.toLowerCase().includes(t);
+                        b.style.display = match ? 'flex' : 'none';
+                        if (match) visibles++;
                     });
+                    noResults.style.display = visibles === 0 ? 'block' : 'none';
                 }
 
                 document.querySelectorAll('.grup-option').forEach(btn => {
                     btn.addEventListener('click', function () {
-                        currentHiddenInput.value = this.dataset.grupId;
-                        currentLabel.innerHTML = `Grup: <strong>${this.dataset.grupNom}</strong>`;
-                        modal.style.display = 'none';
+                        if (currentHiddenInput) currentHiddenInput.value = this.dataset.grupId;
+                        if (currentLabel) currentLabel.innerHTML = `Grup: <strong>${this.dataset.grupNom}</strong>`;
+                        tancarModal();
                     });
                 });
 
-                document.getElementById('tancarModalGrups').onclick = () => modal.style.display = 'none';
+                closeBtn1.addEventListener('click', tancarModal);
+                closeBtn2.addEventListener('click', tancarModal);
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.classList.contains('is-open')) tancarModal();
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) tancarModal();
+                });
             });
             </script>
 
