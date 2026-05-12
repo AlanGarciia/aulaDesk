@@ -76,7 +76,7 @@
                     </div>
                 @endforeach
             </div>
-
+            
             <button class="btn btn-primary" style="margin-top:1.5rem;">Guardar canvis</button>
         </form>
     </div>

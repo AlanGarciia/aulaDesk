@@ -138,7 +138,8 @@ Route::middleware('espai.session')->group(function () {
     Route::delete('/espai/usuaris/{usuariEspai}', [UsuariEspaiController::class, 'destroy'])
         ->name('espai.usuaris.destroy')
         ->middleware('canEspai:users.delete');
-
+    Route::get('/espai/usuaris/assign-roles', [UsuariEspaiController::class, 'assignRolesForm'])
+    ->name('espai.usuaris.assignRoles');
 
     //noticies
     Route::resource('/espai/noticies', NoticiaController::class)

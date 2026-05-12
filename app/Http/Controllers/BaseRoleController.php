@@ -110,22 +110,18 @@ class BaseRoleController extends Controller
         ]);
     }
     
-    public function update(Request $request, BaseRole $role)
+   public function update(Request $request, BaseRole $role)
     {
-        $role->update(['nom' => $request->nom]);
-        $role->permissions()->sync($request->permissions ?? []);
+    $espai = $this->getEspai($request);
 
-        return redirect()->route('espai.roles.index');
-    }
+    abort_if($role->espai_id !== $espai->id, 404);
 
-    public function destroy(Request $request, BaseRole $role)
-    {
-        $espai = $this->getEspai($request);
+    $role->update([
+        'nom' => $request->nom,
+    ]);
 
-        abort_if($role->espai_id !== $espai->id, 404);
+    $role->permissions()->sync($request->permissions ?? []);
 
-        $role->delete();
-
-        return back();
+    return redirect()->route('espai.usuaris.index');
     }
 }

@@ -74,13 +74,8 @@ class StripeController extends Controller
         ]);
 
         return redirect()
-
             ->route('dashboard')
-
-            ->with(
-                'success',
-                'Premium activat'
-            );
+            ->with('premium_success', true);
     }
 
     public function cancel()
