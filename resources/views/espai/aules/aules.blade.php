@@ -71,6 +71,11 @@
                                 Administrar
                             </a>
 
+                            <a class="btn btn-secondary @cantEspaiClass('tickets.view')"
+                               href="{{ route('espai.aules.tickets.index', $aula) }}">
+                                <i class="bi bi-ticket-detailed"></i> Tickets
+                            </a>
+
                             <a class="btn btn-secondary btn-icon @cantEspaiClass('aulas.update')"
                                href="{{ route('espai.aules.edit', $aula) }}">
                                 <i class="bi bi-pencil"></i>
@@ -107,9 +112,6 @@
         </div>
     </div>
 
-    {{-- ============================
-         🚨 MODAL LÍMIT AULES (PLAN FREE)
-       ============================ --}}
     @if(session('showLimitModal'))
         <div id="planModal"
              class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
