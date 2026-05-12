@@ -17,6 +17,7 @@
                 <h2 class="page-title">Editar espai</h2>
 
                 <a href="{{ route('espais.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-box-arrow-right"></i>
                     Tornar
                 </a>
             </div>

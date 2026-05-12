@@ -8,41 +8,58 @@
         <div class="container">
 
             <div class="page-header">
-                <h2 class="page-title">Els meus espais</h2>
+    <h2 class="page-title">Els meus espais</h2>
 
-                <div class="user-inline-menu">
-                    <button class="nav-user-btn" id="userMenuBtn">
-                        <i class="bi bi-person-circle"></i>
-                        <span>{{ auth()->user()->name }}</span>
-                        <i class="bi bi-chevron-down nav-caret"></i>
+    @php
+        $plan = auth()->user()->plan;
+        $isFree = $plan === 'free';
+        $espaisCount = $espais->count();
+        $limitReached = $isFree && $espaisCount >= 1;
+    @endphp 
+
+    <div style="display:flex; align-items:center; gap:10px;">
+        
+        {{-- PLAN BADGE --}}
+        <div class="plan-badge {{ $plan }}">
+            @if($plan === 'premium')
+                <i class="bi bi-stars"></i> Premium
+            @else
+                <i class="bi bi-lock"></i> Free
+            @endif
+        </div>
+
+        {{-- USER MENU --}}
+        <div class="user-inline-menu">
+            <button class="nav-user-btn" id="userMenuBtn">
+                <i class="bi bi-person-circle"></i>
+                <span>{{ auth()->user()->name }}</span>
+                <i class="bi bi-chevron-down nav-caret"></i>
+            </button>
+
+            <div id="userMenu" class="nav-dropdown">
+                <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                    <i class="bi bi-gear"></i> Perfil
+                </a>
+
+                <div class="dropdown-divider"></div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item logout-item">
+                        <i class="bi bi-box-arrow-right"></i> Surt
                     </button>
-
-                    <div id="userMenu" class="nav-dropdown">
-                        <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                            <i class="bi bi-gear"></i> Perfil
-                        </a>
-
-                        <div class="dropdown-divider"></div>
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="dropdown-item logout-item">
-                                <i class="bi bi-box-arrow-right"></i> Surt
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                </form>
             </div>
+        </div>
 
-            {{-- ============================
-                 BOTÓN CREAR ESPAI
-               ============================ --}}
-            {{-- ============================
-     BOTÓN CREAR ESPAI + PLANS
-   ============================ --}}
+    </div>
+</div>
+
 <div class="actions">
 
-    <button class="btn btn-primary" onclick="window.location='{{ route('espais.create') }}'">
+    <button class="btn btn-primary create-btn {{ $limitReached ? 'disabled-btn' : '' }}"
+        @if($limitReached) disabled @else onclick="window.location='{{ route('espais.create') }}'" @endif
+        title="{{ $limitReached ? 'Has arribat al límit del pla gratuït' : '' }}">
         <i class="bi bi-plus"></i> Crear espai
     </button>
 
@@ -143,9 +160,6 @@
         </div>
     </div>
 
-    {{-- ============================
-         MODALES
-       ============================ --}}
     <div id="confirmModal" class="modal" aria-hidden="true">
         <div class="modal-content modal-delete" role="dialog" aria-modal="true" aria-labelledby="confirmText">
             <p id="confirmText"></p>
@@ -187,6 +201,24 @@
             </form>
         </div>
     </div>
+    {{-- MODAL: JA ETS PREMIUM --}}
+<div id="premiumModal" class="modal" aria-hidden="true">
+    <div class="modal-content modal-success" role="dialog" aria-modal="true">
+        <h3 style="margin-bottom:10px; text-align:center;">🎉 Ja ets Premium!</h3>
+
+        <p style="text-align:center; margin-bottom:20px;">
+            Gràcies per confiar en aulaDesk.  
+            Ara tens accés complet a totes les funcions Premium.
+        </p>
+
+        <div class="modal-actions" style="justify-content:center;">
+            <button id="premiumCloseBtn" class="btn btn-primary" type="button">
+                Continuar
+            </button>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -264,8 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmModal.setAttribute('aria-hidden', 'true');
         });
     }
-
-    // CONFIRMAR ELIMINACIÓN
     if (confirmBtn) {
         confirmBtn.addEventListener('click', () => {
             const formId = confirmBtn.dataset.formId;
@@ -275,9 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    /* ============================
-   MODAL COMPARTIR ESPAI
-============================ */
 
 const shareModal = document.getElementById('shareModal');
 const shareTitle = document.getElementById('shareTitle');
@@ -318,9 +345,48 @@ document.querySelectorAll('.share-btn').forEach(btn => {
         });
     }
 
+
 });
+@if(session('showLimitModal'))
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('limitModal');
+
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+});
+@endif
+
+function closeLimitModal() {
+    const modal = document.getElementById('limitModal');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+/* ============================
+   MODAL PREMIUM
+============================ */
+@if(session('premium_success') || auth()->user()->plan === 'premium')
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('premiumModal');
+    const closeBtn = document.getElementById('premiumCloseBtn');
+
+    if (modal) {
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+        });
+    }
+});
+@endif
+
 </script>
 @endpush
-
 
 </x-app-layout>

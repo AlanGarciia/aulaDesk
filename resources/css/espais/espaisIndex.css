@@ -406,3 +406,12 @@
 .modal.is-open{
   display: flex;
 }
+.disabled-btn {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+.disabled-btn:hover {
+    transform: none !important;
+}
