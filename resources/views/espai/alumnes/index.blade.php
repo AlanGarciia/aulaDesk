@@ -14,29 +14,25 @@
                 + Afegir alumne
             </a>
 
-            @if(auth()->user()->plan === 'premium')
-
-                <a href="{{ route('espai.alumnes.import.form') }}"class="btn btn-primary">
-                    Importar CSV
-                </a>
-
-            @else
-
-                <button class="btn btn-secondary" disabled>
-                    Importar CSV 🔒 PREMIUM
-                </button>
-
-            @endif
+                    @if(auth()->user()->plan === 'premium')
+            <a href="{{ route('espai.alumnes.import.form') }}" class="btn btn-primary">
+                Importar CSV
             </a>
-            @if(auth()->user()->plan === 'premium')
+        @else
+            <button class="btn btn-secondary" disabled>
+                Importar CSV 🔒 PREMIUM
+            </button>
+        @endif
 
-                <a href="{{ route('espai.alumnes.export') }}"class="btn btn-success">Exportar CSV </a>
-
-            @else
-
-                <button class="btn btn-secondary" disabled> Exportar CSV 🔒 PREMIUM </button>
-
-            @endif
+        @if(auth()->user()->plan === 'premium')
+            <a href="{{ route('espai.alumnes.export') }}" class="btn btn-primary">
+                Exportar CSV
+            </a>
+        @else
+            <button class="btn btn-secondary" disabled>
+                Exportar CSV 🔒 PREMIUM
+            </button>
+        @endif
 
             <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary @cantEspaiClass('groups.view')">
                 <i class="bi bi-people"></i> Veure grups
