@@ -110,4 +110,37 @@ class AulaTicketController extends Controller
 
         return view('espai.aules.tickets', compact('aula', 'tickets'));
     }
+
+    public function all(Request $request)
+    {
+        $espaiId = (int) session('espai_id');
+        abort_unless($espaiId, 403);
+
+        $query = \App\Models\Ticket::where('espai_id', $espaiId)
+            ->with(['aula', 'creador'])
+            ->latest();
+
+        if ($request->filled('aula_id')) {
+            $query->where('aula_id', (int) $request->input('aula_id'));
+        }
+        if ($request->filled('estat')) {
+            $query->where('estat', $request->input('estat'));
+        }
+        if ($request->filled('prioritat')) {
+            $query->where('prioritat', $request->input('prioritat'));
+        }
+        if ($request->filled('q')) {
+            $q = (string) $request->input('q');
+            $query->where(function ($w) use ($q) {
+                $w->where('titol', 'like', '%' . $q . '%')
+                ->orWhere('descripcio', 'like', '%' . $q . '%');
+            });
+        }
+
+        $tickets = $query->paginate(20)->withQueryString();
+
+        $aules = \App\Models\Aula::where('espai_id', $espaiId)->orderBy('nom')->get();
+
+        return view('espai.tickets.all', compact('tickets', 'aules'));
+    }
 }
