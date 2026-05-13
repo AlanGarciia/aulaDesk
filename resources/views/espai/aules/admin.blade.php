@@ -50,15 +50,23 @@
 
             {{-- Horari --}}
             <div class="panel-card">
-                <div class="section-header">
+                <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;">
                     <h3 class="section-title">Horari de l'aula</h3>
-                </div>
 
-                @php
-                    $_espaiUserId = session('usuari_espai_id');
-                    $_espaiUser   = $_espaiUserId ? \App\Models\UsuariEspai::find($_espaiUserId) : null;
-                    $potEditar    = $_espaiUser && $_espaiUser->canEspai('aulas.horari.update');
-                @endphp
+                    @php
+                        $_espaiUserId = session('usuari_espai_id');
+                        $_espaiUser   = $_espaiUserId ? \App\Models\UsuariEspai::find($_espaiUserId) : null;
+                        $potEditar    = $_espaiUser && $_espaiUser->canEspai('aulas.horari.update');
+                    @endphp
+
+                    <button type="button"
+                            class="btn btn-primary {{ $potEditar ? '' : 'btn-disabled' }}"
+                            id="assignarGrupTot"
+                            {{ $potEditar ? '' : 'disabled' }}
+                            title="{{ $potEditar ? 'Assignar el mateix grup a totes les franges' : 'No tens permís per modificar l\'horari' }}">
+                        <i class="bi bi-people-fill"></i> Assignar grup a tot l'horari
+                    </button>
+                </div>
 
                 <form method="POST" action="{{ route('espai.aules.horari.update', $aula) }}">
                     @csrf
@@ -144,7 +152,7 @@
                     <div class="gm-header">
                         <div>
                             <h3 id="gmTitle">Selecciona un grup</h3>
-                            <div class="gm-header__sub">Tria el grup d'alumnes per aquesta franja</div>
+                            <div class="gm-header__sub" id="gmSubtitle">Tria el grup d'alumnes per aquesta franja</div>
                         </div>
                         <button type="button" class="gm-close" id="tancarModalGrups" aria-label="Tancar">✕</button>
                     </div>
@@ -178,12 +186,15 @@
 
             <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const modal     = document.getElementById('modalGrups');
-                const buscador  = document.getElementById('buscadorGrups');
-                const noResults = document.getElementById('gmNoResults');
-                const closeBtn1 = document.getElementById('tancarModalGrups');
-                const closeBtn2 = document.getElementById('tancarModalGrupsFoot');
+                const modal      = document.getElementById('modalGrups');
+                const buscador   = document.getElementById('buscadorGrups');
+                const noResults  = document.getElementById('gmNoResults');
+                const closeBtn1  = document.getElementById('tancarModalGrups');
+                const closeBtn2  = document.getElementById('tancarModalGrupsFoot');
+                const subtitle   = document.getElementById('gmSubtitle');
+                const btnGlobal  = document.getElementById('assignarGrupTot');
 
+                let modeGlobal = false;
                 let currentHiddenInput = null;
                 let currentLabel = null;
 
@@ -195,12 +206,28 @@
                     modal.classList.remove('is-open');
                 }
 
+                // Botó global
+                if (btnGlobal) {
+                    btnGlobal.addEventListener('click', function () {
+                        modeGlobal = true;
+                        currentHiddenInput = null;
+                        currentLabel = null;
+                        subtitle.textContent = "El grup s'aplicarà a totes les franges de la setmana";
+                        buscador.value = '';
+                        filtrarGrups('');
+                        obrirModal();
+                    });
+                }
+
+                // Botons individuals de cada cel·la
                 document.querySelectorAll('.open-grup-modal:not([disabled])').forEach(btn => {
                     btn.addEventListener('click', function () {
+                        modeGlobal = false;
                         const dia = this.dataset.dia;
                         const franja = this.dataset.franja;
                         currentHiddenInput = document.querySelector(`input[name="grups[${dia}][${franja}]"]`);
                         currentLabel = this.parentElement.querySelector('.grup-label');
+                        subtitle.textContent = "Tria el grup d'alumnes per aquesta franja";
                         buscador.value = '';
                         filtrarGrups('');
                         obrirModal();
@@ -219,10 +246,25 @@
                     noResults.style.display = visibles === 0 ? 'block' : 'none';
                 }
 
+                // Selecció d'un grup
                 document.querySelectorAll('.grup-option').forEach(btn => {
                     btn.addEventListener('click', function () {
-                        if (currentHiddenInput) currentHiddenInput.value = this.dataset.grupId;
-                        if (currentLabel) currentLabel.innerHTML = `Grup: <strong>${this.dataset.grupNom}</strong>`;
+                        const grupId  = this.dataset.grupId;
+                        const grupNom = this.dataset.grupNom;
+
+                        if (modeGlobal) {
+                            // Aplica el grup a totes les cel·les
+                            document.querySelectorAll('input.input-grup').forEach(input => {
+                                input.value = grupId;
+                            });
+                            document.querySelectorAll('.grup-label').forEach(label => {
+                                label.innerHTML = `Grup: <strong>${grupNom}</strong>`;
+                            });
+                        } else {
+                            if (currentHiddenInput) currentHiddenInput.value = grupId;
+                            if (currentLabel) currentLabel.innerHTML = `Grup: <strong>${grupNom}</strong>`;
+                        }
+
                         tancarModal();
                     });
                 });
