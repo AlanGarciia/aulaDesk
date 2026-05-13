@@ -95,6 +95,18 @@
                 </a>
                 @endcanEspai
 
+                @canEspai('tickets.view')
+                <a href="{{ route('espai.tickets.all') }}" class="icon-btn" aria-label="Tickets">
+                    <span class="icon-btn__back bg-pink" aria-hidden="true"></span>
+                    <span class="icon-btn__front" aria-hidden="true">
+                        <span class="icon-btn__icon" aria-hidden="true">
+                            <i class="bi bi-ticket-detailed" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                    <span class="icon-btn__label">Tickets</span>
+                </a>
+                @endcanEspai
+
             </nav>
         </div>
     </div>

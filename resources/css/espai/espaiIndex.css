@@ -311,3 +311,7 @@
 .bg-green {
   background: linear-gradient(hsl(123, 90%, 40%), hsl(108, 90%, 40%));
 }
+
+.bg-pink {
+    background: linear-gradient(135deg, #ec4899, #db2777);
+}
