@@ -74,7 +74,7 @@ class StripeController extends Controller
         ]);
 
         return redirect()
-            ->route('dashboard')
+            ->route('espais.index')
             ->with('premium_success', true);
     }
 

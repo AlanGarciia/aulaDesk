@@ -178,6 +178,27 @@
             </div>
         </div>
     </div>
+    <div id="createdModal" class="modal" aria-hidden="true">
+    <div class="modal-content modal-success" role="dialog" aria-modal="true">
+        
+        <h3 style="margin-bottom:10px; text-align:center;">
+            ✅ Espai creat correctament
+        </h3>
+
+        <p style="text-align:center; margin-bottom:20px;">
+            Usuari per defecte:<br><br>
+            <strong>Usuari:</strong> admin<br>
+            <strong>Contrasenya:</strong> admin
+        </p>
+
+        <div class="modal-actions" style="justify-content:center;">
+            <button id="createdCloseBtn" class="btn btn-primary" type="button">
+                Continuar
+            </button>
+        </div>
+
+    </div>
+</div>
 
     <div id="shareModal" class="modal" aria-hidden="true">
         <div class="modal-content modal-success" role="dialog" aria-modal="true">
@@ -191,7 +212,7 @@
                     id="shareEmail"
                     required
                     placeholder="Email de l’usuari"
-                    style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:12px;"
+                    style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:12px; color: black"
                 >
 
                 <div class="modal-actions">
@@ -367,7 +388,7 @@ function closeLimitModal() {
 /* ============================
    MODAL PREMIUM
 ============================ */
-@if(session('premium_success') || auth()->user()->plan === 'premium')
+@if(session('premium_success'))
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('premiumModal');
     const closeBtn = document.getElementById('premiumCloseBtn');
@@ -385,7 +406,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 @endif
+@if(session('espai_created'))
+document.addEventListener('DOMContentLoaded', () => {
 
+    const modal = document.getElementById('createdModal');
+    const closeBtn = document.getElementById('createdCloseBtn');
+
+    if (modal) {
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+        });
+    }
+
+});
+@endif
 </script>
 @endpush
 

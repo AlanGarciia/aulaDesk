@@ -102,9 +102,7 @@ class EspaiController extends Controller
 
         $adminUser->roles()->attach($adminRole->id);
 
-        return redirect()
-            ->route('espais.index')
-            ->with('status', 'Espai creat correctament. Usuari per defecte: admin / admin');
+        return redirect() ->route('espais.index') ->with('espai_created', true);
     }
 
     public function edit(Espai $espai)
@@ -142,9 +140,7 @@ class EspaiController extends Controller
 
         $espai->delete();
 
-        return redirect()
-            ->route('espais.index')
-            ->with('status', 'Espai eliminat correctament.');
+        return redirect()->route('espais.index')->with('espai_deleted', true);
     }
 
     public function entrarForm(Espai $espai)
