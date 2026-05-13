@@ -1,392 +1,432 @@
-<x-app-layout>
+    <x-app-layout>
 
-    @push('styles')
-        @vite('resources/css/espais/espaisIndex.css')
-    @endpush
+        @push('styles')
+            @vite('resources/css/espais/espaisIndex.css')
+        @endpush
 
-    <div class="page">
-        <div class="container">
+        <div class="page">
+            <div class="container">
 
-            <div class="page-header">
-    <h2 class="page-title">Els meus espais</h2>
+                <div class="page-header">
+        <h2 class="page-title">Els meus espais</h2>
 
-    @php
-        $plan = auth()->user()->plan;
-        $isFree = $plan === 'free';
-        $espaisCount = $espais->count();
-        $limitReached = $isFree && $espaisCount >= 1;
-    @endphp 
+        @php
+            $plan = auth()->user()->plan;
+            $isFree = $plan === 'free';
+            $espaisCount = $espais->count();
+            $limitReached = $isFree && $espaisCount >= 1;
+        @endphp 
 
-    <div style="display:flex; align-items:center; gap:10px;">
-        
-        {{-- PLAN BADGE --}}
-        <div class="plan-badge {{ $plan }}">
-            @if($plan === 'premium')
-                <i class="bi bi-stars"></i> Premium
-            @else
-                <i class="bi bi-lock"></i> Free
-            @endif
-        </div>
-
-        {{-- USER MENU --}}
-        <div class="user-inline-menu">
-            <button class="nav-user-btn" id="userMenuBtn">
-                <i class="bi bi-person-circle"></i>
-                <span>{{ auth()->user()->name }}</span>
-                <i class="bi bi-chevron-down nav-caret"></i>
-            </button>
-
-            <div id="userMenu" class="nav-dropdown">
-                <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                    <i class="bi bi-gear"></i> Perfil
-                </a>
-
-                <div class="dropdown-divider"></div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="dropdown-item logout-item">
-                        <i class="bi bi-box-arrow-right"></i> Surt
-                    </button>
-                </form>
+        <div style="display:flex; align-items:center; gap:10px;">
+            
+            {{-- PLAN BADGE --}}
+            <div class="plan-badge {{ $plan }}">
+                @if($plan === 'premium')
+                    <i class="bi bi-stars"></i> Premium
+                @else
+                    <i class="bi bi-lock"></i> Free
+                @endif
             </div>
+
+            {{-- USER MENU --}}
+            <div class="user-inline-menu">
+                <button class="nav-user-btn" id="userMenuBtn">
+                    <i class="bi bi-person-circle"></i>
+                    <span>{{ auth()->user()->name }}</span>
+                    <i class="bi bi-chevron-down nav-caret"></i>
+                </button>
+
+                <div id="userMenu" class="nav-dropdown">
+                    <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Perfil
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item logout-item">
+                            <i class="bi bi-box-arrow-right"></i> Surt
+                        </button>
+                    </form>
+                </div>
+            </div>
+
         </div>
+    </div>
+
+    <div class="actions">
+
+        <button class="btn btn-primary create-btn {{ $limitReached ? 'disabled-btn' : '' }}"
+            @if($limitReached) disabled @else onclick="window.location='{{ route('espais.create') }}'" @endif
+            title="{{ $limitReached ? 'Has arribat al límit del pla gratuït' : '' }}">
+            <i class="bi bi-plus"></i> Crear espai
+        </button>
+
+        <button class="btn btn-secondary" onclick="window.location='{{ route('espais.plans.index') }}'">
+            <i class="bi bi-stars"></i> Plans
+        </button>
 
     </div>
-</div>
-
-<div class="actions">
-
-    <button class="btn btn-primary create-btn {{ $limitReached ? 'disabled-btn' : '' }}"
-        @if($limitReached) disabled @else onclick="window.location='{{ route('espais.create') }}'" @endif
-        title="{{ $limitReached ? 'Has arribat al límit del pla gratuït' : '' }}">
-        <i class="bi bi-plus"></i> Crear espai
-    </button>
-
-    <button class="btn btn-secondary" onclick="window.location='{{ route('espais.plans.index') }}'">
-        <i class="bi bi-stars"></i> Plans
-    </button>
-
-</div>
 
 
-            
+                
 
-            {{-- ============================
-                 GRID DE ESPAIS
-               ============================ --}}
-            <div class="tilt-grid">
-                @forelse ($espais as $espai)
-                    <div
-                        class="tilt-card js-enter-card"
-                        data-enter-url="{{ route('espais.entrar.form', $espai) }}"
-                        data-tilt
-                        data-tilt-amplitude="12"
-                        data-tilt-scale="1.05"
-                        role="link"
-                        tabindex="0"
-                        aria-label="Entrar a {{ $espai->nom }}"
-                    >
-                        <div class="tilt-card__inner">
-                            <div class="tilt-card__bg"></div>
+                {{-- ============================
+                    GRID DE ESPAIS
+                ============================ --}}
+                <div class="tilt-grid">
+                    @forelse ($espais as $espai)
+                        <div
+                            class="tilt-card js-enter-card"
+                            data-enter-url="{{ route('espais.entrar.form', $espai) }}"
+                            data-tilt
+                            data-tilt-amplitude="12"
+                            data-tilt-scale="1.05"
+                            role="link"
+                            tabindex="0"
+                            aria-label="Entrar a {{ $espai->nom }}"
+                        >
+                            <div class="tilt-card__inner">
+                                <div class="tilt-card__bg"></div>
 
-                            <div class="tilt-card__content">
-                                <div class="tilt-card__title">{{ $espai->nom }}</div>
+                                <div class="tilt-card__content">
+                                    <div class="tilt-card__title">{{ $espai->nom }}</div>
 
-                                @if ($espai->descripcio)
-                                    <div class="tilt-card__desc">{{ $espai->descripcio }}</div>
-                                @endif
+                                    @if ($espai->descripcio)
+                                        <div class="tilt-card__desc">{{ $espai->descripcio }}</div>
+                                    @endif
 
-                                <div class="tilt-card__meta">
-                                    Creat: {{ $espai->created_at->format('d/m/Y') }}
+                                    <div class="tilt-card__meta">
+                                        Creat: {{ $espai->created_at->format('d/m/Y') }}
+                                    </div>
+
+                                    @if ((int) $espai->user_id !== (int) auth()->id())
+                                        <div class="tilt-card__badge">Compartit amb tu</div>
+                                    @endif
                                 </div>
 
-                                @if ((int) $espai->user_id !== (int) auth()->id())
-                                    <div class="tilt-card__badge">Compartit amb tu</div>
+                                @if ((int) $espai->user_id === (int) auth()->id())
+                                    <div class="tilt-card__actions" data-no-enter="1">
+                                        <button
+                                            type="button"
+                                            class="tilt-action tilt-action--neutral js-no-enter"
+                                            onclick="window.location='{{ route('espais.edit', $espai) }}'"
+                                            aria-label="Editar {{ $espai->nom }}"
+                                        >
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="tilt-action tilt-action--neutral share-btn js-no-enter"
+                                            data-espai-name="{{ $espai->nom }}"
+                                            data-action="{{ route('espais.compartir', $espai) }}"
+                                            aria-label="Compartir {{ $espai->nom }}"
+                                        >
+                                            <i class="bi bi-share"></i>
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="tilt-action tilt-action--danger delete-btn js-no-enter"
+                                            data-no-enter="1"
+                                            data-espai-name="{{ $espai->nom }}"
+                                            data-form-id="deleteForm-{{ $espai->id }}"
+                                            aria-label="Eliminar {{ $espai->nom }}"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+
+                                        <form id="deleteForm-{{ $espai->id }}" action="{{ route('espais.destroy', $espai) }}" method="POST" style="display:none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </div>
                                 @endif
                             </div>
 
-                            @if ((int) $espai->user_id === (int) auth()->id())
-                                <div class="tilt-card__actions" data-no-enter="1">
-                                    <button
-                                        type="button"
-                                        class="tilt-action tilt-action--neutral js-no-enter"
-                                        onclick="window.location='{{ route('espais.edit', $espai) }}'"
-                                        aria-label="Editar {{ $espai->nom }}"
-                                    >
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="tilt-action tilt-action--neutral share-btn js-no-enter"
-                                        data-espai-name="{{ $espai->nom }}"
-                                        data-action="{{ route('espais.compartir', $espai) }}"
-                                        aria-label="Compartir {{ $espai->nom }}"
-                                    >
-                                        <i class="bi bi-share"></i>
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="tilt-action tilt-action--danger delete-btn js-no-enter"
-                                        data-no-enter="1"
-                                        data-espai-name="{{ $espai->nom }}"
-                                        data-form-id="deleteForm-{{ $espai->id }}"
-                                        aria-label="Eliminar {{ $espai->nom }}"
-                                    >
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-
-                                    <form id="deleteForm-{{ $espai->id }}" action="{{ route('espais.destroy', $espai) }}" method="POST" style="display:none;">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
-                                </div>
-                            @endif
+                            <div class="tilt-card__tooltip" role="tooltip">
+                                {{ $espai->nom }}
+                            </div>
                         </div>
-
-                        <div class="tilt-card__tooltip" role="tooltip">
-                            {{ $espai->nom }}
+                    @empty
+                        <div class="empty-state-container">
+                            <p class="empty-state">No tens cap espai encara. Crea’n un per començar.</p>
                         </div>
-                    </div>
-                @empty
-                    <div class="empty-state-container">
-                        <p class="empty-state">No tens cap espai encara. Crea’n un per començar.</p>
-                    </div>
-                @endforelse
-            </div>
-
-        </div>
-    </div>
-
-    <div id="confirmModal" class="modal" aria-hidden="true">
-        <div class="modal-content modal-delete" role="dialog" aria-modal="true" aria-labelledby="confirmText">
-            <p id="confirmText"></p>
-            <div class="modal-actions">
-                <button id="cancelBtn" class="btn btn-cancel" type="button">Cancel·lar</button>
-                <button id="confirmBtn" class="btn btn-delete" type="button">Eliminar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="successModal" class="modal" aria-hidden="true">
-        <div class="modal-content modal-success" role="dialog" aria-modal="true" aria-labelledby="successText">
-            <p id="successText"></p>
-            <div class="modal-actions">
-                <button id="successCloseBtn" class="btn btn-primary" type="button">Tancar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="shareModal" class="modal" aria-hidden="true">
-        <div class="modal-content modal-success" role="dialog" aria-modal="true">
-            <p id="shareTitle" style="margin-bottom:10px;"></p>
-
-            <form id="shareForm" method="POST" action="">
-                @csrf
-                <input
-                    type="email"
-                    name="email"
-                    id="shareEmail"
-                    required
-                    placeholder="Email de l’usuari"
-                    style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:12px;"
-                >
-
-                <div class="modal-actions">
-                    <button type="button" id="shareCancelBtn" class="btn btn-cancel">Cancel·lar</button>
-                    <button type="submit" class="btn btn-primary">Compartir</button>
+                    @endforelse
                 </div>
-            </form>
+
+            </div>
+        </div>
+
+        <div id="confirmModal" class="modal" aria-hidden="true">
+            <div class="modal-content modal-delete" role="dialog" aria-modal="true" aria-labelledby="confirmText">
+                <p id="confirmText"></p>
+                <div class="modal-actions">
+                    <button id="cancelBtn" class="btn btn-cancel" type="button">Cancel·lar</button>
+                    <button id="confirmBtn" class="btn btn-delete" type="button">Eliminar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="successModal" class="modal" aria-hidden="true">
+            <div class="modal-content modal-success" role="dialog" aria-modal="true" aria-labelledby="successText">
+                <p id="successText"></p>
+                <div class="modal-actions">
+                    <button id="successCloseBtn" class="btn btn-primary" type="button">Tancar</button>
+                </div>
+            </div>
+        </div>
+        <div id="createdModal" class="modal" aria-hidden="true">
+        <div class="modal-content modal-success" role="dialog" aria-modal="true">
+            
+            <h3 style="margin-bottom:10px; text-align:center;">
+                ✅ Espai creat correctament
+            </h3>
+
+            <p style="text-align:center; margin-bottom:20px;">
+                Usuari per defecte:<br><br>
+                <strong>Usuari:</strong> admin<br>
+                <strong>Contrasenya:</strong> admin
+            </p>
+
+            <div class="modal-actions" style="justify-content:center;">
+                <button id="createdCloseBtn" class="btn btn-primary" type="button">
+                    Continuar
+                </button>
+            </div>
+
         </div>
     </div>
-    {{-- MODAL: JA ETS PREMIUM --}}
-<div id="premiumModal" class="modal" aria-hidden="true">
-    <div class="modal-content modal-success" role="dialog" aria-modal="true">
-        <h3 style="margin-bottom:10px; text-align:center;">🎉 Ja ets Premium!</h3>
 
-        <p style="text-align:center; margin-bottom:20px;">
-            Gràcies per confiar en aulaDesk.  
-            Ara tens accés complet a totes les funcions Premium.
-        </p>
+        <div id="shareModal" class="modal" aria-hidden="true">
+            <div class="modal-content modal-success" role="dialog" aria-modal="true">
+                <p id="shareTitle" style="margin-bottom:10px;"></p>
 
-        <div class="modal-actions" style="justify-content:center;">
-            <button id="premiumCloseBtn" class="btn btn-primary" type="button">
-                Continuar
-            </button>
+                <form id="shareForm" method="POST" action="">
+                    @csrf
+                    <input
+                        type="email"
+                        name="email"
+                        id="shareEmail"
+                        required
+                        placeholder="Email de l’usuari"
+                        style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:12px; color: black"
+                    >
+
+                    <div class="modal-actions">
+                        <button type="button" id="shareCancelBtn" class="btn btn-cancel">Cancel·lar</button>
+                        <button type="submit" class="btn btn-primary">Compartir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{-- MODAL: JA ETS PREMIUM --}}
+    <div id="premiumModal" class="modal" aria-hidden="true">
+        <div class="modal-content modal-success" role="dialog" aria-modal="true">
+            <h3 style="margin-bottom:10px; text-align:center;">🎉 Ja ets Premium!</h3>
+
+            <p style="text-align:center; margin-bottom:20px;">
+                Gràcies per confiar en aulaDesk.  
+                Ara tens accés complet a totes les funcions Premium.
+            </p>
+
+            <div class="modal-actions" style="justify-content:center;">
+                <button id="premiumCloseBtn" class="btn btn-primary" type="button">
+                    Continuar
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+    @push('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-    /* ============================
-       ENTRAR AL ESPAI AL CLICAR LA CARD
-    ============================ */
-    document.querySelectorAll('.js-enter-card').forEach(card => {
-        card.addEventListener('click', (e) => {
+        /* ============================
+        ENTRAR AL ESPAI AL CLICAR LA CARD
+        ============================ */
+        document.querySelectorAll('.js-enter-card').forEach(card => {
+            card.addEventListener('click', (e) => {
 
-            // Si clicas un botón dentro de la card, NO entrar
-            if (e.target.closest('.js-no-enter')) return;
+                // Si clicas un botón dentro de la card, NO entrar
+                if (e.target.closest('.js-no-enter')) return;
 
-            const url = card.dataset.enterUrl;
-            if (url) window.location.href = url;
-        });
-    });
-
-    /* ============================
-       MENU USUARIO
-    ============================ */
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userMenu = document.getElementById('userMenu');
-
-    if (userMenuBtn && userMenu) {
-        userMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userMenu.classList.toggle('is-open');
+                const url = card.dataset.enterUrl;
+                if (url) window.location.href = url;
+            });
         });
 
-        window.addEventListener('click', () => {
-            userMenu.classList.remove('is-open');
+        /* ============================
+        MENU USUARIO
+        ============================ */
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+
+        if (userMenuBtn && userMenu) {
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenu.classList.toggle('is-open');
+            });
+
+            window.addEventListener('click', () => {
+                userMenu.classList.remove('is-open');
+            });
+        }
+
+        /* ============================
+        MODAL ELIMINAR ESPAI
+        ============================ */
+
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmText = document.getElementById('confirmText');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // BOTONES DE ELIMINAR
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // evita entrar a la card
+
+                const espaiName = btn.dataset.espaiName;
+                const formId = btn.dataset.formId;
+
+                // Texto del modal
+                if (confirmText) {
+                    confirmText.textContent = `Segur que vols eliminar "${espaiName}"?`;
+                }
+
+                // Guardamos el form que se debe enviar
+                if (confirmBtn) {
+                    confirmBtn.dataset.formId = formId;
+                }
+
+                // Mostrar modal
+                if (confirmModal) {
+                    confirmModal.setAttribute('aria-hidden', 'false');
+                    confirmModal.classList.add('is-open');
+                }
+            });
         });
-    }
 
-    /* ============================
-       MODAL ELIMINAR ESPAI
-    ============================ */
+        // CANCELAR
+        if (cancelBtn && confirmModal) {
+            cancelBtn.addEventListener('click', () => {
+                confirmModal.classList.remove('is-open');
+                confirmModal.setAttribute('aria-hidden', 'true');
+            });
+        }
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                const formId = confirmBtn.dataset.formId;
+                if (formId) {
+                    const form = document.getElementById(formId);
+                    if (form) form.submit();
+                }
+            });
+        }
 
-    const confirmModal = document.getElementById('confirmModal');
-    const confirmText = document.getElementById('confirmText');
-    const confirmBtn = document.getElementById('confirmBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
+    const shareModal = document.getElementById('shareModal');
+    const shareTitle = document.getElementById('shareTitle');
+    const shareForm = document.getElementById('shareForm');
+    const shareCancelBtn = document.getElementById('shareCancelBtn');
 
-    // BOTONES DE ELIMINAR
-    document.querySelectorAll('.delete-btn').forEach(btn => {
+    // BOTONES COMPARTIR
+    document.querySelectorAll('.share-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // evita entrar a la card
+            e.stopPropagation();
 
             const espaiName = btn.dataset.espaiName;
-            const formId = btn.dataset.formId;
+            const action = btn.dataset.action;
 
-            // Texto del modal
-            if (confirmText) {
-                confirmText.textContent = `Segur que vols eliminar "${espaiName}"?`;
+            // Título
+            if (shareTitle) {
+                shareTitle.textContent = `Compartir "${espaiName}"`;
             }
 
-            // Guardamos el form que se debe enviar
-            if (confirmBtn) {
-                confirmBtn.dataset.formId = formId;
+            // Action del form
+            if (shareForm) {
+                shareForm.action = action;
             }
 
             // Mostrar modal
-            if (confirmModal) {
-                confirmModal.setAttribute('aria-hidden', 'false');
-                confirmModal.classList.add('is-open');
+            if (shareModal) {
+                shareModal.classList.add('is-open');
+                shareModal.setAttribute('aria-hidden', 'false');
             }
         });
     });
 
     // CANCELAR
-    if (cancelBtn && confirmModal) {
-        cancelBtn.addEventListener('click', () => {
-            confirmModal.classList.remove('is-open');
-            confirmModal.setAttribute('aria-hidden', 'true');
-        });
-    }
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', () => {
-            const formId = confirmBtn.dataset.formId;
-            if (formId) {
-                const form = document.getElementById(formId);
-                if (form) form.submit();
-            }
-        });
-    }
-
-const shareModal = document.getElementById('shareModal');
-const shareTitle = document.getElementById('shareTitle');
-const shareForm = document.getElementById('shareForm');
-const shareCancelBtn = document.getElementById('shareCancelBtn');
-
-// BOTONES COMPARTIR
-document.querySelectorAll('.share-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-
-        const espaiName = btn.dataset.espaiName;
-        const action = btn.dataset.action;
-
-        // Título
-        if (shareTitle) {
-            shareTitle.textContent = `Compartir "${espaiName}"`;
+        if (shareCancelBtn && shareModal) {
+            shareCancelBtn.addEventListener('click', () => {
+                shareModal.classList.remove('is-open');
+                shareModal.setAttribute('aria-hidden', 'true');
+            });
         }
 
-        // Action del form
-        if (shareForm) {
-            shareForm.action = action;
-        }
 
-        // Mostrar modal
-        if (shareModal) {
-            shareModal.classList.add('is-open');
-            shareModal.setAttribute('aria-hidden', 'false');
+    });
+    @if(session('showLimitModal'))
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('limitModal');
+
+        if (modal) {
+            modal.style.display = 'flex';
         }
     });
-});
+    @endif
 
-// CANCELAR
-    if (shareCancelBtn && shareModal) {
-        shareCancelBtn.addEventListener('click', () => {
-            shareModal.classList.remove('is-open');
-            shareModal.setAttribute('aria-hidden', 'true');
-        });
+    function closeLimitModal() {
+        const modal = document.getElementById('limitModal');
+
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
+    /* ============================
+    MODAL PREMIUM
+    ============================ */
+    @if(session('premium_success'))
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('premiumModal');
+        const closeBtn = document.getElementById('premiumCloseBtn');
 
+        if (modal) {
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
 
-});
-@if(session('showLimitModal'))
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('limitModal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        }
+    });
+    @endif
+    @if(session('espai_created'))
+    document.addEventListener('DOMContentLoaded', () => {
 
-    if (modal) {
-        modal.style.display = 'flex';
-    }
-});
-@endif
+        const modal = document.getElementById('createdModal');
+        const closeBtn = document.getElementById('createdCloseBtn');
 
-function closeLimitModal() {
-    const modal = document.getElementById('limitModal');
+        if (modal) {
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
 
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-/* ============================
-   MODAL PREMIUM
-============================ */
-@if(session('premium_success') || auth()->user()->plan === 'premium')
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('premiumModal');
-    const closeBtn = document.getElementById('premiumCloseBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        }
 
-    if (modal) {
-        modal.classList.add('is-open');
-        modal.setAttribute('aria-hidden', 'false');
-    }
+    });
+    @endif
+    </script>
+    @endpush
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('is-open');
-            modal.setAttribute('aria-hidden', 'true');
-        });
-    }
-});
-@endif
-
-</script>
-@endpush
-
-</x-app-layout>
+    </x-app-layout>
