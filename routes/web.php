@@ -310,6 +310,10 @@ Route::middleware('espai.session')->group(function () {
     Route::get('/espai/aules/{aula}/tickets', [AulaTicketController::class, 'showAula'])
     ->name('espai.aules.tickets.index')
     ->middleware('canEspai:tickets.view');
+    
+    Route::get('/espai/tickets/tots', [AulaTicketController::class, 'all'])
+    ->middleware('canEspai:tickets.view')
+    ->name('espai.tickets.all');
 
 
     //rols
