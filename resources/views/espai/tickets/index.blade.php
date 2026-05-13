@@ -10,6 +10,7 @@
                     <a class="btn btn-secondary" href="{{ route('espai.index') }}">Tornar</a>
                 </div>
             </div>
+            <h1>Hola</h1>
 
             @if($tickets->isEmpty())
                 <div class="empty-state">No hi ha tickets oberts.</div>
