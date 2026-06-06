@@ -86,7 +86,7 @@ class BaseRoleController extends Controller
 
         $role->permissions()->sync($request->permissions ?? []);
 
-        return redirect()->route('espai.roles.index');
+        return redirect()->route('espai.usuaris.index');
     }
 
     public function edit(Request $request, BaseRole $role, $from_user = null)
@@ -123,5 +123,30 @@ class BaseRoleController extends Controller
     $role->permissions()->sync($request->permissions ?? []);
 
     return redirect()->route('espai.usuaris.index');
+    }
+
+    public function destroy(Request $request, BaseRole $role)
+    {
+        $espai = $this->getEspai($request);
+
+        abort_if($role->espai_id !== $espai->id, 404);
+
+        if ($role->nom === 'admin') {
+            return redirect()
+                ->route('espai.usuaris.index')
+                ->with('error', 'No es pot eliminar el rol admin.');
+        }
+
+        $role->permissions()->detach();
+
+        if (method_exists($role, 'usuaris')) {
+            $role->usuaris()->detach();
+        }
+
+        $role->delete();
+
+        return redirect()
+            ->route('espai.usuaris.index')
+            ->with('ok', 'Rol eliminat correctament.');
     }
 }

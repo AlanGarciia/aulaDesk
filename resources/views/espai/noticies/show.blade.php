@@ -4,15 +4,15 @@
     <x-slot name="header">
         <div class="page-header">
             <div class="page-header__text">
-                <h2 class="page-title">Notícia</h2>
+                <h2 class="page-title">{{ __('messages.news_single') }}</h2>
             </div>
 
             <div class="page-header__actions">
                 <a class="btn btn-secondary" href="{{ route('espai.noticies.index') }}">
-                    Tornar al tauló
+                    {{ __('messages.back_to_board') }}
                 </a>
                 <a class="btn btn-secondary" href="{{ route('espai.index') }}">
-                    Tornar a l’espai
+                    {{ __('messages.back_to_space') }}
                 </a>
             </div>
         </div>
@@ -28,13 +28,13 @@
                         <span>{{ $noticia->created_at->format('d/m/Y') }}</span>
                         <span class="dot">•</span>
                         <span>
-                            Reaccions:
+                            {{ __('messages.reactions') }}:
                             <strong>{{ $noticia->reaccions_count ?? $noticia->reaccions()->count() }}</strong>
                         </span>
 
                         @if(!empty($noticia->usuari_espai_id))
                             <span class="dot">•</span>
-                            <span>Autor: <strong>{{ $noticia->usuari_espai_id }}</strong></span>
+                            <span>{{ __('messages.author') }}: <strong>{{ $noticia->usuari_espai_id }}</strong></span>
                         @endif
                     </div>
                 </header>
@@ -83,7 +83,7 @@
                             <div class="show-media">
                                 <img
                                     src="{{ asset('storage/'.$noticia->imatge_path) }}"
-                                    alt="imatge"
+                                    alt="{{ __('messages.image') }}"
                                     loading="lazy"
                                 >
                             </div>
@@ -98,7 +98,7 @@
                                 @if($noticia->contingut)
                                     <div class="show-content">{{ $noticia->contingut }}</div>
                                 @else
-                                    <div style="color:var(--muted);">Sense contingut.</div>
+                                    <div style="color:var(--muted);">{{ __('messages.no_content') }}</div>
                                 @endif
                             </div>
                         </div>
@@ -109,21 +109,21 @@
                     <form class="inline-form" method="POST" action="{{ route('espai.noticies.reaccio', $noticia) }}">
                         @csrf
                         <input type="hidden" name="tipus" value="like">
-                        <button class="icon-btn" type="submit" title="M'agrada">
-                            👍 <span class="sr-only">M'agrada</span>
+                        <button class="icon-btn" type="submit" title="{{ __('messages.i_like') }}">
+                            👍 <span class="sr-only">{{ __('messages.i_like') }}</span>
                         </button>
                     </form>
 
                     @if ((int) session('usuari_espai_id') === (int) $noticia->usuari_espai_id)
                         <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $noticia) }}">
-                            Editar
+                            {{ __('messages.edit') }}
                         </a>
 
                         <form class="inline-form" method="POST" action="{{ route('espai.noticies.destroy', $noticia) }}"
-                              onsubmit="return confirm('Eliminar la notícia?');">
+                              onsubmit="return confirm('{{ __('messages.news_delete_confirm') }}');">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger" type="submit">Eliminar</button>
+                            <button class="btn btn-danger" type="submit">{{ __('messages.delete') }}</button>
                         </form>
                     @endif
                 </div>

@@ -18,6 +18,9 @@
     @stack('styles')
 </head>
 <body>
+    <div style="position:fixed; top:16px; right:16px; z-index:50; background:rgba(255,255,255,.9); padding:6px 10px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.08);">
+        <x-language-switcher />
+    </div>
     <div class="login-page">
         {{ $slot }}
     </div>

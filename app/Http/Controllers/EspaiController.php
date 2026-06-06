@@ -37,7 +37,6 @@ class EspaiController extends Controller
 
     public function store(Request $request)
     {
-        // LIMIT PLAN FREE (1 espai)
         if (
             auth()->user()->plan === 'free'
             && auth()->user()->espais()->count() >= 1

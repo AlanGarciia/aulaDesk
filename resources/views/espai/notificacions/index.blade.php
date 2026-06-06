@@ -4,28 +4,28 @@
 
 <x-app-layout>
     <a href="{{ route('espai.index') }}" class="btn btn-secondary btn-top-right">
-        Tornar a l'espai
+        {{ __('messages.back_to_space') }}
     </a>
 
     <x-slot name="header">
         <div class="page-header">
             <div class="page-header__text">
-                <h2 class="page-title">Notificacions</h2>
+                <h2 class="page-title">{{ __('messages.notifications') }}</h2>
             </div>
         </div>
     </x-slot>
 
     <div class="notif-page">
-        <h1 class="notif-page__title">Totes les notificacions</h1>
-        <p class="notif-page__sub">Aquí tens l'historial complet d'avisos del teu espai.</p>
+        <h1 class="notif-page__title">{{ __('messages.notifications_all_title') }}</h1>
+        <p class="notif-page__sub">{{ __('messages.notifications_sub') }}</p>
 
         @php
             $tipusOptions = [
-                '' => 'Tots els tipus',
-                'noticia_creada' => 'Notícies',
-                'usuari_nou' => 'Usuaris nous',
-                'guardia_solicitada' => 'Sol·licituds de guàrdia',
-                'guardia_acceptada' => 'Guàrdies cobertes',
+                '' => __('messages.notif_type_all'),
+                'noticia_creada' => __('messages.notif_type_news'),
+                'usuari_nou' => __('messages.notif_type_new_users'),
+                'guardia_solicitada' => __('messages.notif_type_guardia_requests'),
+                'guardia_acceptada' => __('messages.notif_type_guardia_covered'),
             ];
 
             $iconaPerTipus = fn($t) => match ($t) {
@@ -45,13 +45,13 @@
             };
         @endphp
 
-        <div class="notif-filters" role="tablist" aria-label="Filtres">
+        <div class="notif-filters" role="tablist" aria-label="{{ __('messages.filters') }}">
             <a href="{{ route('espai.notificacions.index', ['filtre' => 'totes', 'tipus' => $tipusSeleccionat]) }}"
-               class="chip {{ $filtre === 'totes' ? 'chip--active' : '' }}">Totes</a>
+               class="chip {{ $filtre === 'totes' ? 'chip--active' : '' }}">{{ __('messages.notif_all') }}</a>
             <a href="{{ route('espai.notificacions.index', ['filtre' => 'no_llegides', 'tipus' => $tipusSeleccionat]) }}"
-               class="chip {{ $filtre === 'no_llegides' ? 'chip--active' : '' }}">No llegides</a>
+               class="chip {{ $filtre === 'no_llegides' ? 'chip--active' : '' }}">{{ __('messages.notif_unread') }}</a>
             <a href="{{ route('espai.notificacions.index', ['filtre' => 'llegides', 'tipus' => $tipusSeleccionat]) }}"
-               class="chip {{ $filtre === 'llegides' ? 'chip--active' : '' }}">Llegides</a>
+               class="chip {{ $filtre === 'llegides' ? 'chip--active' : '' }}">{{ __('messages.notif_read') }}</a>
 
             <span style="flex:1"></span>
 
@@ -76,20 +76,20 @@
                             <div class="notif-row__msg">{{ $n->missatge }}</div>
                         @endif
                         <div class="notif-row__time">
-                            {{ optional($n->created_at)->diffForHumans() }}
+                            {{ optional($n->created_at)->locale(app()->getLocale())->diffForHumans() }}
                             @if($n->llegida_el)
-                                · llegida {{ $n->llegida_el->diffForHumans() }}
+                                · {{ __('messages.notif_read_at') }} {{ $n->llegida_el->locale(app()->getLocale())->diffForHumans() }}
                             @endif
                         </div>
                     </div>
                     @unless($n->llegida_el)
-                        <span class="notif-row__dot" aria-label="No llegida"></span>
+                        <span class="notif-row__dot" aria-label="{{ __('messages.notif_unread') }}"></span>
                     @endunless
                 </a>
             @empty
                 <div class="notif-empty">
                     <i class="bi bi-bell-slash" aria-hidden="true"></i>
-                    <div>No hi ha notificacions per als filtres seleccionats.</div>
+                    <div>{{ __('messages.notif_empty') }}</div>
                 </div>
             @endforelse
         </div>

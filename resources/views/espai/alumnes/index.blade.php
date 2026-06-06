@@ -6,40 +6,40 @@
     <div class="page">
 
         <div class="page-title-container">
-            <h2 class="page-title">Alumnes de l'espai</h2>
+            <h2 class="page-title">{{ __('messages.students_index_title') }}</h2>
         </div>
 
         <div class="actions">
             <a href="{{ route('espai.alumnes.create') }}" class="btn btn-primary @cantEspaiClass('students.create')">
-                + Afegir alumne
+                + {{ __('messages.students_add_title') }}
             </a>
 
                     @if(auth()->user()->plan === 'premium')
             <a href="{{ route('espai.alumnes.import.form') }}" class="btn btn-primary">
-                Importar CSV
+                {{ __('messages.import_csv') }}
             </a>
         @else
             <button class="btn btn-secondary" disabled>
-                Importar CSV 🔒 PREMIUM
+                {{ __('messages.import_csv') }} 🔒 PREMIUM
             </button>
         @endif
 
         @if(auth()->user()->plan === 'premium')
             <a href="{{ route('espai.alumnes.export') }}" class="btn btn-primary">
-                Exportar CSV
+                {{ __('messages.export_csv') }}
             </a>
         @else
             <button class="btn btn-secondary" disabled>
-                Exportar CSV 🔒 PREMIUM
+                {{ __('messages.export_csv') }} 🔒 PREMIUM
             </button>
         @endif
 
             <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary @cantEspaiClass('groups.view')">
-                <i class="bi bi-people"></i> Veure grups
+                <i class="bi bi-people"></i> {{ __('messages.view_groups') }}
             </a>
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
                 <i class="bi bi-box-arrow-right"></i>
-                Tornar a l'espai
+                {{ __('messages.back_to_space') }}
             </a>
         </div>
 
@@ -51,16 +51,16 @@
             <form method="GET" action="{{ route('espai.alumnes.index') }}" class="filters-form">
                 <div class="filters-grid">
                     <div class="filter-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="Buscar per nom">
+                        <label for="nom">{{ __('messages.name') }}</label>
+                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="{{ __('messages.search_by_name') }}">
                     </div>
                     <div class="filter-group">
-                        <label for="idalu">IDALU</label>
-                        <input type="text" name="idalu" id="idalu" value="{{ request('idalu') }}" placeholder="Buscar per IDALU">
+                        <label for="idalu">{{ __('messages.idalu') }}</label>
+                        <input type="text" name="idalu" id="idalu" value="{{ request('idalu') }}" placeholder="{{ __('messages.search_by_idalu') }}">
                     </div>
                     <div class="filter-actions">
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
-                        <a href="{{ route('espai.alumnes.index') }}" class="btn btn-secondary">Netejar</a>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.filter') }}</button>
+                        <a href="{{ route('espai.alumnes.index') }}" class="btn btn-secondary">{{ __('messages.clear') }}</a>
                     </div>
                 </div>
             </form>
@@ -71,9 +71,9 @@
                         <div class="user-info">
                             <div class="user-name">{{ $alumne->nom }} {{ $alumne->cognoms }}</div>
                             <div class="user-meta">
-                                IDALU: {{ $alumne->idalu }}<br>
-                                @if($alumne->correu) Correu: {{ $alumne->correu }}<br> @endif
-                                @if($alumne->telefon) Telèfon: {{ $alumne->telefon }} @endif
+                                {{ __('messages.idalu') }}: {{ $alumne->idalu }}<br>
+                                @if($alumne->correu) {{ __('messages.email') }}: {{ $alumne->correu }}<br> @endif
+                                @if($alumne->telefon) {{ __('messages.phone') }}: {{ $alumne->telefon }} @endif
                             </div>
                         </div>
                         <div class="user-actions">
@@ -86,17 +86,17 @@
                             <form class="inline-form"
                                   method="POST"
                                   action="{{ route('espai.alumnes.destroy', $alumne) }}"
-                                  onsubmit="return confirm('Segur que vols eliminar aquest alumne?');">
+                                  onsubmit="return confirm('{{ __('messages.students_delete_confirm') }}');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger @cantEspaiClass('students.delete')">
-                                    Eliminar
+                                    {{ __('messages.delete') }}
                                 </button>
                             </form>
                         </div>
                     </div>
                 @empty
-                    <p class="empty-state">No hi ha alumnes creats en aquest espai.</p>
+                    <p class="empty-state">{{ __('messages.students_empty') }}</p>
                 @endforelse
             </div>
 

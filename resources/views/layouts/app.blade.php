@@ -23,6 +23,11 @@
 <body class="font-sans antialiased bg-[var(--color-bg)]">
 <div class="min-h-screen">
 
+    <!-- Selector d'idioma (flotant) -->
+    <div style="position:fixed; top:14px; right:14px; z-index:9998; background:#fff; padding:6px 10px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.12);">
+        <x-language-switcher />
+    </div>
+
     <main>
         {{ $slot }}
     </main>

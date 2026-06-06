@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>Llista d'incidències</title>
+    <title>{{ __('messages.incidents_list_doc_title') }}</title>
     <style>
         @page { margin: 24px 28px; }
         * { box-sizing: border-box; }
@@ -96,29 +96,29 @@
 <body>
 
 <div class="pdf-head">
-    <h1>{{ $aulaHorari->grup->nom ?? 'Grup' }}</h1>
+    <h1>{{ $aulaHorari->grup->nom ?? __('messages.group') }}</h1>
     <div class="meta">
-        <span>Aula: <strong>{{ $aulaHorari->aula->nom ?? '—' }}</strong></span>
-        <span>Hora: <strong>{{ substr($aulaHorari->franja->inici ?? '', 0, 5) }} – {{ substr($aulaHorari->franja->fi ?? '', 0, 5) }}</strong></span>
-        <span>Període: <strong>{{ $from->format('d/m/Y') }} – {{ $to->format('d/m/Y') }}</strong></span>
-        <span>Alumnes: <strong>{{ $alumnes->count() }}</strong></span>
+        <span>{{ __('messages.classroom') }}: <strong>{{ $aulaHorari->aula->nom ?? '—' }}</strong></span>
+        <span>{{ __('messages.hour') }}: <strong>{{ substr($aulaHorari->franja->inici ?? '', 0, 5) }} – {{ substr($aulaHorari->franja->fi ?? '', 0, 5) }}</strong></span>
+        <span>{{ __('messages.period') }}: <strong>{{ $from->format('d/m/Y') }} – {{ $to->format('d/m/Y') }}</strong></span>
+        <span>{{ __('messages.students') }}: <strong>{{ $alumnes->count() }}</strong></span>
     </div>
 </div>
 
-<h2 class="section">Resum per alumne</h2>
+<h2 class="section">{{ __('messages.summary_per_student') }}</h2>
 
 @if($alumnes->isEmpty())
-    <div class="empty">Aquest grup encara no té cap alumne.</div>
+    <div class="empty">{{ __('messages.group_has_no_students') }}</div>
 @else
     <table>
         <thead>
             <tr>
-                <th>Alumne</th>
-                <th style="width:40px; text-align:center;">Ass</th>
-                <th style="width:40px; text-align:center;">Deu</th>
-                <th style="width:40px; text-align:center;">Mat</th>
-                <th style="width:40px; text-align:center;">Amo</th>
-                <th style="width:50px; text-align:center;">Total</th>
+                <th>{{ __('messages.student') }}</th>
+                <th style="width:40px; text-align:center;">{{ __('messages.abbr_attendance') }}</th>
+                <th style="width:40px; text-align:center;">{{ __('messages.abbr_homework') }}</th>
+                <th style="width:40px; text-align:center;">{{ __('messages.abbr_material') }}</th>
+                <th style="width:40px; text-align:center;">{{ __('messages.abbr_warning') }}</th>
+                <th style="width:50px; text-align:center;">{{ __('messages.total') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -140,19 +140,19 @@
     </table>
 @endif
 
-<h2 class="section">Detall per dia</h2>
+<h2 class="section">{{ __('messages.detail_per_day') }}</h2>
 
 @if($perDia->isEmpty())
-    <div class="empty">No hi ha cap incidència registrada en aquest període.</div>
+    <div class="empty">{{ __('messages.no_incidents_period') }}</div>
 @else
     @foreach($perDia as $diaStr => $incs)
         @php
-            $diaCarbon = \Carbon\Carbon::parse($diaStr);
+            $diaCarbon = \Carbon\Carbon::parse($diaStr)->locale(app()->getLocale());
         @endphp
         <div class="day-block">
             <div class="day-title">
                 {{ ucfirst($diaCarbon->isoFormat('dddd D MMMM YYYY')) }}
-                <span style="font-weight:400; opacity:.85; margin-left:6px;">({{ $incs->count() }} incidències)</span>
+                <span style="font-weight:400; opacity:.85; margin-left:6px;">({{ $incs->count() }} {{ __('messages.incidents_lower') }})</span>
             </div>
             <ul>
                 @foreach($incs as $inc)
@@ -173,7 +173,7 @@
 @endif
 
 <div class="footer">
-    Generat el {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }} · AulaDesk
+    {{ __('messages.generated_on') }} {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }} · AulaDesk
 </div>
 
 </body>

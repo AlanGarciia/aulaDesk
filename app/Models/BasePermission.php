@@ -30,35 +30,35 @@ class BasePermission extends Model
         $action = $parts[1] ?? '';
 
         $modules = [
-            'users' => 'Usuaris',
-            'groups' => 'Grups',
-            'students' => 'Alumnes',
-            'aulas' => 'Aules',
-            'noticies' => 'Notícies',
-            'guardies' => 'Guardies',
-            'tickets' => 'Tiquets',
-            'roles' => 'Rols',
-            'permissions' => 'Permisos',
+            'users'       => __('messages.users'),
+            'groups'      => __('messages.groups'),
+            'students'    => __('messages.students'),
+            'aulas'       => __('messages.classrooms'),
+            'noticies'    => __('messages.news'),
+            'guardies'    => __('messages.guardies_title'),
+            'tickets'     => __('messages.tickets'),
+            'roles'       => __('messages.roles'),
+            'permissions' => __('messages.permissions'),
         ];
 
         $actions = [
-            'view' => 'Veure',
-            'create' => 'Crear',
-            'update' => 'Editar',
-            'delete' => 'Eliminar',
-            'manage' => 'Gestionar',
-            'import' => 'Importar',
-            'export' => 'Exportar',
-            'reaccionar' => 'Reaccionar',
+            'view'       => __('messages.action_view'),
+            'create'     => __('messages.action_create'),
+            'update'     => __('messages.action_update'),
+            'delete'     => __('messages.action_delete'),
+            'manage'     => __('messages.action_manage'),
+            'import'     => __('messages.action_import'),
+            'export'     => __('messages.action_export'),
+            'reaccionar' => __('messages.action_react'),
         ];
 
         if ($module === 'aulas' && $action === 'horari') {
-            return 'Actualitzar Horari d’Aules';
+            return __('messages.perm_aulas_horari');
         }
 
         $moduleName = $modules[$module] ?? ucfirst($module);
         $actionName = $actions[$action] ?? ucfirst($action);
 
-        return "$actionName $moduleName";
+        return __('messages.perm_format', ['action' => $actionName, 'module' => $moduleName]);
     }
 }

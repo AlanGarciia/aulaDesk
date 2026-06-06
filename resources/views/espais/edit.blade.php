@@ -14,11 +14,11 @@
 
         <div class="container">
             <div class="page-header page-foreground">
-                <h2 class="page-title">Editar espai</h2>
+                <h2 class="page-title">{{ __('messages.espais_edit_title') }}</h2>
 
                 <a href="{{ route('espais.index') }}" class="btn btn-secondary">
                     <i class="bi bi-box-arrow-right"></i>
-                    Tornar
+                    {{ __('messages.back') }}
                 </a>
             </div>
 
@@ -29,7 +29,7 @@
                     @method('PUT')
 
                     <div class="form-group">
-                        <label for="nom">Nom</label>
+                        <label for="nom">{{ __('messages.name') }}</label>
                         <input
                             type="text"
                             id="nom"
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="descripcio">Descripció (opcional)</label>
+                        <label for="descripcio">{{ __('messages.description_optional') }}</label>
                         <textarea
                             id="descripcio"
                             name="descripcio"
@@ -57,11 +57,11 @@
 
                     <div class="edit-actions">
                         <button type="submit" class="btn btn-primary">
-                            Guardar canvis
+                            {{ __('messages.save_changes') }}
                         </button>
 
                         <button type="button" class="btn btn-danger" id="deleteBtn">
-                            <i class="bi bi-trash"></i> Eliminar
+                            <i class="bi bi-trash"></i> {{ __('messages.delete') }}
                         </button>
                     </div>
                 </form>
@@ -73,13 +73,13 @@
     {{-- MODAL ELIMINAR --}}
     <div id="confirmModal" class="modal">
         <div class="modal-content modal-delete">
-            <p>Segur que vols eliminar aquest espai?</p>
+            <p>{{ __('messages.espais_delete_confirm') }}</p>
             <div class="modal-actions">
-                <button id="cancelBtn" class="btn btn-cancel">Cancel·lar</button>
+                <button id="cancelBtn" class="btn btn-cancel">{{ __('messages.cancel') }}</button>
                 <form method="POST" action="{{ route('espais.destroy', $espai) }}">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-delete">Eliminar</button>
+                    <button type="submit" class="btn btn-delete">{{ __('messages.delete') }}</button>
                 </form>
             </div>
         </div>

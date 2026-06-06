@@ -6,12 +6,12 @@
     <div class="page">
 
         <div class="page-title-container">
-            <h2 class="page-title">Editar rol</h2>
+            <h2 class="page-title">{{ __('messages.role_edit_title') }}</h2>
         </div>
 
         <div class="actions">
            <a href="{{ $from_user ? route('espai.usuaris.roles', $from_user) : route('espai.roles.index') }}" class="btn btn-secondary">
-               <i class="bi bi-box-arrow-right me-2" ></i> Tornar
+               <i class="bi bi-box-arrow-right me-2" ></i> {{ __('messages.back') }}
            </a>
         </div>
 
@@ -20,22 +20,22 @@
             @method('PUT')
 
             <div class="form-group">
-                <label>Nom del rol</label>
+                <label>{{ __('messages.role_name') }}</label>
                 <input type="text" name="nom" value="{{ $role->nom }}" required>
             </div>
 
             <div class="permissions-header">
-                <h3>Permisos del rol</h3>
-                <span>Selecciona els permisos que tindrà aquest rol</span>
+                <h3>{{ __('messages.role_permissions') }}</h3>
+                <span>{{ __('messages.role_permissions_sub') }}</span>
             </div>
 
             {{-- Botó seleccionar-ho tot --}}
             <div style="margin-bottom:1rem;">
                 <button type="button" id="btnTotsElsPermisos" class="btn btn-secondary">
-                    ✅ Tots els permisos
+                    ✅ {{ __('messages.all_permissions') }}
                 </button>
                 <button type="button" id="btnCapPermis" class="btn btn-secondary" style="margin-left:.5rem;">
-                    ☐ Cap permís
+                    ☐ {{ __('messages.no_permissions') }}
                 </button>
             </div>
 
@@ -43,15 +43,15 @@
                 @foreach($groupedPermissions as $category => $perms)
                     @php
                         $moduleNames = [
-                            'users'       => 'Usuaris',
-                            'groups'      => 'Grups',
-                            'students'    => 'Alumnes',
-                            'aulas'       => 'Aules',
-                            'noticies'    => 'Notícies',
-                            'guardies'    => 'Guardies',
-                            'tickets'     => 'Tiquets',
-                            'roles'       => 'Rols',
-                            'permissions' => 'Permisos',
+                            'users'       => __('messages.users'),
+                            'groups'      => __('messages.groups'),
+                            'students'    => __('messages.students'),
+                            'aulas'       => __('messages.classrooms'),
+                            'noticies'    => __('messages.news'),
+                            'guardies'    => __('messages.guardies_title'),
+                            'tickets'     => __('messages.tickets'),
+                            'roles'       => __('messages.roles'),
+                            'permissions' => __('messages.permissions'),
                         ];
                         $categoryLabel = $moduleNames[$category] ?? ucfirst($category);
                     @endphp
@@ -77,7 +77,7 @@
                 @endforeach
             </div>
             
-            <button class="btn btn-primary" style="margin-top:1.5rem;">Guardar canvis</button>
+            <button class="btn btn-primary" style="margin-top:1.5rem;">{{ __('messages.save_changes') }}</button>
         </form>
     </div>
 

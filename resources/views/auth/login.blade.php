@@ -5,7 +5,7 @@
     @endpush
 
     @push('scripts')
-        @vite('resources/js/particles.js')
+        @vite('resources/js/espais/particles-bg.js')
     @endpush
 
     <!-- Botón Tornar fijo en la esquina superior izquierda -->

@@ -35,6 +35,24 @@ Route::get('/', function () {
     return view('presentacion.landing');
 });
 
+/* Canvi d'idioma (català / castellà) */
+Route::get('/locale/{locale}', function (string $locale) {
+    if (in_array($locale, ['ca', 'es'], true)) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('locale.switch');
+
+/* RUTA DE PRUEBA TEMPORAL - borrar después */
+Route::get('/test-idioma', function () {
+    return [
+        'locale_activo'   => app()->getLocale(),
+        'locale_sesion'   => session('locale'),
+        'config_default'  => config('app.locale'),
+        'traduccion_test' => __('messages.Dashboard'),
+    ];
+});
+
 Route::get('/dashboard', function () {
     return redirect()->route('espais.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -299,9 +317,9 @@ Route::middleware('espai.session')->group(function () {
         ->name('espai.aules.tickets.store')
         ->middleware('canEspai:tickets.create');
 
-    Route::put('/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'update'])
-        ->name('espai.aules.tickets.update')
-        ->middleware('canEspai:tickets.update');
+    Route::match(['put', 'patch'], '/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'update'])
+    ->name('espai.aules.tickets.update')
+    ->middleware('canEspai:tickets.update');
 
     Route::delete('/espai/aules/{aula}/tickets/{ticket}', [AulaTicketController::class, 'destroy'])
         ->name('espai.aules.tickets.destroy')

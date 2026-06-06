@@ -7,7 +7,7 @@
         <input
             class="title"
             name="titol"
-            placeholder="Titular"
+            placeholder="{{ __('messages.news_headline_placeholder') }}"
             value="{{ old('titol') }}"
             required
         >
@@ -26,13 +26,13 @@
 
         <textarea
             name="contingut"
-            placeholder="Escriu la notícia…"
+            placeholder="{{ __('messages.news_content_placeholder') }}"
             rows="14"
         >{{ old('contingut') }}</textarea>
 
         <div class="actions">
-            <a href="{{ route('espai.noticies.index') }}">Cancel·lar</a>
-            <button type="submit">Publicar</button>
+            <a href="{{ route('espai.noticies.index') }}">{{ __('messages.cancel') }}</a>
+            <button type="submit">{{ __('messages.publish') }}</button>
         </div>
     </form>
 </div>

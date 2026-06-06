@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Aplica l'idioma seleccionat a cada petició web
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+
         $middleware->alias([
             'espai.session' => \App\Http\Middleware\EspaiSessionMiddleware::class,
             'canEspai'      => \App\Http\Middleware\CanEspai::class,

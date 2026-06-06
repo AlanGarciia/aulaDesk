@@ -6,17 +6,17 @@
     <div class="page">
         <div class="container">
             <div class="page-header">
-                <h2 class="page-title">Aules</h2>
+                <h2 class="page-title">{{ __('messages.classrooms') }}</h2>
 
                 <div class="top-actions">
                     <a class="btn btn-secondary" href="{{ route('espai.index') }}">
-                        <i class="bi bi-box-arrow-right"></i>Tornar a l'espai
+                        <i class="bi bi-box-arrow-right"></i>{{ __('messages.back_to_space') }}
                     </a>
                     <a class="btn btn-primary" href="{{ route('espai.aules.create') }}">
-                        Nova aula
+                        {{ __('messages.new_classroom') }}
                     </a>
                     <a class="btn btn-secondary" href="{{ route('espai.franges.index') }}">
-                        Veure franges
+                        {{ __('messages.view_slots') }}
                     </a>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                         {{ session('ok') }}
                         <button type="button" class="btn btn-secondary modal-close"
                                 onclick="document.getElementById('successModal').style.display='none'">
-                            Tancar
+                            {{ __('messages.close') }}
                         </button>
                     </div>
                 </div>
@@ -36,23 +36,23 @@
             <form method="GET" action="{{ route('espai.aules.index') }}" class="filters-form">
                 <div class="filters-grid">
                     <div class="filter-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="Buscar per nom">
+                        <label for="nom">{{ __('messages.name') }}</label>
+                        <input type="text" name="nom" id="nom" value="{{ request('nom') }}" placeholder="{{ __('messages.search_by_name') }}">
                     </div>
 
                     <div class="filter-group">
-                        <label for="codi">Codi</label>
-                        <input type="text" name="codi" id="codi" value="{{ request('codi') }}" placeholder="Buscar per codi">
+                        <label for="codi">{{ __('messages.code') }}</label>
+                        <input type="text" name="codi" id="codi" value="{{ request('codi') }}" placeholder="{{ __('messages.search_by_code') }}">
                     </div>
 
                     <div class="filter-group">
-                        <label for="planta">Planta</label>
-                        <input type="text" name="planta" id="planta" value="{{ request('planta') }}" placeholder="Buscar per planta">
+                        <label for="planta">{{ __('messages.floor') }}</label>
+                        <input type="text" name="planta" id="planta" value="{{ request('planta') }}" placeholder="{{ __('messages.search_by_floor') }}">
                     </div>
 
                     <div class="filter-actions">
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
-                        <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">Netejar</a>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.filter') }}</button>
+                        <a href="{{ route('espai.aules.index') }}" class="btn btn-secondary">{{ __('messages.clear') }}</a>
                     </div>
                 </div>
             </form>
@@ -61,19 +61,19 @@
                 @forelse($aules as $aula)
                     <div class="aula-card">
                         <div class="aula-name">{{ $aula->nom }}</div>
-                        <div class="aula-meta">Codi: {{ $aula->codi }}</div>
-                        <div class="aula-meta">Capacitat: {{ $aula->capacitat }}</div>
-                        <div class="aula-meta">Planta: {{ $aula->planta }}</div>
+                        <div class="aula-meta">{{ __('messages.code') }}: {{ $aula->codi }}</div>
+                        <div class="aula-meta">{{ __('messages.capacity') }}: {{ $aula->capacitat }}</div>
+                        <div class="aula-meta">{{ __('messages.floor') }}: {{ $aula->planta }}</div>
 
                         <div class="aula-actions">
                             <a class="btn btn-secondary @cantEspaiClass('aulas.manage')"
                                href="{{ route('espai.aules.admin', $aula) }}">
-                                Administrar
+                                {{ __('messages.manage') }}
                             </a>
 
                             <a class="btn btn-secondary @cantEspaiClass('tickets.view')"
                                href="{{ route('espai.aules.tickets.index', $aula) }}">
-                                <i class="bi bi-ticket-detailed"></i> Tickets
+                                <i class="bi bi-ticket-detailed"></i> {{ __('messages.tickets') }}
                             </a>
 
                             <a class="btn btn-secondary btn-icon @cantEspaiClass('aulas.update')"
@@ -96,10 +96,10 @@
                     </div>
                 @empty
                     <div class="empty-state">
-                        <div>No hi ha aules disponibles.</div>
+                        <div>{{ __('messages.classrooms_empty') }}</div>
                         <a class="btn btn-primary @cantEspaiClass('aulas.create')"
                            href="{{ route('espai.aules.create') }}">
-                            Crear primera aula
+                            {{ __('messages.create_first_classroom') }}
                         </a>
                     </div>
                 @endforelse
@@ -133,28 +133,27 @@
                 </div>
 
                 <h2 class="mt-4 text-2xl font-bold text-center text-gray-800">
-                    Límit d’aules assolit
+                    {{ __('messages.classroom_limit_title') }}
                 </h2>
 
                 <p class="mt-3 text-center text-gray-600">
-                    El pla gratuït només permet crear fins a
-                    <span class="font-semibold">10 aules</span>.
+                    {!! __('messages.classroom_limit_text') !!}
                 </p>
 
                 <p class="mt-1 text-center text-sm text-gray-500">
-                    Millora el teu pla per poder crear més aules.
+                    {{ __('messages.classroom_limit_upgrade') }}
                 </p>
 
                 <div class="mt-6 flex gap-3">
 
                     <button onclick="closePlanModal()"
                             class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
-                        Tancar
+                        {{ __('messages.close') }}
                     </button>
 
                     <a href="{{ route('stripe.checkout.premium') }}"
                        class="w-full px-4 py-3 rounded-xl bg-indigo-600 text-white text-center hover:bg-indigo-700 transition">
-                        Millorar pla
+                        {{ __('messages.upgrade_plan') }}
                     </a>
 
                 </div>

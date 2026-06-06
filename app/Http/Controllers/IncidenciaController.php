@@ -30,7 +30,6 @@ class IncidenciaController extends Controller
         return [$espaiId, $usuariEspaiId];
     }
 
-    /** Construeix [alumne_id => [tipus => count, ...]] inicialitzat a 0 */
     private function buildResumIdx($alumnes, $incidencies): array
     {
         $idx = [];
@@ -45,7 +44,6 @@ class IncidenciaController extends Controller
         return $idx;
     }
 
-    /** Resol grup_id de l'aula_horari a int o null */
     private function grupIdOrNull(AulaHorario $aulaHorari): ?int
     {
         if ($aulaHorari->grup_id) return (int) $aulaHorari->grup_id;
@@ -73,7 +71,6 @@ class IncidenciaController extends Controller
             ->orderBy('created_at')
             ->get();
 
-        // Taula plana [alumne_id_int][tipus] => incidencia
         $incidenciesIdx = [];
         foreach ($rows as $inc) {
             $aid = (int) $inc->alumne_id;
@@ -175,14 +172,12 @@ class IncidenciaController extends Controller
         $selections = [];
         if (isset($payload['selections'])) $selections = $payload['selections'];
 
-        // IDs vàlids del grup
         $alumnesIds = [];
         foreach ($aulaHorari->grup->alumnes as $a) {
             $alumnesIds[] = (int) $a->id;
         }
         $alumnesIdsSet = array_flip($alumnesIds);
 
-        // Construir el set seleccionat: [alumne_id][tipus] => true
         $seleccionatsIdx = [];
         foreach ($selections as $alumneId => $tipusArr) {
             $alumneId = (int) $alumneId;

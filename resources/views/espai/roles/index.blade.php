@@ -5,22 +5,22 @@
     <div class="page">
 
         <div class="page-title-container">
-            <h2 class="page-title">Rols de l'espai</h2>
+            <h2 class="page-title">{{ __('messages.roles_index_title') }}</h2>
         </div>
 
         <div class="actions" style="width:min(980px,100%);margin:auto;">
-            <a href="{{ route('espai.roles.create') }}" class="btn btn-primary @cantEspaiClass('roles.create')">+ Crear rol</a>
+            <a href="{{ route('espai.roles.create') }}" class="btn btn-primary @cantEspaiClass('roles.create')">+ {{ __('messages.role_create') }}</a>
         </div>
 
         <div class="card role-list-card">
             @forelse($roles as $role)
                 <div class="role-row">
                     <span class="role-name">{{ $role->nom }}</span>
-                    <a href="{{ route('espai.roles.edit', $role) }}" class="btn btn-secondary @cantEspaiClass('roles.update')">Editar</a>
+                    <a href="{{ route('espai.roles.edit', $role) }}" class="btn btn-secondary @cantEspaiClass('roles.update')">{{ __('messages.edit') }}</a>
                 </div>
             @empty
                 <div class="empty-state">
-                    Encara no hi ha rols creats.
+                    {{ __('messages.roles_empty') }}
                 </div>
             @endforelse
         </div>
