@@ -24,7 +24,7 @@
 <div class="min-h-screen">
 
     <!-- Selector d'idioma (flotant) -->
-    <div style="position:fixed; top:14px; right:14px; z-index:9998; background:#fff; padding:6px 10px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.12);">
+    <div style="position:fixed; top:14px; right:70px; z-index:9998;">
         <x-language-switcher />
     </div>
 
@@ -50,9 +50,9 @@
         <div class="error-modal__icon">
             <i class="bi bi-exclamation-triangle-fill"></i>
         </div>
-        <h3 class="error-modal__title">No es pot fer aquesta acció</h3>
+        <h3 class="error-modal__title">{{ __('messages.action_not_allowed') }}</h3>
         <p class="error-modal__msg">{{ session('error_modal') }}</p>
-        <button type="button" class="error-modal__btn" @click="open = false">D'acord</button>
+        <button type="button" class="error-modal__btn" @click="open = false">{{ __('messages.accept') }}</button>
     </div>
 </div>
 
