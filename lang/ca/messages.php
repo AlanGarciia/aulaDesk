@@ -468,4 +468,22 @@ return [
     'repeat_password'   => 'Repetir contrasenya',
     'have_account'      => 'Ja tens un compte?',
     
+    'options' => 'Opcions',
+
+    // Perfil
+    'profile_info'           => 'Informació de perfil',
+    'profile_info_sub'       => "Actualitza la informació del perfil i l'adreça electrònica del teu compte.",
+    'email_unverified'       => 'El teu email no està verificat.',
+    'resend_verification'    => 'Fes clic aquí per reenviar el correu de verificació.',
+    'verification_sent'      => "S'ha enviat un nou enllaç de verificació.",
+    'update_password'        => 'Actualitzar contrasenya',
+    'update_password_sub'    => "Assegura't que el teu compte estigui utilitzant una contrasenya llarga i segura.",
+    'current_password'       => 'Contrasenya actual',
+    'new_password'           => 'Nova contrasenya',
+    'saved'                  => 'Guardat.',
+    'delete_account'         => 'Esborrar compte',
+    'delete_account_warning' => "Un cop suprimit el compte, totes les dades s'eliminaran permanentment.",
+    'confirmation'           => 'Confirmació',
+    'delete_account_confirm' => 'Introdueix la contrasenya per confirmar.',
+
 ];

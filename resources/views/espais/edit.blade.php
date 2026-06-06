@@ -2,18 +2,11 @@
     @vite('resources/css/espais/espaisEdit.css')
 @endpush
 
-@push('scripts')
-    @vite('resources/js/espais/particles-bg.js')
-@endpush
-
 <x-app-layout>
-    <div class="page particles-page">
-
-        {{-- Fondo de partículas --}}
-        <div id="particles-bg" class="particles-bg" aria-hidden="true"></div>
+    <div class="page edit-page">
 
         <div class="container">
-            <div class="page-header page-foreground">
+            <div class="page-header">
                 <h2 class="page-title">{{ __('messages.espais_edit_title') }}</h2>
 
                 <a href="{{ route('espais.index') }}" class="btn btn-secondary">
@@ -22,8 +15,8 @@
                 </a>
             </div>
 
-            {{-- FORMULARIO (cristal) --}}
-            <div class="edit-postit edit-foreground">
+            {{-- FORMULARIO --}}
+            <div class="edit-card">
                 <form id="editForm" method="POST" action="{{ route('espais.update', $espai) }}">
                     @csrf
                     @method('PUT')

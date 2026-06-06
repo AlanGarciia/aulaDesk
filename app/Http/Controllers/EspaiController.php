@@ -19,11 +19,20 @@ class EspaiController extends Controller
             ->pluck('espai_id')
             ->toArray();
 
+        // Orden personalizado del usuario: [espai_id => ordre]
+        $ordres = \DB::table('espai_user_order')
+            ->where('user_id', $userId)
+            ->pluck('ordre', 'espai_id');
+
         $espais = Espai::query()
             ->where('user_id', $userId)
             ->orWhereIn('id', $idsCompartits)
-            ->orderByDesc('created_at')
-            ->get();
+            ->get()
+            ->sortBy(function ($espai) use ($ordres) {
+                // Si tiene orden guardado, usa ese número; si no, lo manda al final
+                return $ordres[$espai->id] ?? PHP_INT_MAX;
+            })
+            ->values();
 
         return view('espais.index', [
             'espais' => $espais,
@@ -205,5 +214,39 @@ class EspaiController extends Controller
     public function show(Espai $espai)
     {
         return redirect()->route('espais.index');
+    }
+
+    public function reordenar(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        $data = $request->validate([
+            'ordre'   => ['required', 'array'],
+            'ordre.*' => ['integer'],
+        ]);
+
+        // IDs de espacios a los que el usuario tiene acceso (propios + compartidos)
+        $idsCompartits = UsuariExternEspai::where('user_id', $userId)
+            ->pluck('espai_id')
+            ->toArray();
+
+        $idsPermesos = Espai::where('user_id', $userId)
+            ->orWhereIn('id', $idsCompartits)
+            ->pluck('id')
+            ->toArray();
+
+        foreach ($data['ordre'] as $posicio => $espaiId) {
+            // Solo guarda si el espacio es accesible por este usuario (seguridad)
+            if (!in_array((int) $espaiId, $idsPermesos, true)) {
+                continue;
+            }
+
+            \DB::table('espai_user_order')->updateOrInsert(
+                ['user_id' => $userId, 'espai_id' => $espaiId],
+                ['ordre' => $posicio, 'updated_at' => now(), 'created_at' => now()]
+            );
+        }
+
+        return response()->json(['ok' => true]);
     }
 }
