@@ -2,15 +2,8 @@
     @vite('resources/css/espais/espaisEntrar.css')
 @endpush
 
-@push('scripts')
-    @vite('resources/js/espais/particles-bg.js')
-@endpush
-
 <x-app-layout>
-    <div class="page particles-page">
-
-        {{-- Fondo de partículas --}}
-        <div id="particles-bg" class="particles-bg" aria-hidden="true"></div>
+    <div class="page enter-page">
 
         <div class="container">
             <div class="card card-foreground">

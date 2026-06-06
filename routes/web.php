@@ -93,11 +93,15 @@ Route::middleware(['auth','checkPremium'])->group(function () {
     Route::get('/espais', [EspaiController::class, 'index'])->name('espais.index');
     Route::get('/espais/create', [EspaiController::class, 'create'])->name('espais.create');
     Route::post('/espais', [EspaiController::class, 'store'])->name('espais.store');
+    
     Route::get('/espais/{espai}', [EspaiController::class, 'show'])->name('espais.show');
     Route::get('/espais/{espai}/edit', [EspaiController::class, 'edit'])->name('espais.edit');
     Route::put('/espais/{espai}', [EspaiController::class, 'update'])->name('espais.update');
     Route::patch('/espais/{espai}', [EspaiController::class, 'update'])->name('espais.update');
     Route::delete('/espais/{espai}', [EspaiController::class, 'destroy'])->name('espais.destroy');
+    // (drag & drop)
+    Route::post('/espais/reordenar', [EspaiController::class, 'reordenar'])
+        ->name('espais.reordenar');
 
     // compartir espai
     Route::post('/espais/{espai}/compartir', [EspaiShareController::class, 'store'])

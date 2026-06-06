@@ -468,4 +468,23 @@ return [
     'repeat_password'   => 'Repetir contraseña',
     'have_account'      => '¿Ya tienes una cuenta?',
 
+    'options' => 'Opciones',
+
+    // Perfil
+    'profile_info'           => 'Información de perfil',
+    'profile_info_sub'       => 'Actualiza la información del perfil y la dirección de correo de tu cuenta.',
+    'email_unverified'       => 'Tu email no está verificado.',
+    'resend_verification'    => 'Haz clic aquí para reenviar el correo de verificación.',
+    'verification_sent'      => 'Se ha enviado un nuevo enlace de verificación.',
+    'update_password'        => 'Actualizar contraseña',
+    'update_password_sub'    => 'Asegúrate de que tu cuenta esté usando una contraseña larga y segura.',
+    'current_password'       => 'Contraseña actual',
+    'new_password'           => 'Nueva contraseña',
+    'saved'                  => 'Guardado.',
+    'delete_account'         => 'Eliminar cuenta',
+    'delete_account_warning' => 'Una vez eliminada la cuenta, todos los datos se borrarán permanentemente.',
+    'confirmation'           => 'Confirmación',
+    'delete_account_confirm' => 'Introduce la contraseña para confirmar.',
+
+
 ];
