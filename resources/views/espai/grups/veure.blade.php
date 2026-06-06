@@ -9,21 +9,21 @@
 
             <div class="card">
 
-                <h2 class="inside-title">Alumnes del grup: {{ $grup->nom }}</h2>
+                <h2 class="inside-title">{{ __('messages.group_students_title') }}: {{ $grup->nom }}</h2>
 
                 <div class="field">
-                    <label class="label">Nom del grup</label>
+                    <label class="label">{{ __('messages.group_name') }}</label>
                     <div class="input" style="background: rgba(255,255,255,0.15);">
                         {{ $grup->nom }}
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Llista d'alumnes</label>
+                    <label class="label">{{ __('messages.students_list') }}</label>
 
                     @if ($alumnes->count() === 0)
                         <p style="color: rgba(255,255,255,.75); font-size: 14px;">
-                            Aquest grup encara no té alumnes assignats.
+                            {{ __('messages.group_no_students') }}
                         </p>
                     @endif
 
@@ -39,7 +39,7 @@
                                         {{ $alumne->nom }} {{ $alumne->cognoms }}
                                     </div>
                                     <div class="alumne-id">
-                                        IDALU: {{ $alumne->idalu }}
+                                        {{ __('messages.idalu') }}: {{ $alumne->idalu }}
                                     </div>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="actions">
                     <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary" style="width: 100%;">
-                        Tornar
+                        {{ __('messages.back') }}
                     </a>
                 </div>
 

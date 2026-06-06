@@ -6,7 +6,7 @@
     <x-slot name="header">
         <div class="page">
             <div class="container">
-                <h2 class="page-title">Guardies</h2>
+                <h2 class="page-title">{{ __('messages.guardies_title') }}</h2>
             </div>
         </div>
     </x-slot>
@@ -23,15 +23,15 @@
                             } elseif (session()->has('usuari_espai_nom')) {
                                 $nomUsuari = (string) session('usuari_espai_nom');
                             }
-                            $salutacio = $nomUsuari !== '' ? 'Hola ' . $nomUsuari . '!' : 'Hola!';
+                            $salutacio = $nomUsuari !== '' ? __('messages.hello_name', ['name' => $nomUsuari]) : __('messages.hello');
                         @endphp
 
                         <h3 class="guardies-title">
-                            {{ $salutacio }} aquest és el teu horari de la setmana:
+                            {{ $salutacio }} {{ __('messages.guardies_week_intro') }}
                         </h3>
 
                         <p class="guardies-sub">
-                            Clica "Llista" per passar llista, o descarrega un informe.
+                            {{ __('messages.guardies_sub') }}
                         </p>
                     </div>
 
@@ -45,16 +45,16 @@
                     <div class="guardies-actions">
                         <a href="{{ route('espai.incidencies.globalPdf', ['from' => $weekStart, 'to' => $weekEnd, 'tipus' => 'setmanal']) }}"
                         class="btn-informe btn-informe--week" target="_blank">
-                            <i class="bi bi-calendar-week"></i> Informe setmanal
+                            <i class="bi bi-calendar-week"></i> {{ __('messages.report_weekly') }}
                         </a>
 
                         <a href="{{ route('espai.incidencies.globalPdf', ['from' => $monthStart, 'to' => $monthEnd, 'tipus' => 'mensual']) }}"
                         class="btn-informe btn-informe--month" target="_blank">
-                            <i class="bi bi-calendar-month"></i> Informe mensual
+                            <i class="bi bi-calendar-month"></i> {{ __('messages.report_monthly') }}
                         </a>
 
                         <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                            <i class="bi bi-box-arrow-right me-1"></i> Tornar
+                            <i class="bi bi-box-arrow-right me-1"></i> {{ __('messages.back') }}
                         </a>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                 @if(!$hasData)
                     <div class="p-3">
                         <div class="alert alert-info mb-0">
-                            Encara no hi ha franjes o dies configurats per mostrar l'horari.
+                            {{ __('messages.guardies_no_data') }}
                         </div>
                     </div>
                 @else
@@ -76,9 +76,9 @@
                         <table class="timetable">
                             <thead>
                                 <tr>
-                                    <th class="th-hora">Hora</th>
+                                    <th class="th-hora">{{ __('messages.hour') }}</th>
                                     @foreach($dies as $dia)
-                                        <th>{{ $diesLabels[$dia] ?? 'Dia ' . $dia }}</th>
+                                        <th>{{ $diesLabels[$dia] ?? __('messages.day') . ' ' . $dia }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -123,8 +123,8 @@
                                                             @if($horariId)
                                                                 <a class="btn-llista"
                                                                    href="{{ route('espai.incidencies.index', ['aulaHorari' => $horariId]) }}"
-                                                                   title="Passar llista">
-                                                                    <i class="bi bi-list-check"></i> Llista
+                                                                   title="{{ __('messages.take_attendance') }}">
+                                                                    <i class="bi bi-list-check"></i> {{ __('messages.list') }}
                                                                 </a>
                                                             @endif
 
@@ -134,20 +134,20 @@
                                                                 </span>
                                                             @elseif($solSocCobridor)
                                                                 <span class="badge-guardia badge-guardia--cobridor">
-                                                                    <i class="bi bi-shield-check"></i> Cobr.
+                                                                    <i class="bi bi-shield-check"></i> {{ __('messages.covering_short') }}
                                                                 </span>
                                                             @else
                                                                 <a class="btn-guardia"
                                                                    href="{{ route('espai.guardia.solicitaGuardia', ['dia' => $dia, 'franja' => $franja->id]) }}"
-                                                                   title="Sol·licitar guàrdia">
-                                                                    <i class="bi bi-plus-circle"></i> Guàrdia
+                                                                   title="{{ __('messages.request_guardia') }}">
+                                                                    <i class="bi bi-plus-circle"></i> {{ __('messages.guardia') }}
                                                                 </a>
                                                             @endif
 
                                                             @if($horariId)
                                                                 <a class="btn-pdf-mini"
                                                                    href="{{ route('espai.incidencies.pdf', ['aulaHorari' => $horariId, 'from' => $weekStart, 'to' => $weekEnd]) }}"
-                                                                   title="PDF setmana"
+                                                                   title="{{ __('messages.pdf_week') }}"
                                                                    target="_blank">
                                                                     <i class="bi bi-file-earmark-pdf"></i>
                                                                 </a>

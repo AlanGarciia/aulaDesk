@@ -1,4 +1,4 @@
-    <x-app-layout>
+<x-app-layout>
 
         @push('styles')
             @vite('resources/css/espais/espaisIndex.css')
@@ -8,7 +8,7 @@
             <div class="container">
 
                 <div class="page-header">
-        <h2 class="page-title">Els meus espais</h2>
+        <h2 class="page-title">{{ __('messages.espais_index_title') }}</h2>
 
         @php
             $plan = auth()->user()->plan;
@@ -38,7 +38,7 @@
 
                 <div id="userMenu" class="nav-dropdown">
                     <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                        <i class="bi bi-gear"></i> Perfil
+                        <i class="bi bi-gear"></i> {{ __('messages.Profile') }}
                     </a>
 
                     <div class="dropdown-divider"></div>
@@ -46,7 +46,7 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="dropdown-item logout-item">
-                            <i class="bi bi-box-arrow-right"></i> Surt
+                            <i class="bi bi-box-arrow-right"></i> {{ __('messages.logout_short') }}
                         </button>
                     </form>
                 </div>
@@ -59,12 +59,12 @@
 
         <button class="btn btn-primary create-btn {{ $limitReached ? 'disabled-btn' : '' }}"
             @if($limitReached) disabled @else onclick="window.location='{{ route('espais.create') }}'" @endif
-            title="{{ $limitReached ? 'Has arribat al límit del pla gratuït' : '' }}">
-            <i class="bi bi-plus"></i> Crear espai
+            title="{{ $limitReached ? __('messages.espais_limit_reached') : '' }}">
+            <i class="bi bi-plus"></i> {{ __('messages.espais_create_btn') }}
         </button>
 
         <button class="btn btn-secondary" onclick="window.location='{{ route('espais.plans.index') }}'">
-            <i class="bi bi-stars"></i> Plans
+            <i class="bi bi-stars"></i> {{ __('messages.plans') }}
         </button>
 
     </div>
@@ -85,7 +85,7 @@
                             data-tilt-scale="1.05"
                             role="link"
                             tabindex="0"
-                            aria-label="Entrar a {{ $espai->nom }}"
+                            aria-label="{{ __('messages.enter') }} {{ $espai->nom }}"
                         >
                             <div class="tilt-card__inner">
                                 <div class="tilt-card__bg"></div>
@@ -98,11 +98,11 @@
                                     @endif
 
                                     <div class="tilt-card__meta">
-                                        Creat: {{ $espai->created_at->format('d/m/Y') }}
+                                        {{ __('messages.created') }}: {{ $espai->created_at->format('d/m/Y') }}
                                     </div>
 
                                     @if ((int) $espai->user_id !== (int) auth()->id())
-                                        <div class="tilt-card__badge">Compartit amb tu</div>
+                                        <div class="tilt-card__badge">{{ __('messages.shared_with_you') }}</div>
                                     @endif
                                 </div>
 
@@ -112,7 +112,7 @@
                                             type="button"
                                             class="tilt-action tilt-action--neutral js-no-enter"
                                             onclick="window.location='{{ route('espais.edit', $espai) }}'"
-                                            aria-label="Editar {{ $espai->nom }}"
+                                            aria-label="{{ __('messages.edit') }} {{ $espai->nom }}"
                                         >
                                             <i class="bi bi-pencil"></i>
                                         </button>
@@ -122,7 +122,7 @@
                                             class="tilt-action tilt-action--neutral share-btn js-no-enter"
                                             data-espai-name="{{ $espai->nom }}"
                                             data-action="{{ route('espais.compartir', $espai) }}"
-                                            aria-label="Compartir {{ $espai->nom }}"
+                                            aria-label="{{ __('messages.share') }} {{ $espai->nom }}"
                                         >
                                             <i class="bi bi-share"></i>
                                         </button>
@@ -133,7 +133,7 @@
                                             data-no-enter="1"
                                             data-espai-name="{{ $espai->nom }}"
                                             data-form-id="deleteForm-{{ $espai->id }}"
-                                            aria-label="Eliminar {{ $espai->nom }}"
+                                            aria-label="{{ __('messages.delete') }} {{ $espai->nom }}"
                                         >
                                             <i class="bi bi-trash"></i>
                                         </button>
@@ -152,7 +152,7 @@
                         </div>
                     @empty
                         <div class="empty-state-container">
-                            <p class="empty-state">No tens cap espai encara. Crea’n un per començar.</p>
+                            <p class="empty-state">{{ __('messages.espais_empty') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -164,8 +164,8 @@
             <div class="modal-content modal-delete" role="dialog" aria-modal="true" aria-labelledby="confirmText">
                 <p id="confirmText"></p>
                 <div class="modal-actions">
-                    <button id="cancelBtn" class="btn btn-cancel" type="button">Cancel·lar</button>
-                    <button id="confirmBtn" class="btn btn-delete" type="button">Eliminar</button>
+                    <button id="cancelBtn" class="btn btn-cancel" type="button">{{ __('messages.cancel') }}</button>
+                    <button id="confirmBtn" class="btn btn-delete" type="button">{{ __('messages.delete') }}</button>
                 </div>
             </div>
         </div>
@@ -174,7 +174,7 @@
             <div class="modal-content modal-success" role="dialog" aria-modal="true" aria-labelledby="successText">
                 <p id="successText"></p>
                 <div class="modal-actions">
-                    <button id="successCloseBtn" class="btn btn-primary" type="button">Tancar</button>
+                    <button id="successCloseBtn" class="btn btn-primary" type="button">{{ __('messages.close') }}</button>
                 </div>
             </div>
         </div>
@@ -182,18 +182,18 @@
         <div class="modal-content modal-success" role="dialog" aria-modal="true">
             
             <h3 style="margin-bottom:10px; text-align:center;">
-                ✅ Espai creat correctament
+                ✅ {{ __('messages.espais_created_title') }}
             </h3>
 
             <p style="text-align:center; margin-bottom:20px;">
-                Usuari per defecte:<br><br>
-                <strong>Usuari:</strong> admin<br>
-                <strong>Contrasenya:</strong> admin
+                {{ __('messages.espais_default_user') }}<br><br>
+                <strong>{{ __('messages.user') }}:</strong> admin<br>
+                <strong>{{ __('messages.password') }}:</strong> admin
             </p>
 
             <div class="modal-actions" style="justify-content:center;">
                 <button id="createdCloseBtn" class="btn btn-primary" type="button">
-                    Continuar
+                    {{ __('messages.continue') }}
                 </button>
             </div>
 
@@ -211,13 +211,13 @@
                         name="email"
                         id="shareEmail"
                         required
-                        placeholder="Email de l’usuari"
+                        placeholder="{{ __('messages.user_email_placeholder') }}"
                         style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:12px; color: black"
                     >
 
                     <div class="modal-actions">
-                        <button type="button" id="shareCancelBtn" class="btn btn-cancel">Cancel·lar</button>
-                        <button type="submit" class="btn btn-primary">Compartir</button>
+                        <button type="button" id="shareCancelBtn" class="btn btn-cancel">{{ __('messages.cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.share') }}</button>
                     </div>
                 </form>
             </div>
@@ -225,16 +225,15 @@
         {{-- MODAL: JA ETS PREMIUM --}}
     <div id="premiumModal" class="modal" aria-hidden="true">
         <div class="modal-content modal-success" role="dialog" aria-modal="true">
-            <h3 style="margin-bottom:10px; text-align:center;">🎉 Ja ets Premium!</h3>
+            <h3 style="margin-bottom:10px; text-align:center;">🎉 {{ __('messages.premium_title') }}</h3>
 
             <p style="text-align:center; margin-bottom:20px;">
-                Gràcies per confiar en aulaDesk.  
-                Ara tens accés complet a totes les funcions Premium.
+                {{ __('messages.premium_text') }}
             </p>
 
             <div class="modal-actions" style="justify-content:center;">
                 <button id="premiumCloseBtn" class="btn btn-primary" type="button">
-                    Continuar
+                    {{ __('messages.continue') }}
                 </button>
             </div>
         </div>
@@ -294,7 +293,7 @@
 
                 // Texto del modal
                 if (confirmText) {
-                    confirmText.textContent = `Segur que vols eliminar "${espaiName}"?`;
+                    confirmText.textContent = `{{ __('messages.espais_delete_confirm_js') }} "${espaiName}"?`;
                 }
 
                 // Guardamos el form que se debe enviar
@@ -342,7 +341,7 @@
 
             // Título
             if (shareTitle) {
-                shareTitle.textContent = `Compartir "${espaiName}"`;
+                shareTitle.textContent = `{{ __('messages.share') }} "${espaiName}"`;
             }
 
             // Action del form

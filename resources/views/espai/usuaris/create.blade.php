@@ -9,19 +9,19 @@
 
             @if ($errors->any())
                 <div class="alert-danger">
-                    Revisa els camps, hi ha errors.
+                    {{ __('messages.check_fields_errors') }}
                 </div>
             @endif
 
             <div class="card">
-                <h2 class="inside-title">Afegir usuari</h2>
+                <h2 class="inside-title">{{ __('messages.user_add_title') }}</h2>
 
                 <form method="POST" action="{{ route('espai.usuaris.store') }}">
                     @csrf
 
                     {{-- NOM --}}
                     <div class="field">
-                        <label for="nom" class="label">Nom</label>
+                        <label for="nom" class="label">{{ __('messages.name') }}</label>
                         <input id="nom" name="nom" type="text"
                                value="{{ old('nom') }}"
                                class="input" autocomplete="off" autofocus required>
@@ -32,7 +32,7 @@
 
                     {{-- ROL (dinámico desde base_roles) --}}
                     <div class="field">
-                        <label for="rol" class="label">Rol</label>
+                        <label for="rol" class="label">{{ __('messages.role') }}</label>
 
                         <select id="rol" name="rol" class="input" required>
                             @foreach(\App\Models\BaseRole::all() as $rol)
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="contrasenya" class="label">Contrasenya</label>
+                        <label for="contrasenya" class="label">{{ __('messages.password') }}</label>
                         <input id="contrasenya" name="contrasenya" type="password"
                                class="input" required>
                         @error('contrasenya')
@@ -58,11 +58,11 @@
 
                     <div class="actions">
                         <button type="submit" class="btn btn-primary">
-                            Crear usuari
+                            {{ __('messages.user_create_btn') }}
                         </button>
 
                         <a href="{{ route('espai.usuaris.index') }}" class="btn btn-secondary">
-                            Cancel·lar
+                            {{ __('messages.cancel') }}
                         </a>
                     </div>
 

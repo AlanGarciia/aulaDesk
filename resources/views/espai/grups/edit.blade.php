@@ -9,24 +9,24 @@
 
             @if ($errors->any())
                 <div class="alert-danger">
-                    Revisa els camps, hi ha errors.
+                    {{ __('messages.check_fields_errors') }}
                 </div>
             @endif
 
             <div class="card">
 
-                <h2 class="inside-title">Gestionar grup: {{ $grup->nom }}</h2>
+                <h2 class="inside-title">{{ __('messages.group_manage_title') }}: {{ $grup->nom }}</h2>
 
                 {{-- FORMULARIO GET SOLO PARA BUSCAR --}}
                 <form method="GET" action="{{ route('espai.grups.edit', $grup) }}" style="margin-bottom: 12px;">
                     <div class="field">
-                        <label class="label">Buscar alumne</label>
+                        <label class="label">{{ __('messages.search_student') }}</label>
                         <input type="text"
                                id="search"
                                name="search"
                                value="{{ request('search') }}"
                                class="input"
-                               placeholder="Buscar alumne...">
+                               placeholder="{{ __('messages.search_student_placeholder') }}">
                     </div>
                 </form>
 
@@ -37,7 +37,7 @@
 
                     {{-- NOMBRE DEL GRUPO --}}
                     <div class="field">
-                        <label for="nom" class="label">Nom del grup</label>
+                        <label for="nom" class="label">{{ __('messages.group_name') }}</label>
                         <input id="nom" name="nom" type="text"
                                value="{{ old('nom', $grup->nom) }}"
                                class="input" required>
@@ -45,7 +45,7 @@
 
                     {{-- GRID DE ALUMNES --}}
                     <div class="field">
-                        <label class="label">Alumnes del grup</label>
+                        <label class="label">{{ __('messages.group_students') }}</label>
 
                         <div id="alumnes-grid" class="alumnes-grid">
                             @foreach ($alumnes as $alumne)
@@ -65,7 +65,7 @@
                                             {{ $alumne->nom }} {{ $alumne->cognoms }}
                                         </div>
                                         <div class="alumne-id">
-                                            IDALU: {{ $alumne->idalu }}
+                                            {{ __('messages.idalu') }}: {{ $alumne->idalu }}
                                         </div>
                                     </div>
                                 </label>
@@ -78,8 +78,8 @@
                     </div>
 
                     <div class="actions">
-                        <button type="submit" class="btn btn-primary">Guardar canvis</button>
-                        <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary">Tornar</a>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
+                        <a href="{{ route('espai.grups.index') }}" class="btn btn-secondary">{{ __('messages.back') }}</a>
                     </div>
 
                 </form>

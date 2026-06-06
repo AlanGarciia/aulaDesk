@@ -6,15 +6,15 @@
     <div class="page">
 
         <div class="page-title-container">
-            <h2 class="page-title">Grups de l'espai</h2>
+            <h2 class="page-title">{{ __('messages.groups_index_title') }}</h2>
         </div>
 
         <div class="actions">
             <a href="{{ route('espai.grups.create') }}" class="btn btn-primary @cantEspaiClass('groups.create')">
-                + Crear grup
+                + {{ __('messages.group_create_title') }}
             </a>
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                <i class="bi bi-box-arrow-right"></i> Tornar a l'espai
+                <i class="bi bi-box-arrow-right"></i> {{ __('messages.back_to_space') }}
             </a>
 
         </div>
@@ -29,32 +29,32 @@
                     <div class="user-row">
                         <div class="user-info">
                             <div class="user-name">{{ $grup->nom }}</div>
-                            <div class="user-meta">{{ $grup->alumnes()->count() }} alumnes</div>
+                            <div class="user-meta">{{ $grup->alumnes()->count() }} {{ __('messages.students_lower') }}</div>
                         </div>
 
                         <div class="user-actions">
                             <a class="btn btn-secondary @cantEspaiClass('groups.view')"
                                href="{{ route('espai.grups.veure', $grup) }}">
-                                Veure
+                                {{ __('messages.view') }}
                             </a>
                             <a class="btn btn-secondary @cantEspaiClass('groups.update')"
                                href="{{ route('espai.grups.edit', $grup) }}">
-                                Gestionar
+                                {{ __('messages.manage') }}
                             </a>
                             <form class="inline-form"
                                   method="POST"
                                   action="{{ route('espai.grups.destroy', $grup) }}"
-                                  onsubmit="return confirm('Segur que vols eliminar aquest grup?');">
+                                  onsubmit="return confirm('{{ __('messages.group_delete_confirm') }}');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger @cantEspaiClass('groups.delete')">
-                                    Eliminar
+                                    {{ __('messages.delete') }}
                                 </button>
                             </form>
                         </div>
                     </div>
                 @empty
-                    <p class="empty-state">No hi ha grups creats en aquest espai.</p>
+                    <p class="empty-state">{{ __('messages.groups_empty') }}</p>
                 @endforelse
             </div>
         </div>

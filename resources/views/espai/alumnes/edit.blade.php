@@ -9,11 +9,11 @@
 
             <div class="card">
 
-                <h2 class="inside-title">Editar alumne</h2>
+                <h2 class="inside-title">{{ __('messages.students_edit_title') }}</h2>
 
                 @if ($errors->any())
                     <div class="alert-danger">
-                        Hi ha errors en el formulari. Revisa els camps.
+                        {{ __('messages.form_has_errors') }}
                     </div>
                 @endif
 
@@ -22,7 +22,7 @@
                     @method('PUT')
 
                     <div class="field">
-                        <label for="nom" class="label">Nom</label>
+                        <label for="nom" class="label">{{ __('messages.name') }}</label>
                         <input id="nom"
                                name="nom"
                                type="text"
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="cognoms" class="label">Cognoms</label>
+                        <label for="cognoms" class="label">{{ __('messages.surnames') }}</label>
                         <input id="cognoms"
                                name="cognoms"
                                type="text"
@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="correu" class="label">Correu</label>
+                        <label for="correu" class="label">{{ __('messages.email') }}</label>
                         <input id="correu"
                                name="correu"
                                type="email"
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="idalu" class="label">IDALU</label>
+                        <label for="idalu" class="label">{{ __('messages.idalu') }}</label>
                         <input id="idalu"
                                name="idalu"
                                type="text"
@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="telefon" class="label">Telèfon</label>
+                        <label for="telefon" class="label">{{ __('messages.phone') }}</label>
                         <input id="telefon"
                                name="telefon"
                                type="text"
@@ -84,8 +84,8 @@
                     </div>
 
                     <div class="actions">
-                        <button type="submit" class="btn btn-primary">Guardar canvis</button>
-                        <a href="{{ route('espai.alumnes.index') }}" class="btn btn-secondary">Cancel·lar</a>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
+                        <a href="{{ route('espai.alumnes.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
                     </div>
 
                 </form>

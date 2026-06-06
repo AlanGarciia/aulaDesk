@@ -5,7 +5,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="guardies-wrap">
-            <h2 class="page-title" style="margin:0;">Sol·licitar guàrdia</h2>
+            <h2 class="page-title" style="margin:0;">{{ __('messages.request_guardia_title') }}</h2>
         </div>
     </x-slot>
 
@@ -13,7 +13,7 @@
         <div class="guardies-wrap">
 
             <p style="margin: 0 0 12px;">
-                <a class="btn btn-secondary" href="{{ route('espai.guardies.index') }}">Tornar</a>
+                <a class="btn btn-secondary" href="{{ route('espai.guardies.index') }}">{{ __('messages.back') }}</a>
             </p>
 
             @if(session('ok'))
@@ -24,7 +24,7 @@
 
             @if($errors->any())
                 <div class="alert">
-                    <strong>Hi ha errors:</strong>
+                    <strong>{{ __('messages.there_are_errors') }}</strong>
                     <ul style="margin: 8px 0 0 18px;">
                         @foreach($errors->all() as $e)
                             <li>{{ $e }}</li>
@@ -44,7 +44,7 @@
                     if (isset($diesLabels) && isset($diesLabels[$dia])) {
                         $diaTxt = (string) $diesLabels[$dia];
                     } else {
-                        if (isset($dia)) $diaTxt = 'Dia ' . (string) $dia;
+                        if (isset($dia)) $diaTxt = __('messages.day') . ' ' . (string) $dia;
                     }
                 }
 
@@ -68,7 +68,7 @@
             <div class="card">
                 <div class="head">
                     <div>
-                        <h3 class="title">Sol·licitud de guàrdia</h3>
+                        <h3 class="title">{{ __('messages.guardia_request_card_title') }}</h3>
                     </div>
 
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -91,48 +91,48 @@
 
                     <div class="row">
                         <div class="field">
-                            <label>Dia</label>
+                            <label>{{ __('messages.day') }}</label>
                             <input type="text" value="{{ $diaTxt }}" readonly>
                         </div>
 
                         <div class="field">
-                            <label>Franja</label>
+                            <label>{{ __('messages.time_slot') }}</label>
                             <input type="text" value="{{ $franjaTxt }}" readonly>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="field">
-                            <label>Aula</label>
+                            <label>{{ __('messages.classroom') }}</label>
                             <input type="text" value="{{ $aulaTxt }}" readonly>
                         </div>
 
                         <div class="field">
-                            <label>Tipus (opcional)</label>
+                            <label>{{ __('messages.type_optional') }}</label>
                             <select name="tipus">
                                 @php
                                     $tipusOld = old('tipus');
                                     if ($tipusOld === null) $tipusOld = '';
                                 @endphp
                                 <option value="" {{ $tipusOld === '' ? 'selected' : '' }}>—</option>
-                                <option value="canvi" {{ $tipusOld === 'canvi' ? 'selected' : '' }}>Canvi</option>
-                                <option value="absencia" {{ $tipusOld === 'absencia' ? 'selected' : '' }}>Absència</option>
-                                <option value="suport" {{ $tipusOld === 'suport' ? 'selected' : '' }}>Suport</option>
-                                <option value="altres" {{ $tipusOld === 'altres' ? 'selected' : '' }}>Altres</option>
+                                <option value="canvi" {{ $tipusOld === 'canvi' ? 'selected' : '' }}>{{ __('messages.guardia_type_change') }}</option>
+                                <option value="absencia" {{ $tipusOld === 'absencia' ? 'selected' : '' }}>{{ __('messages.guardia_type_absence') }}</option>
+                                <option value="suport" {{ $tipusOld === 'suport' ? 'selected' : '' }}>{{ __('messages.guardia_type_support') }}</option>
+                                <option value="altres" {{ $tipusOld === 'altres' ? 'selected' : '' }}>{{ __('messages.guardia_type_other') }}</option>
                             </select>
                             @error('tipus') <div class="error">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
                     <div style="margin-top: 12px;">
-                        <label>Comentari (opcional)</label>
-                        <textarea name="comentari" placeholder="Ex: Necessito cobertura perquè...">{{ old('comentari') }}</textarea>
+                        <label>{{ __('messages.comment_optional') }}</label>
+                        <textarea name="comentari" placeholder="{{ __('messages.guardia_comment_placeholder') }}">{{ old('comentari') }}</textarea>
                         @error('comentari') <div class="error">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="actions">
-                        <a class="btn btn-secondary" href="{{ route('espai.guardies.index') }}">Cancel·lar</a>
-                        <button class="btn btn-primary" type="submit">Enviar sol·licitud</button>
+                        <a class="btn btn-secondary" href="{{ route('espai.guardies.index') }}">{{ __('messages.cancel') }}</a>
+                        <button class="btn btn-primary" type="submit">{{ __('messages.send_request') }}</button>
                     </div>
                 </form>
             </div>

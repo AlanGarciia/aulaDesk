@@ -11,7 +11,7 @@
         <input
             class="title"
             name="titol"
-            placeholder="Titular"
+            placeholder="{{ __('messages.news_headline_placeholder') }}"
             value="{{ old('titol', $noticia->titol) }}"
             required
         >
@@ -35,13 +35,13 @@
             <div class="current-image">
                 <img
                     src="{{ asset('storage/'.$noticia->imatge_path) }}"
-                    alt="Imatge actual"
+                    alt="{{ __('messages.current_image') }}"
                     loading="lazy"
                 >
 
                 <label class="remove-image">
                     <input type="checkbox" name="treure_imatge" value="1">
-                    Treure la imatge actual
+                    {{ __('messages.remove_current_image') }}
                 </label>
             </div>
         @endif
@@ -49,14 +49,14 @@
         {{-- CONTENIDO --}}
         <textarea
             name="contingut"
-            placeholder="Escriu la notícia…"
+            placeholder="{{ __('messages.news_content_placeholder') }}"
             rows="14"
         >{{ old('contingut', $noticia->contingut) }}</textarea>
 
         {{-- ACCIONES --}}
         <div class="actions">
-            <a href="{{ route('espai.noticies.index') }}">Cancel·lar</a>
-            <button type="submit">Desar canvis</button>
+            <a href="{{ route('espai.noticies.index') }}">{{ __('messages.cancel') }}</a>
+            <button type="submit">{{ __('messages.save_changes') }}</button>
         </div>
     </form>
 </div>

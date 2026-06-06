@@ -1,13 +1,13 @@
 <x-app-layout>
     <a href="{{ route('espai.index') }}"class="btn btn-secondary btn-top-right">
-        Tornar a l'espai
+        {{ __('messages.back_to_space') }}
     </a>
     @vite(['resources/css/espai/noticies/noticiesIndex.css'])
 
     <x-slot name="header">
         <div class="page-header">
             <div class="page-header__text">
-                <h2 class="page-title">Tauló de notícies</h2>
+                <h2 class="page-title">{{ __('messages.news_board_title') }}</h2>
             </div>
 
             <div class="page-header__actions page-header__actions--with-exit">
@@ -37,9 +37,9 @@
             <div class="filters">
                 <form method="GET" action="{{ route('espai.noticies.index') }}" class="filters__form">
                     <div class="filters__left">
-                        <label class="filters__label" for="tipus">Filtrar</label>
+                        <label class="filters__label" for="tipus">{{ __('messages.filter') }}</label>
                         <select id="tipus" name="tipus" class="filters__select" onchange="this.form.submit()">
-                            <option value="">Tots</option>
+                            <option value="">{{ __('messages.all') }}</option>
                             @foreach($tipusDisponibles as $t)
                                 <option value="{{ $t }}" @selected(($tipusSeleccionat ?? '') === $t)>
                                     {{ ucfirst($t) }}
@@ -49,15 +49,15 @@
 
                         @if(!empty($tipusSeleccionat))
                             <a class="filters__clear" href="{{ route('espai.noticies.index') }}">
-                                Netejar
+                                {{ __('messages.clear') }}
                             </a>
                         @endif
                     </div>
 
                     <div class="filters__right">
                         <span class="filters__count">
-                            Mostrant <strong>{{ $noticies->count() }}</strong>
-                            {{ $noticies->count() === 1 ? 'resultat' : 'resultats' }}
+                            {{ __('messages.showing') }} <strong>{{ $noticies->count() }}</strong>
+                            {{ $noticies->count() === 1 ? __('messages.result') : __('messages.results') }}
                         </span>
                     </div>
                 </form>
@@ -111,17 +111,17 @@
 
                                         @if($solPendent)
                                             <span class="pill" style="background: rgba(245,158,11,.15); color:#92400e; border:1px solid rgba(245,158,11,.35);">
-                                                Pendent
+                                                {{ __('messages.status_pending') }}
                                             </span>
                                         @elseif($solAcceptada)
                                             <span class="pill" style="background: rgba(16,185,129,.12); color:#065f46; border:1px solid rgba(16,185,129,.30);">
-                                                Acceptada
+                                                {{ __('messages.status_accepted') }}
                                             </span>
 
                                             @if($cobridor)
                                                 <span class="dot">•</span>
                                                 <span>
-                                                    Cobridor:
+                                                    {{ __('messages.cover_person') }}:
                                                     <strong>{{ $cobridor->nom }}</strong>
                                                 </span>
                                             @endif
@@ -137,15 +137,15 @@
 
                                     <span class="dot">•</span>
                                     <span>
-                                        Reaccions:
+                                        {{ __('messages.reactions') }}:
                                         <strong>{{ $n->reaccions_count }}</strong>
                                     </span>
 
                                     @if(!empty($n->usuari_espai_id))
                                         <span class="dot">•</span>
                                         <span>
-                                            Autor:
-                                            <strong>{{ $n->autor->nom ?? 'Autor desconegut' }}</strong>
+                                            {{ __('messages.author') }}:
+                                            <strong>{{ $n->autor->nom ?? __('messages.unknown_author') }}</strong>
                                         </span>
                                     @endif
                                 </div>
@@ -158,7 +158,7 @@
                                       class="inline-form">
                                     @csrf
                                     <input type="hidden" name="tipus" value="like">
-                                    <button type="submit" class="icon-btn" title="M'agrada">
+                                    <button type="submit" class="icon-btn" title="{{ __('messages.i_like') }}">
                                         👍
                                     </button>
                                 </form>
@@ -168,7 +168,7 @@
                                     <form method="POST" action="{{ route('espai.guardia.acceptar', $sol) }}" class="inline-form">
                                         @csrf
                                         <button type="submit" class="btn btn-primary">
-                                            Acceptar guàrdia
+                                            {{ __('messages.accept_guardia') }}
                                         </button>
                                     </form>
                                 @endif
@@ -176,18 +176,18 @@
                                 {{-- Pendent meva --}}
                                 @if($isGuardia && $sol && $solPendent && $esMeva)
                                     <span class="pill" style="background: rgba(59,130,246,.10); color:#1e3a8a; border:1px solid rgba(59,130,246,.25);">
-                                        Pendent (teva)
+                                        {{ __('messages.pending_yours') }}
                                     </span>
                                 @endif
 
                                 {{-- Edit/Delete --}}
                                 @if(!$isGuardia && (int) session('usuari_espai_id') === (int) $n->usuari_espai_id)
                                     <a class="btn btn-secondary" href="{{ route('espai.noticies.edit', $n) }}">
-                                        Editar
+                                        {{ __('messages.edit') }}
                                     </a>
 
                                     <button type="button" class="btn btn-danger btn-delete" data-action="{{ route('espai.noticies.destroy', $n) }}">
-                                        Eliminar
+                                        {{ __('messages.delete') }}
                                     </button>
                                 @endif
                             </div>
@@ -195,7 +195,7 @@
 
                         @if($n->imatge_path)
                             <div class="post__media">
-                                <img src="{{ asset('storage/'.$n->imatge_path) }}" alt="imatge" loading="lazy">
+                                <img src="{{ asset('storage/'.$n->imatge_path) }}" alt="{{ __('messages.image') }}" loading="lazy">
                             </div>
                         @endif
 
@@ -211,7 +211,7 @@
 
                                 @if($isLong)
                                     <a class="btn btn-secondary post__more" href="{{ route('espai.noticies.show', $n) }}">
-                                        Veure més
+                                        {{ __('messages.read_more') }}
                                     </a>
                                 @endif
                             </div>
@@ -220,12 +220,12 @@
                 @empty
                     <div class="empty">
                         <div class="empty__icon">📰</div>
-                        <h3 class="empty__title">Encara no hi ha notícies</h3>
+                        <h3 class="empty__title">{{ __('messages.news_empty_title') }}</h3>
                         <p class="empty__text">
-                            Crea la primera notícia perquè aparegui aquí.
+                            {{ __('messages.news_empty_text') }}
                         </p>
                         <a class="btn btn-primary" href="{{ route('espai.noticies.create') }}">
-                            + Nova notícia
+                            + {{ __('messages.news_new') }}
                         </a>
                     </div>
                 @endforelse
@@ -240,18 +240,18 @@
             <span class="modal-periodic__close">&times;</span>
 
             <div class="modal-periodic__icon">📰</div>
-            <h3 class="modal-periodic__title">Eliminar notícia</h3>
+            <h3 class="modal-periodic__title">{{ __('messages.news_delete_title') }}</h3>
             <p class="modal-periodic__text">
-                Estàs segur que vols eliminar aquesta notícia? Aquesta acció no es pot desfer.
+                {{ __('messages.news_delete_text') }}
             </p>
 
             <div class="modal-periodic__actions">
-                <button id="cancelDelete" class="btn btn-secondary">Cancelar</button>
+                <button id="cancelDelete" class="btn btn-secondary">{{ __('messages.cancel') }}</button>
 
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                 </form>
             </div>
         </div>
@@ -297,7 +297,7 @@
     @endpush
     @if($noticies->count() > 0)
     <a href="{{ route('espai.noticies.create') }}" class="btn-create-fixed">
-        + Nova notícia
+        + {{ __('messages.news_new') }}
     </a>
 @endif
 </x-app-layout>

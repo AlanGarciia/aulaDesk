@@ -66,7 +66,6 @@ class AulaController extends Controller
     $espaiId = $this->currentEspaiId();
     if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
 
-    // 🔒 CHECK LÍMITE ANTES DE CREAR
     if (
         auth()->user()->plan === 'free'
         && Aula::where('espai_id', $espaiId)->count() >= 10
@@ -91,6 +90,16 @@ class AulaController extends Controller
         ->route('espai.aules.index')
         ->with('ok', 'Aula creada correctament.');
 }
+
+    public function edit(Aula $aula)
+    {
+        $espaiId = $this->currentEspaiId();
+        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+        abort_if($aula->espai_id !== $espaiId, 403);
+
+        return view('espai.aules.edit', compact('aula'));
+    }
+
 
     public function update(Request $request, Aula $aula)
     {

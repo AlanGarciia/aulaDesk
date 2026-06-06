@@ -1,102 +1,182 @@
-@push('styles')
-    @vite('resources/css/espai/incidencies/incidencies.css')
-@endpush
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <title>{{ __('messages.incidents_report_doc_title') }}</title>
+    <style>
+        @page { margin: 22px 26px; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 10.5px;
+            color: #1c1c1e;
+            margin: 0;
+        }
+        .pdf-head {
+            background: #0d47a1;
+            color: #fff;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+        .pdf-head h1 { margin: 0 0 3px; font-size: 17px; font-weight: 700; }
+        .pdf-head .meta {
+            font-size: 10px; opacity: .92; margin-top: 4px;
+        }
+        .pdf-head .meta span { margin-right: 14px; }
 
-<x-app-layout>
-    <a href="{{ route('espai.guardies.index') }}" class="btn btn-secondary btn-top-right">
-        <i class="bi bi-arrow-left"></i> Tornar
-    </a>
+        .group-block {
+            page-break-inside: avoid;
+            margin-bottom: 18px;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+        }
+        .group-block.empty { background: #fafafa; }
 
-    <x-slot name="header">
-        <div class="page-header">
-            <h2 class="page-title">Passar llista</h2>
-        </div>
-    </x-slot>
+        .group-title {
+            margin: 0 0 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #0d47a1;
+            border-bottom: 1.5px solid #e0e7ff;
+            padding-bottom: 4px;
+        }
+        .group-meta {
+            font-size: 9.5px;
+            color: #6b7280;
+            margin-bottom: 7px;
+        }
+        .group-meta span { margin-right: 12px; }
 
-    <div class="att-page">
-        <div class="att-head">
-            <h1>{{ $aulaHorari->grup->nom ?? 'Grup' }}</h1>
-            <div class="att-head__meta">
-                <span><i class="bi bi-door-open"></i>{{ $aulaHorari->aula->nom ?? '—' }}</span>
-                <span><i class="bi bi-clock"></i>
-                    {{ substr($aulaHorari->franja->inici ?? '', 0, 5) }} -
-                    {{ substr($aulaHorari->franja->fi ?? '', 0, 5) }}
-                </span>
-                <span><i class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($data)->isoFormat('dddd D MMM YYYY') }}</span>
-                <span><i class="bi bi-people"></i>{{ $alumnes->count() }} alumnes</span>
-            </div>
-        </div>
+        table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 4px 6px;
+            text-align: left;
+            font-size: 9.5px;
+        }
+        thead th {
+            background: #f1f5f9;
+            color: #0d47a1;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 8.5px;
+            letter-spacing: .3px;
+        }
+        td.num { text-align: center; width: 32px; font-weight: 700; }
+        td.tot { background: #eef2ff !important; color: #1e3a8a; font-weight: 800; }
 
-        <div class="att-bar">
-            <form method="GET" style="display:flex; align-items:center; gap:10px; margin:0;">
-                <label for="data">Data:</label>
-                <input type="date" id="data" name="data" value="{{ $data }}" onchange="this.form.submit()">
-            </form>
+        .empty-msg {
+            color: #9ca3af; font-style: italic; font-size: 10px; padding: 6px 0;
+        }
 
-            <a href="{{ route('espai.incidencies.pdf', ['aulaHorari' => $aulaHorari->id, 'from' => $data, 'to' => $data]) }}"
-               class="att-pdf-btn"
-               target="_blank"
-               title="Descarregar PDF del dia">
-                <i class="bi bi-file-earmark-pdf"></i> PDF dia
-            </a>
+        .footer {
+            margin-top: 14px;
+            font-size: 8.5px;
+            color: #9ca3af;
+            text-align: right;
+        }
 
-            <div class="att-legend">
-                <span><i class="bi {{ $tipusIcones['assistencia'] }} lg-as"></i>Assistència</span>
-                <span><i class="bi {{ $tipusIcones['deures'] }} lg-de"></i>Deures</span>
-                <span><i class="bi {{ $tipusIcones['material'] }} lg-ma"></i>Material</span>
-                <span><i class="bi {{ $tipusIcones['amonestacio'] }} lg-am"></i>Amonestació</span>
-            </div>
-        </div>
+        .totals-row {
+            background: #fef3c7 !important;
+        }
+    </style>
+</head>
+<body>
 
-        @if(session('ok'))
-            <div class="att-flash">{{ session('ok') }}</div>
-        @endif
-
-        <form method="POST"
-              action="{{ route('espai.incidencies.save', ['aulaHorari' => $aulaHorari->id]) }}">
-            @csrf
-            <input type="hidden" name="data" value="{{ $data }}">
-
-            <div class="att-list">
-                @forelse($alumnes as $alumne)
-                    @php
-                        $tipusActius = array_keys($incidenciesIdx[(int) $alumne->id] ?? []);
-                    @endphp
-                    <div class="att-row">
-                        <div class="att-avatar">
-                            {{ strtoupper(substr($alumne->nom ?? '?', 0, 1)) }}{{ strtoupper(substr($alumne->cognoms ?? '', 0, 1)) }}
-                        </div>
-                        <div class="att-name">
-                            {{ trim(($alumne->cognoms ?? '') . ', ' . ($alumne->nom ?? '')) }}
-                        </div>
-                        <div class="att-toggles">
-                            @foreach($tipusValids as $tipus)
-                                <label class="toggle" data-tipus="{{ $tipus }}" title="{{ $tipusLabels[$tipus] }}">
-                                    <input type="checkbox"
-                                           name="selections[{{ $alumne->id }}][{{ $tipus }}]"
-                                           value="1"
-                                           {{ in_array($tipus, $tipusActius, true) ? 'checked' : '' }}>
-                                    <span class="toggle__btn">
-                                        <i class="bi {{ $tipusIcones[$tipus] }}"></i>
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                @empty
-                    <div class="att-row" style="justify-content:center; color:#6b7280;">
-                        Aquest grup encara no té cap alumne.
-                    </div>
-                @endforelse
-            </div>
-
-            @if($alumnes->isNotEmpty())
-                <div class="att-savebar">
-                    <button type="submit" class="att-save">
-                        <i class="bi bi-check-lg"></i> Guardar canvis
-                    </button>
-                </div>
-            @endif
-        </form>
+<div class="pdf-head">
+    <h1>{{ $tipus === 'mensual' ? __('messages.incidents_report_monthly') : __('messages.incidents_report_weekly') }}</h1>
+    <div class="meta">
+        <span>{{ __('messages.period') }}: <strong>{{ $from->format('d/m/Y') }} – {{ $to->format('d/m/Y') }}</strong></span>
+        <span>{{ __('messages.groups') }}: <strong>{{ count($horariData) }}</strong></span>
     </div>
-</x-app-layout>
+</div>
+
+@if(empty($horariData))
+    <div class="empty-msg" style="text-align:center; padding:30px 0;">
+        {{ __('messages.report_no_groups') }}
+    </div>
+@else
+    @foreach($horariData as $hd)
+        @php
+            $h = $hd['horari'];
+            $incs = $hd['incidencies'];
+            $resum = $hd['resumIdx'];
+            $diesLabels = [
+                1 => __('messages.day_monday'),
+                2 => __('messages.day_tuesday'),
+                3 => __('messages.day_wednesday'),
+                4 => __('messages.day_thursday'),
+                5 => __('messages.day_friday'),
+            ];
+            $diaTxt = $diesLabels[(int) $h->dia_setmana] ?? '';
+            $totalGroup = collect($resum)->sum(fn ($r) => array_sum($r));
+        @endphp
+
+        <div class="group-block {{ $totalGroup === 0 ? 'empty' : '' }}">
+            <div class="group-title">{{ $h->grup->nom ?? __('messages.group') }}</div>
+            <div class="group-meta">
+                <span>📅 {{ $diaTxt }}</span>
+                <span>🕐 {{ substr($h->franja->inici ?? '', 0, 5) }}–{{ substr($h->franja->fi ?? '', 0, 5) }}</span>
+                <span>🚪 {{ $h->aula->nom ?? '—' }}</span>
+                <span>👥 {{ $h->grup->alumnes->count() }} {{ __('messages.students_lower') }}</span>
+                <span>📊 {{ $totalGroup }} {{ __('messages.incidents_lower') }}</span>
+            </div>
+
+            @if($h->grup->alumnes->isEmpty())
+                <div class="empty-msg">{{ __('messages.no_students_in_group') }}</div>
+            @elseif($totalGroup === 0)
+                <div class="empty-msg">{{ __('messages.no_incidents_period') }}</div>
+            @else
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{{ __('messages.student') }}</th>
+                            <th style="width:32px; text-align:center;">{{ __('messages.abbr_attendance') }}</th>
+                            <th style="width:32px; text-align:center;">{{ __('messages.abbr_homework') }}</th>
+                            <th style="width:32px; text-align:center;">{{ __('messages.abbr_material') }}</th>
+                            <th style="width:32px; text-align:center;">{{ __('messages.abbr_warning') }}</th>
+                            <th style="width:40px; text-align:center;">{{ __('messages.abbr_total') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $totals = ['assistencia'=>0,'deures'=>0,'material'=>0,'amonestacio'=>0]; @endphp
+                        @foreach($h->grup->alumnes as $a)
+                            @php
+                                $r = $resum[$a->id] ?? ['assistencia'=>0,'deures'=>0,'material'=>0,'amonestacio'=>0];
+                                $tot = $r['assistencia'] + $r['deures'] + $r['material'] + $r['amonestacio'];
+                                foreach ($r as $k => $v) $totals[$k] += $v;
+                            @endphp
+                            @if($tot > 0)
+                                <tr>
+                                    <td>{{ trim(($a->cognoms ?? '') . ', ' . ($a->nom ?? '')) }}</td>
+                                    <td class="num">{{ $r['assistencia'] ?: '–' }}</td>
+                                    <td class="num">{{ $r['deures'] ?: '–' }}</td>
+                                    <td class="num">{{ $r['material'] ?: '–' }}</td>
+                                    <td class="num">{{ $r['amonestacio'] ?: '–' }}</td>
+                                    <td class="num tot">{{ $tot }}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                        <tr class="totals-row">
+                            <td><strong>{{ __('messages.totals') }}</strong></td>
+                            <td class="num">{{ $totals['assistencia'] }}</td>
+                            <td class="num">{{ $totals['deures'] }}</td>
+                            <td class="num">{{ $totals['material'] }}</td>
+                            <td class="num">{{ $totals['amonestacio'] }}</td>
+                            <td class="num tot">{{ array_sum($totals) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    @endforeach
+@endif
+
+<div class="footer">
+    {{ __('messages.generated_on') }} {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }} · AulaDesk
+</div>
+
+</body>
+</html>

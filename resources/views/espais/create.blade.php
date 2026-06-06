@@ -12,37 +12,37 @@
         <div id="particles-bg" class="particles-bg" aria-hidden="true"></div>
 
         <div class="create-postit create-foreground">
-            <h2 class="create-title">Crear Espai</h2>
+            <h2 class="create-title">{{ __('messages.espais_create_title') }}</h2>
 
             <h3 class="create-subtitle">
-                Introdueix la informació del nou espai
+                {{ __('messages.espais_create_subtitle') }}
             </h3>
 
             <form method="POST" action="{{ route('espais.store') }}">
                 @csrf
 
                 <div class="form-group">
-                    <label for="nom">Nom</label>
+                    <label for="nom">{{ __('messages.name') }}</label>
                     <input id="nom" name="nom" type="text"
                            value="{{ old('nom') }}"
-                           placeholder="Nom de l'espai" autofocus>
+                           placeholder="{{ __('messages.espais_name_placeholder') }}" autofocus>
                     @error('nom')
                         <p class="error">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label for="descripcio">Descripció (opcional)</label>
+                    <label for="descripcio">{{ __('messages.description_optional') }}</label>
                     <textarea id="descripcio" name="descripcio" rows="4"
-                              placeholder="Escriu una descripció breu">{{ old('descripcio') }}</textarea>
+                              placeholder="{{ __('messages.description_placeholder') }}">{{ old('descripcio') }}</textarea>
                     @error('descripcio')
                         <p class="error">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">Desar</button>
-                    <a href="{{ route('espais.index') }}" class="btn-secondary">Cancel·lar</a>
+                    <button type="submit" class="btn-primary">{{ __('messages.save') }}</button>
+                    <a href="{{ route('espais.index') }}" class="btn-secondary">{{ __('messages.cancel') }}</a>
                 </div>
             </form>
         </div>

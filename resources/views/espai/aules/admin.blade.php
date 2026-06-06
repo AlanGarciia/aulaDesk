@@ -5,9 +5,9 @@
         <div class="container">
 
             <div class="page-header">
-                <h2 class="page-title">Administrar aula: {{ $aula->nom }}</h2>
+                <h2 class="page-title">{{ __('messages.classroom_admin_title') }}: {{ $aula->nom }}</h2>
                 <div class="top-actions">
-                    <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">Tornar</a>
+                    <a class="btn btn-secondary" href="{{ route('espai.aules.index') }}">{{ __('messages.back') }}</a>
                 </div>
             </div>
 
@@ -16,23 +16,23 @@
                 <div class="conflict-backdrop" id="conflictModal" style="display:flex;">
                     <div class="conflict-card">
                         <div class="conflict-head">
-                            <h3 class="conflict-title">⚠️ Conflicte d'horari</h3>
+                            <h3 class="conflict-title">⚠️ {{ __('messages.schedule_conflict') }}</h3>
                         </div>
                         <div class="conflict-body">
-                            <p>Els professors següents <strong>no s'han pogut assignar</strong> perquè ja estan en una altra aula en el mateix horari:</p>
+                            <p>{!! __('messages.schedule_conflict_intro') !!}</p>
                             <ul class="conflict-list">
                                 @foreach($conflicts as $c)
                                     <li>
                                         <span class="conflict-tag">{{ $c['professor'] }}</span>
-                                        <span>Dia {{ $c['dia'] }} — {{ $c['franja'] }}</span>
-                                        <span class="conflict-extra">Ja està a: <strong>{{ $c['aula'] }}</strong></span>
+                                        <span>{{ __('messages.day') }} {{ $c['dia'] }} — {{ $c['franja'] }}</span>
+                                        <span class="conflict-extra">{{ __('messages.already_in') }} <strong>{{ $c['aula'] }}</strong></span>
                                     </li>
                                 @endforeach
                             </ul>
-                            <p style="margin-top:.75rem;font-size:.85rem;opacity:.7;">La resta de l'horari s'ha desat correctament.</p>
+                            <p style="margin-top:.75rem;font-size:.85rem;opacity:.7;">{{ __('messages.schedule_rest_saved') }}</p>
                         </div>
                         <div class="conflict-foot">
-                            <button type="button" class="btn btn-primary" id="closeConflictModal">D'acord</button>
+                            <button type="button" class="btn btn-primary" id="closeConflictModal">{{ __('messages.accept') }}</button>
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
             {{-- Horari --}}
             <div class="panel-card">
                 <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;">
-                    <h3 class="section-title">Horari de l'aula</h3>
+                    <h3 class="section-title">{{ __('messages.classroom_schedule') }}</h3>
 
                     @php
                         $_espaiUserId = session('usuari_espai_id');
@@ -63,8 +63,8 @@
                             class="btn btn-primary {{ $potEditar ? '' : 'btn-disabled' }}"
                             id="assignarGrupTot"
                             {{ $potEditar ? '' : 'disabled' }}
-                            title="{{ $potEditar ? 'Assignar el mateix grup a totes les franges' : 'No tens permís per modificar l\'horari' }}">
-                        <i class="bi bi-people-fill"></i> Assignar grup a tot l'horari
+                            title="{{ $potEditar ? __('messages.assign_group_all_tip') : __('messages.no_permission_schedule') }}">
+                        <i class="bi bi-people-fill"></i> {{ __('messages.assign_group_all') }}
                     </button>
                 </div>
 
@@ -74,7 +74,7 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Franja</th>
+                                    <th>{{ __('messages.time_slot') }}</th>
                                     @foreach($dies as $diaNom)<th>{{ $diaNom }}</th>@endforeach
                                 </tr>
                             </thead>
@@ -98,8 +98,8 @@
                                                 <select class="input-control select-control"
                                                         name="assignacions[{{ $diaNum }}][{{ $franja->id }}]"
                                                         {{ $potEditar ? '' : 'disabled' }}
-                                                        title="{{ $potEditar ? '' : 'No tens permís per modificar l\'horari' }}">
-                                                    <option value="">-- lliure --</option>
+                                                        title="{{ $potEditar ? '' : __('messages.no_permission_schedule') }}">
+                                                    <option value="">{{ __('messages.free_slot') }}</option>
                                                     @foreach($professors as $p)
                                                         <option value="{{ $p->id }}" {{ (string)$professorId === (string)$p->id ? 'selected' : '' }}>
                                                             👨‍🏫 {{ $p->nom }}
@@ -119,8 +119,8 @@
                                                         data-franja="{{ $franja->id }}"
                                                         {{ $potEditar ? '' : 'disabled' }}
                                                         style="margin-top:4px;"
-                                                        title="{{ $potEditar ? '' : 'No tens permís per modificar l\'horari' }}">
-                                                    Assignar grup
+                                                        title="{{ $potEditar ? '' : __('messages.no_permission_schedule') }}">
+                                                    {{ __('messages.assign_group') }}
                                                 </button>
 
                                                 <input type="hidden" class="input-grup"
@@ -128,7 +128,7 @@
                                                        value="{{ $grupId }}">
 
                                                 <div class="grup-label">
-                                                    {{ $grupNom ? "Grup: $grupNom" : "Sense grup" }}
+                                                    {{ $grupNom ? __('messages.group') . ": $grupNom" : __('messages.no_group') }}
                                                 </div>
                                             </div>
                                         </td>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="form-actions">
                         <button class="btn btn-primary @cantEspaiClass('aulas.horari.update')" type="submit">
-                            Desar horari
+                            {{ __('messages.save_schedule') }}
                         </button>
                     </div>
                 </form>
@@ -151,15 +151,15 @@
                 <div class="gm-card">
                     <div class="gm-header">
                         <div>
-                            <h3 id="gmTitle">Selecciona un grup</h3>
-                            <div class="gm-header__sub" id="gmSubtitle">Tria el grup d'alumnes per aquesta franja</div>
+                            <h3 id="gmTitle">{{ __('messages.select_group') }}</h3>
+                            <div class="gm-header__sub" id="gmSubtitle">{{ __('messages.select_group_sub') }}</div>
                         </div>
-                        <button type="button" class="gm-close" id="tancarModalGrups" aria-label="Tancar">✕</button>
+                        <button type="button" class="gm-close" id="tancarModalGrups" aria-label="{{ __('messages.close') }}">✕</button>
                     </div>
 
                     <div class="gm-search">
                         <span class="gm-search-ic"><i class="bi bi-search"></i></span>
-                        <input type="text" id="buscadorGrups" placeholder="Cerca grup..." autocomplete="off">
+                        <input type="text" id="buscadorGrups" placeholder="{{ __('messages.search_group') }}" autocomplete="off">
                     </div>
 
                     <div class="gm-list" id="llistaGrups">
@@ -171,15 +171,15 @@
                                 <span>{{ $g->nom }}</span>
                             </button>
                         @empty
-                            <div class="gm-empty">No hi ha grups creats encara.</div>
+                            <div class="gm-empty">{{ __('messages.no_groups_yet') }}</div>
                         @endforelse
                         <div class="gm-empty" id="gmNoResults" style="display:none;">
-                            Cap grup coincideix amb la cerca.
+                            {{ __('messages.no_group_match') }}
                         </div>
                     </div>
 
                     <div class="gm-foot">
-                        <button type="button" class="btn btn-secondary" id="tancarModalGrupsFoot">Tancar</button>
+                        <button type="button" class="btn btn-secondary" id="tancarModalGrupsFoot">{{ __('messages.close') }}</button>
                     </div>
                 </div>
             </div>
@@ -193,6 +193,10 @@
                 const closeBtn2  = document.getElementById('tancarModalGrupsFoot');
                 const subtitle   = document.getElementById('gmSubtitle');
                 const btnGlobal  = document.getElementById('assignarGrupTot');
+
+                const txtGlobalSub = @json(__('messages.group_applied_all'));
+                const txtSingleSub = @json(__('messages.select_group_sub'));
+                const txtGroup     = @json(__('messages.group'));
 
                 let modeGlobal = false;
                 let currentHiddenInput = null;
@@ -212,7 +216,7 @@
                         modeGlobal = true;
                         currentHiddenInput = null;
                         currentLabel = null;
-                        subtitle.textContent = "El grup s'aplicarà a totes les franges de la setmana";
+                        subtitle.textContent = txtGlobalSub;
                         buscador.value = '';
                         filtrarGrups('');
                         obrirModal();
@@ -227,7 +231,7 @@
                         const franja = this.dataset.franja;
                         currentHiddenInput = document.querySelector(`input[name="grups[${dia}][${franja}]"]`);
                         currentLabel = this.parentElement.querySelector('.grup-label');
-                        subtitle.textContent = "Tria el grup d'alumnes per aquesta franja";
+                        subtitle.textContent = txtSingleSub;
                         buscador.value = '';
                         filtrarGrups('');
                         obrirModal();
@@ -258,11 +262,11 @@
                                 input.value = grupId;
                             });
                             document.querySelectorAll('.grup-label').forEach(label => {
-                                label.innerHTML = `Grup: <strong>${grupNom}</strong>`;
+                                label.innerHTML = `${txtGroup}: <strong>${grupNom}</strong>`;
                             });
                         } else {
                             if (currentHiddenInput) currentHiddenInput.value = grupId;
-                            if (currentLabel) currentLabel.innerHTML = `Grup: <strong>${grupNom}</strong>`;
+                            if (currentLabel) currentLabel.innerHTML = `${txtGroup}: <strong>${grupNom}</strong>`;
                         }
 
                         tancarModal();

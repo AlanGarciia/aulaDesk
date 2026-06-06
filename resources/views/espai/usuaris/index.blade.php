@@ -5,16 +5,16 @@
 <x-app-layout>
     <div class="page">
         <div class="page-title-container">
-            <h2 class="page-title">Usuaris de l'espai</h2>
+            <h2 class="page-title">{{ __('messages.users_index_title') }}</h2>
         </div>
 
         <div class="actions">
             <a href="{{ route('espai.usuaris.create') }}" class="btn btn-primary @cantEspaiClass('users.create')">
-                + Afegir usuari
+                + {{ __('messages.user_add_title') }}
             </a>
 
             <a href="{{ route('espai.index') }}" class="btn btn-secondary">
-                <i class="bi bi-box-arrow-right"></i>Tornar a l'espai
+                <i class="bi bi-box-arrow-right"></i>{{ __('messages.back_to_space') }}
             </a>
         </div>
 
@@ -28,18 +28,18 @@
             <form method="GET" action="{{ route('espai.usuaris.index') }}" class="filters-form">
                 <div class="filters-grid">
                     <div class="filter-group">
-                        <label for="nom">Nom</label>
+                        <label for="nom">{{ __('messages.name') }}</label>
                         <input type="text"
                                name="nom"
                                id="nom"
                                value="{{ request('nom') }}"
-                               placeholder="Buscar per nom">
+                               placeholder="{{ __('messages.search_by_name') }}">
                     </div>
 
                     <div class="filter-group">
-                        <label for="rol">Rol</label>
+                        <label for="rol">{{ __('messages.role') }}</label>
                         <select name="rol" id="rol">
-                            <option value="">Tots</option>
+                            <option value="">{{ __('messages.all') }}</option>
 
                             @foreach(\App\Models\BaseRole::pluck('nom') as $rol)
                                 <option value="{{ $rol }}"
@@ -52,12 +52,12 @@
 
                     <div class="filter-actions">
                         <button type="submit" class="btn btn-primary">
-                            Filtrar
+                            {{ __('messages.filter') }}
                         </button>
 
                         <a href="{{ route('espai.usuaris.index') }}"
                            class="btn btn-secondary">
-                            Netejar
+                            {{ __('messages.clear') }}
                         </a>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                             </div>
 
                             <div class="user-meta">
-                                Rol: {{ $usuari->rol }}
+                                {{ __('messages.role') }}: {{ $usuari->rol }}
                             </div>
                         </div>
 
@@ -92,14 +92,14 @@
                             <form class="inline-form"
                                   method="POST"
                                   action="{{ route('espai.usuaris.destroy', $usuari) }}"
-                                  onsubmit="return confirm('Segur que vols eliminar aquest usuari?');">
+                                  onsubmit="return confirm('{{ __('messages.user_delete_confirm') }}');">
 
                                 @csrf
                                 @method('DELETE')
 
                                 <button type="submit"
                                         class="btn btn-danger @cantEspaiClass('users.delete')">
-                                    Eliminar
+                                    {{ __('messages.delete') }}
                                 </button>
                             </form>
 
@@ -109,7 +109,7 @@
                 @empty
 
                     <p class="empty-state">
-                        No hi ha usuaris creats en aquest espai.
+                        {{ __('messages.users_empty') }}
                     </p>
 
                 @endforelse
@@ -139,28 +139,27 @@
                 </div>
 
                 <h2 class="mt-4 text-2xl font-bold text-center text-gray-800">
-                    Límit assolit
+                    {{ __('messages.limit_reached_title') }}
                 </h2>
 
                 <p class="mt-3 text-center text-gray-600">
-                    El pla gratuït només permet crear fins a
-                    <span class="font-semibold">3 usuaris</span>.
+                    {!! __('messages.user_limit_text') !!}
                 </p>
 
                 <p class="mt-1 text-center text-sm text-gray-500">
-                    Millora el teu pla per afegir més membres a l’espai.
+                    {{ __('messages.user_limit_upgrade') }}
                 </p>
 
                 <div class="mt-6 flex gap-3">
 
                     <button onclick="closePlanModal()"
                             class="w-full px-4 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
-                        Tancar
+                        {{ __('messages.close') }}
                     </button>
 
                     <a href="{{ route('stripe.checkout.premium') }}"
                        class="w-full px-4 py-3 rounded-xl bg-indigo-600 text-white text-center hover:bg-indigo-700 transition">
-                        Millorar pla
+                        {{ __('messages.upgrade_plan') }}
                     </a>
 
                 </div>
