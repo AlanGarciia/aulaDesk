@@ -4,46 +4,62 @@
         @vite('resources/css/login.css')
     @endpush
 
-    @push('scripts')
-        @vite('resources/js/espais/particles-bg.js')
-    @endpush
+    {{-- Botó Tornar --}}
+    <a href="{{ url('/') }}" class="back-link" aria-label="{{ __('messages.back_to_home') }}">
+        <i class="bi bi-arrow-left"></i> {{ __('messages.back') }}
+    </a>
 
-    <!-- Botón Tornar fijo en la esquina superior izquierda -->
-        <a href="{{ url('/') }}" class="back-link" aria-label="Tornar a l'inici">
-            <i class="bi bi-box-arrow-right"></i> Tornar
-        </a>
+    <div class="auth-wrap">
+        <div class="auth-card">
 
-
-    <!-- Canvas para partículas -->
-    <canvas id="particles" class="absolute inset-0 w-full h-full z-0"></canvas>
-
-    <div class="login-card">
-        <h1 class="login-title">Iniciar sessió</h1>
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="exemple@domini.com" required autofocus>
-                @error('email') <span class="error">{{ $message }}</span> @enderror
+            <div class="auth-head">
+                <div class="auth-logo">
+                    <img src="{{ asset('img/logo_solo.png') }}" alt="aulaDesk">
+                </div>
+                <h1 class="auth-title">{{ __('messages.login_title') }}</h1>
+                <p class="auth-sub">{{ __('messages.login_sub') }}</p>
             </div>
 
-            <div class="form-group">
-                <label for="password">Contrasenya</label>
-                <input type="password" id="password" name="password" placeholder="La teva contrasenya" required>
-                @error('password') <span class="error">{{ $message }}</span> @enderror
-            </div>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
 
-            <div class="remember">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Recordar-me</label>
-            </div>
+                <div class="field">
+                    <label for="email">{{ __('messages.email_label') }}</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-envelope"></i>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}"
+                               placeholder="exemple@domini.com" required autofocus>
+                    </div>
+                    @error('email') <span class="error">{{ $message }}</span> @enderror
+                </div>
 
-            <a class="forgot-link" href="{{ route('password.request') }}">Has oblidat la contrasenya?</a>
+                <div class="field">
+                    <label for="password">{{ __('messages.password') }}</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" id="password" name="password"
+                               placeholder="{{ __('messages.your_password') }}" required>
+                    </div>
+                    @error('password') <span class="error">{{ $message }}</span> @enderror
+                </div>
 
-            <button type="submit">Iniciar sessió</button>
-        </form>
+                <div class="row-between">
+                    <label class="remember">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span>{{ __('messages.remember_me') }}</span>
+                    </label>
+                    <a class="forgot-link" href="{{ route('password.request') }}">{{ __('messages.forgot_password') }}</a>
+                </div>
+
+                <button type="submit" class="auth-btn">{{ __('messages.login_title') }}</button>
+            </form>
+
+            <p class="auth-foot">
+                {{ __('messages.no_account') }}
+                <a href="{{ route('register') }}">{{ __('messages.create_account') }}</a>
+            </p>
+
+        </div>
     </div>
 
 </x-guest-layout>
