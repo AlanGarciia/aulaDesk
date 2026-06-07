@@ -486,5 +486,136 @@ return [
     'confirmation'           => 'Confirmación',
     'delete_account_confirm' => 'Introduce la contraseña para confirmar.',
 
+    // ===== Flash / errores de los controladores =====
+
+    // Comunes
+    'no_space_selected'  => 'No hay ningún espacio seleccionado.',
+    'no_active_space'    => 'No hay ningún espacio activo en la sesión.',
+    'no_space_user'      => 'No hay usuario de espacio en la sesión.',
+    'select_space_first' => 'Selecciona un espacio para continuar.',
+    'premium_feature'    => 'Función Premium',
+    'wrong_credentials'  => 'Nombre o contraseña incorrectos.',
+
+    // Alumnos
+    'idalu_exists'       => 'Este IDALU ya existe dentro de este espacio.',
+    'student_created'    => 'Alumno creado correctamente.',
+    'student_deleted'    => 'Alumno eliminado correctamente.',
+    'student_updated'    => 'Alumno actualizado correctamente.',
+    'students_imported'  => 'Alumnos importados correctamente.',
+
+    // Aulas
+    'other_classroom'    => 'Otra aula',
+    'invalid_professor'  => 'Profesor inválido.',
+    'professor'          => 'Profesor',
+    'schedule_saved'     => 'Horario guardado.',
+    'schedule_saved_ok'  => 'Horario guardado correctamente',
+    'schedule_conflict_warning' => 'Algunos profesores ya estaban asignados en otra aula en el mismo horario.',
+    'classroom_created'  => 'Aula creada correctamente.',
+    'classroom_updated'  => 'Aula actualizada.',
+    'classroom_deleted'  => 'Aula eliminada.',
+
+    // Tickets
+    'ticket_created'     => 'Ticket creado.',
+    'ticket_updated'     => 'Ticket actualizado.',
+    'ticket_deleted'     => 'Ticket eliminado.',
+
+    // Roles
+    'cannot_delete_admin_role' => 'No se puede eliminar el rol admin.',
+    'role_deleted'             => 'Rol eliminado correctamente.',
+
+    // Espacios
+    'space_updated'      => 'Espacio actualizado correctamente.',
+
+    // Compartir espacio
+    'share_no_user'            => 'No existe ningún usuario con este email.',
+    'share_already_yours'      => 'Este espacio ya es tuyo.',
+    'share_already_has_access' => 'Este usuario ya tiene acceso al espacio.',
+    'share_success'            => 'Espacio compartido correctamente.',
+
+    // Franjas horarias
+    'slot_order_exists' => 'Ya existe una franja con este orden.',
+    'slot_created'      => 'Franja creada.',
+    'slot_updated'      => 'Franja actualizada.',
+    'slot_deleted'      => 'Franja eliminada.',
+
+    // Grupos
+    'group_created'     => 'Grupo creado correctamente.',
+    'group_updated'     => 'Grupo actualizado correctamente.',
+    'group_deleted'     => 'Grupo eliminado correctamente.',
+
+    // Guardias
+    'guardia_premium'               => 'Las guardias son una función Premium.',
+    'invalid_day'                   => 'Día inválido.',
+    'invalid_slot'                  => 'Franja inválida.',
+    'slot_not_found'                => 'Franja no encontrada.',
+    'no_classroom_in_slot'          => 'No tienes ningún aula asignada en esta franja.',
+    'type'                          => 'Tipo',
+    'comment'                       => 'Comentario',
+    'a_professor'                   => 'Un profesor',
+    'the_professor'                 => 'el profesor',
+    'guardia_pending_title'         => 'Guardia pendiente (:day)',
+    'guardia_requested'             => 'Se ha solicitado una guardia.',
+    'guardia_can_accept'            => 'Otro profesor puede aceptarla desde el tablón de noticias.',
+    'guardia_requested_notif'       => ':name ha pedido una guardia (:day)',
+    'guardia_sent'                  => 'Solicitud de guardia enviada y publicada en el tablón.',
+    'guardia_own'                   => 'No puedes aceptar tu propia guardia.',
+    'guardia_already_managed'       => 'Esta guardia ya ha sido gestionada.',
+    'guardia_busy'                  => 'Ya tienes un aula asignada en esta franja. No puedes cubrir esta guardia.',
+    'guardia_accepted'              => 'Has aceptado la guardia y se ha actualizado el horario.',
+    'guardia_will_cover'            => ':cover cubrirá la guardia de :requester',
+    'guardia_substitution_accepted' => 'suplencia aceptada',
+    'guardia_accept_failed'         => 'No se ha podido aceptar la guardia.',
+
+    // Días abreviados
+    'abbr_monday'    => 'Lu',
+    'abbr_tuesday'   => 'Ma',
+    'abbr_wednesday' => 'Mi',
+    'abbr_thursday'  => 'Ju',
+    'abbr_friday'    => 'Vi',
+
+    // Incidencias
+    'hour_not_yours'        => 'Esta hora no es tuya.',
+    'hour_no_group'         => 'Esta hora no tiene ningún grupo asignado.',
+    'student_not_in_group'  => 'El alumno no pertenece al grupo de esta hora.',
+    'incident_added'        => 'Incidencia añadida.',
+    'incident_not_yours'    => 'No puedes eliminar incidencias de otros profesores.',
+    'incident_deleted'      => 'Incidencia eliminada.',
+    'list_saved'            => 'Lista guardada correctamente.',
+    'group_lower'           => 'grupo',
+
+    // Noticias
+    'news_created'          => 'Noticia creada correctamente.',
+    'news_updated'          => 'Noticia actualizada correctamente.',
+    'news_deleted'          => 'Noticia eliminada.',
+    'news_guardia_no_edit'  => 'Esta noticia de guardia no se puede editar manualmente.',
+
+    // Permisos
+    'permission_created'    => 'Permiso creado correctamente.',
+    'permission_updated'    => 'Permiso actualizado correctamente.',
+    'permission_deleted'    => 'Permiso eliminado.',
+
+    // Stripe
+    'payment_cancelled'     => 'Pago cancelado',
+    'subscription_cancelled' => 'Suscripción cancelada',
+
+    // Usuarios de espacio
+    'user_name_exists'  => 'Este nombre ya existe dentro de este espacio.',
+    'user_new_notif'    => 'Nuevo usuario en el espacio: :name',
+    'user_created_ok'   => 'Usuario creado correctamente.',
+    'user_updated_ok'   => 'Usuario actualizado correctamente.',
+    'user_deleted_ok'   => 'Usuario eliminado correctamente.',
+    'roles_updated_ok'  => 'Roles actualizados correctamente.',
+
+    // Disposición de la noticia (layout)
+    'news_edit'          => 'Editar noticia',
+    'layout_label'       => 'Disposición de la imagen',
+    'layout_top'         => 'Foto arriba',
+    'layout_bottom'      => 'Foto abajo',
+    'layout_left'        => 'Foto a la izquierda',
+    'layout_right'       => 'Foto a la derecha',
+    'layout_text'        => 'Solo texto',
+    'preview'            => 'Vista previa',
+    'preview_title_ph'   => 'Título de la noticia',
+    'preview_content_ph' => 'Aquí aparecerá el contenido de la noticia...',
 
 ];

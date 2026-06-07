@@ -15,7 +15,7 @@ class GrupController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         $user = $request->user();
@@ -63,7 +63,7 @@ class GrupController extends Controller
         $espai->grups()->create($data);
 
         return redirect()->route('espai.grups.index')
-            ->with('status', 'Grup creat correctament.');
+            ->with('status', __('messages.group_created'));
     }
 
     public function edit(Request $request, Grup $grup)
@@ -112,7 +112,7 @@ class GrupController extends Controller
         $grup->alumnes()->sync($data['alumnes'] ?? []);
 
         return redirect()->route('espai.grups.index')
-            ->with('status', 'Grup actualitzat correctament.');
+            ->with('status', __('messages.group_updated'));
     }
 
     public function destroy(Request $request, Grup $grup)
@@ -126,7 +126,7 @@ class GrupController extends Controller
         $grup->delete();
 
         return redirect()->route('espai.grups.index')
-            ->with('status', 'Grup eliminat correctament.');
+            ->with('status', __('messages.group_deleted'));
     }
 
     public function veure(Request $request, Grup $grup)

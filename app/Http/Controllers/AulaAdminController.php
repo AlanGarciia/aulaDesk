@@ -32,10 +32,22 @@ class AulaAdminController extends Controller
         return 'professor';
     }
 
+    /** Días de la semana traducidos */
+    private function diesLabels(): array
+    {
+        return [
+            1 => __('messages.day_monday'),
+            2 => __('messages.day_tuesday'),
+            3 => __('messages.day_wednesday'),
+            4 => __('messages.day_thursday'),
+            5 => __('messages.day_friday'),
+        ];
+    }
+
     public function show(Aula $aula)
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hi ha cap espai seleccionat.');
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
         abort_if((int) $aula->espai_id !== (int) $espaiId, 403);
 
         $rolProfessor = $this->professorRolValue();
@@ -44,7 +56,7 @@ class AulaAdminController extends Controller
         $grups = Grup::where('espai_id', $espaiId)->orderBy('nom')->get();
         $franges = FranjaHoraria::where('espai_id', $espaiId)->orderBy('ordre')->get();
 
-        $dies = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
+        $dies = $this->diesLabels();
 
         $assignacions = [];
         $ocupats = [];
@@ -74,7 +86,7 @@ class AulaAdminController extends Controller
                 ->get();
 
             foreach ($ocupacions as $o) {
-                $nom = 'Altra aula';
+                $nom = __('messages.other_classroom');
                 if ($o->aula && $o->aula->nom) $nom = $o->aula->nom;
                 $ocupats[(int) $o->dia_setmana][(int) $o->franja_horaria_id][(int) $o->usuari_espai_id] = $nom;
             }
@@ -109,7 +121,7 @@ class AulaAdminController extends Controller
     public function update(Request $request, Aula $aula)
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hi ha cap espai seleccionat.');
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
         abort_if((int) $aula->espai_id !== (int) $espaiId, 403);
 
         $data = $request->validate([
@@ -139,7 +151,7 @@ class AulaAdminController extends Controller
         }
 
         $dies = [1, 2, 3, 4, 5];
-        $diesLabels = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
+        $diesLabels = $this->diesLabels();
         $conflicts = [];
         foreach ($dies as $dia) {
             foreach ($franjaIds as $franjaId) {
@@ -149,7 +161,7 @@ class AulaAdminController extends Controller
 
                 if ($profId === '' || $profId === null) continue;
                 $profId = (int) $profId;
-                abort_if(!in_array($profId, $profIds, true), 422, 'Professor invàlid.');
+                abort_if(!in_array($profId, $profIds, true), 422, __('messages.invalid_professor'));
 
                 $ocupacio = AulaHorario::where('usuari_espai_id', $profId)
                     ->where('dia_setmana', $dia)
@@ -163,16 +175,16 @@ class AulaAdminController extends Controller
 
                 if (!$ocupacio) continue;
 
-                $diaTxt = 'Dia ' . $dia;
+                $diaTxt = __('messages.day') . ' ' . $dia;
                 if (isset($diesLabels[$dia])) $diaTxt = $diesLabels[$dia];
 
-                $franjaTxt = 'Franja ' . $franjaId;
+                $franjaTxt = __('messages.time_slot') . ' ' . $franjaId;
                 if (isset($franjaLabels[$franjaId])) $franjaTxt = $franjaLabels[$franjaId];
 
-                $profTxt = 'Professor #' . $profId;
+                $profTxt = __('messages.professor') . ' #' . $profId;
                 if (isset($profNoms[$profId])) $profTxt = $profNoms[$profId];
 
-                $aulaTxt = 'Altra aula';
+                $aulaTxt = __('messages.other_classroom');
                 if ($ocupacio->aula && $ocupacio->aula->nom) $aulaTxt = $ocupacio->aula->nom;
 
                 $conflicts[] = [
@@ -197,7 +209,7 @@ class AulaAdminController extends Controller
                 $usuariId = null;
                 if ($profId !== '' && $profId !== null) {
                     $profId = (int) $profId;
-                    abort_if(!in_array($profId, $profIds, true), 422, 'Professor invàlid.');
+                    abort_if(!in_array($profId, $profIds, true), 422, __('messages.invalid_professor'));
                     $usuariId = $profId;
                 }
 
@@ -208,6 +220,6 @@ class AulaAdminController extends Controller
             }
         }
 
-        return redirect()->route('espai.aules.admin', $aula)->with('ok', 'Horari desat.');
+        return redirect()->route('espai.aules.admin', $aula)->with('ok', __('messages.schedule_saved'));
     }
 }

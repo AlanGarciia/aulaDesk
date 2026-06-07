@@ -79,6 +79,7 @@ class NoticiaController extends Controller
     public function create(Request $request)
     {
         $this->espaiActiu($request);
+    
         $tipus = self::TIPUS_CREABLES;
         return view('espai.noticies.create', compact('tipus'));
     }
@@ -93,6 +94,7 @@ class NoticiaController extends Controller
             'contingut' => ['nullable', 'string'],
             'tipus' => ['required', 'in:' . implode(',', self::TIPUS_CREABLES)],
             'imatge' => ['nullable', 'image', 'max:2048'],
+            'layout' => ['nullable', 'in:top,bottom,left,right,text'],
         ]);
 
         $path = null;
@@ -112,7 +114,7 @@ class NoticiaController extends Controller
 
         return redirect()
             ->route('espai.noticies.index')
-            ->with('status', 'Notícia creada correctament.');
+            ->with('status', __('messages.news_created'));
     }
 
     public function edit(Request $request, Noticia $noticia)
@@ -142,7 +144,7 @@ class NoticiaController extends Controller
 
         abort_unless((int) $noticia->espai_id === (int) $espai->id, 404);
         $this->assertCreador($request, $noticia);
-        abort_if((string) $noticia->tipus === 'guardia', 403, 'Aquesta notícia de guàrdia no es pot editar manualment.');
+        abort_if((string) $noticia->tipus === 'guardia', 403, __('messages.news_guardia_no_edit'));
 
         $data = $request->validate([
             'titol' => ['required', 'string', 'max:255'],
@@ -150,6 +152,7 @@ class NoticiaController extends Controller
             'tipus' => ['required', 'in:' . implode(',', self::TIPUS_CREABLES)],
             'imatge' => ['nullable', 'image', 'max:2048'],
             'treure_imatge' => ['nullable', 'boolean'],
+            'layout' => ['nullable', 'in:top,bottom,left,right,text'],
         ]);
 
         if (!empty($data['treure_imatge']) && $noticia->imatge_path) {
@@ -167,11 +170,12 @@ class NoticiaController extends Controller
         $noticia->titol = $data['titol'];
         $noticia->contingut = $data['contingut'] ?? null;
         $noticia->tipus = $data['tipus'];
+        $noticia->layout = $data['layout'] ?? 'top';
         $noticia->save();
 
         return redirect()
             ->route('espai.noticies.index')
-            ->with('status', 'Notícia actualitzada correctament.');
+            ->with('status', __('messages.news_updated'));
     }
 
     public function destroy(Request $request, Noticia $noticia)
@@ -189,6 +193,6 @@ class NoticiaController extends Controller
 
         return redirect()
             ->route('espai.noticies.index')
-            ->with('status', 'Notícia eliminada.');
+            ->with('status', __('messages.news_deleted'));
     }
 }

@@ -31,7 +31,7 @@ class FranjaHorariaController extends Controller
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hi ha cap espai seleccionat.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         $franges = FranjaHoraria::where('espai_id', $espaiId)
@@ -45,7 +45,7 @@ class FranjaHorariaController extends Controller
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hi ha cap espai seleccionat.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         return view('espai.franges.create');
@@ -55,7 +55,7 @@ class FranjaHorariaController extends Controller
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hi ha cap espai seleccionat.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         $data = $request->validate(
@@ -78,21 +78,21 @@ class FranjaHorariaController extends Controller
             ->exists();
 
         if ($exists) {
-            return back()->withErrors(['ordre' => 'Ja existeix una franja amb aquest ordre.'])->withInput();
+            return back()->withErrors(['ordre' => __('messages.slot_order_exists')])->withInput();
         }
 
         $data['espai_id'] = $espaiId;
 
         FranjaHoraria::create($data);
 
-        return redirect()->route('espai.franges.index')->with('ok', 'Franja creada.');
+        return redirect()->route('espai.franges.index')->with('ok', __('messages.slot_created'));
     }
 
     public function edit(FranjaHoraria $franja)
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hi ha cap espai seleccionat.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         abort_if($franja->espai_id !== $espaiId, 403);
@@ -104,7 +104,7 @@ class FranjaHorariaController extends Controller
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hi ha cap espai seleccionat.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         abort_if($franja->espai_id !== $espaiId, 403);
@@ -124,25 +124,25 @@ class FranjaHorariaController extends Controller
             ->exists();
 
         if ($exists) {
-            return back()->withErrors(['ordre' => 'Ja existeix una franja amb aquest ordre.'])->withInput();
+            return back()->withErrors(['ordre' => __('messages.slot_order_exists')])->withInput();
         }
 
         $franja->update($data);
 
-        return redirect()->route('espai.franges.index')->with('ok', 'Franja actualitzada.');
+        return redirect()->route('espai.franges.index')->with('ok', __('messages.slot_updated'));
     }
 
     public function destroy(FranjaHoraria $franja)
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hi ha cap espai seleccionat.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         abort_if($franja->espai_id !== $espaiId, 403);
 
         $franja->delete();
 
-        return redirect()->route('espai.franges.index')->with('ok', 'Franja eliminada.');
+        return redirect()->route('espai.franges.index')->with('ok', __('messages.slot_deleted'));
     }
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
-    <a href="{{ route('espai.index') }}"class="btn btn-secondary btn-top-right">
-        {{ __('messages.back_to_space') }}
+    <a href="{{ route('espai.index') }}" class="btn btn-secondary btn-top-right">
+        <i class="bi bi-box-arrow-left"></i> {{ __('messages.back_to_space') }}
     </a>
     @vite(['resources/css/espai/noticies/noticiesIndex.css'])
 

@@ -486,4 +486,136 @@ return [
     'confirmation'           => 'Confirmació',
     'delete_account_confirm' => 'Introdueix la contrasenya per confirmar.',
 
+    // ===== Flash / errors dels controladors =====
+
+    // Comuns
+    'no_space_selected'  => 'No hi ha cap espai seleccionat.',
+    'no_active_space'    => 'No hi ha cap espai actiu a la sessió.',
+    'no_space_user'      => "No hi ha usuari d'espai a la sessió.",
+    'select_space_first' => 'Selecciona un espai per continuar.',
+    'premium_feature'    => 'Funció Premium',
+    'wrong_credentials'  => 'Nom o contrasenya incorrectes.',
+
+    // Alumnes
+    'idalu_exists'       => "Aquest IDALU ja existeix dins d'aquest espai.",
+    'student_created'    => 'Alumne creat correctament.',
+    'student_deleted'    => 'Alumne eliminat correctament.',
+    'student_updated'    => 'Alumne actualitzat correctament.',
+    'students_imported'  => 'Alumnes importats correctament.',
+
+    // Aules
+    'other_classroom'    => 'Altra aula',
+    'invalid_professor'  => 'Professor invàlid.',
+    'professor'          => 'Professor',
+    'schedule_saved'     => 'Horari desat.',
+    'schedule_saved_ok'  => 'Horari guardat correctament',
+    'schedule_conflict_warning' => 'Alguns professors ja estaven assignats en una altra aula en el mateix horari.',
+    'classroom_created'  => 'Aula creada correctament.',
+    'classroom_updated'  => 'Aula actualitzada.',
+    'classroom_deleted'  => 'Aula eliminada.',
+
+    // Tickets
+    'ticket_created'     => 'Ticket creat.',
+    'ticket_updated'     => 'Ticket actualitzat.',
+    'ticket_deleted'     => 'Ticket eliminat.',
+
+    // Rols
+    'cannot_delete_admin_role' => 'No es pot eliminar el rol admin.',
+    'role_deleted'             => 'Rol eliminat correctament.',
+
+    // Espais
+    'space_updated'      => 'Espai actualitzat correctament.',
+
+    // Compartir espai
+    'share_no_user'            => 'No existeix cap usuari amb aquest email.',
+    'share_already_yours'      => 'Aquest espai ja és teu.',
+    'share_already_has_access' => "Aquest usuari ja té accés a l'espai.",
+    'share_success'            => 'Espai compartit correctament.',
+
+    // Franges horàries
+    'slot_order_exists' => 'Ja existeix una franja amb aquest ordre.',
+    'slot_created'      => 'Franja creada.',
+    'slot_updated'      => 'Franja actualitzada.',
+    'slot_deleted'      => 'Franja eliminada.',
+
+    // Grups
+    'group_created'     => 'Grup creat correctament.',
+    'group_updated'     => 'Grup actualitzat correctament.',
+    'group_deleted'     => 'Grup eliminat correctament.',
+
+    // Guàrdies
+    'guardia_premium'               => 'Les guàrdies són una funció Premium.',
+    'invalid_day'                   => 'Dia invàlid.',
+    'invalid_slot'                  => 'Franja invàlida.',
+    'slot_not_found'                => 'Franja no trobada.',
+    'no_classroom_in_slot'          => 'No tens cap aula assignada en aquesta franja.',
+    'type'                          => 'Tipus',
+    'comment'                       => 'Comentari',
+    'a_professor'                   => 'Un professor',
+    'the_professor'                 => 'el professor',
+    'guardia_pending_title'         => 'Guàrdia pendent (:day)',
+    'guardia_requested'             => "S'ha sol·licitat una guàrdia.",
+    'guardia_can_accept'            => 'Un altre professor pot acceptar-la des del tauló de notícies.',
+    'guardia_requested_notif'       => ':name ha demanat una guàrdia (:day)',
+    'guardia_sent'                  => 'Sol·licitud de guàrdia enviada i publicada al tauló.',
+    'guardia_own'                   => 'No pots acceptar la teva pròpia guàrdia.',
+    'guardia_already_managed'       => 'Aquesta guàrdia ja ha estat gestionada.',
+    'guardia_busy'                  => 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.',
+    'guardia_accepted'              => "Has acceptat la guàrdia i s'ha actualitzat l'horari.",
+    'guardia_will_cover'            => ':cover cobrirà la guàrdia de :requester',
+    'guardia_substitution_accepted' => 'suplència acceptada',
+    'guardia_accept_failed'         => "No s'ha pogut acceptar la guàrdia.",
+
+    // Dies abreujats
+    'abbr_monday'    => 'Dl',
+    'abbr_tuesday'   => 'Dt',
+    'abbr_wednesday' => 'Dc',
+    'abbr_thursday'  => 'Dj',
+    'abbr_friday'    => 'Dv',
+
+    // Incidències
+    'hour_not_yours'        => 'Aquesta hora no és teva.',
+    'hour_no_group'         => 'Aquesta hora no té cap grup assignat.',
+    'student_not_in_group'  => "L'alumne no pertany al grup d'aquesta hora.",
+    'incident_added'        => 'Incidència afegida.',
+    'incident_not_yours'    => "No pots eliminar incidències d'altres professors.",
+    'incident_deleted'      => 'Incidència eliminada.',
+    'list_saved'            => 'Llista guardada correctament.',
+    'group_lower'           => 'grup',
+
+    // Notícies
+    'news_created'          => 'Notícia creada correctament.',
+    'news_updated'          => 'Notícia actualitzada correctament.',
+    'news_deleted'          => 'Notícia eliminada.',
+    'news_guardia_no_edit'  => 'Aquesta notícia de guàrdia no es pot editar manualment.',
+
+    // Permisos
+    'permission_created'    => 'Permís creat correctament.',
+    'permission_updated'    => 'Permís actualitzat correctament.',
+    'permission_deleted'    => 'Permís eliminat.',
+
+    // Stripe
+    'payment_cancelled'     => 'Pagament cancel·lat',
+    'subscription_cancelled' => 'Subscripció cancel·lada',
+
+    // Usuaris d'espai
+    'user_name_exists'  => "Aquest nom ja existeix dins d'aquest espai.",
+    'user_new_notif'    => "Nou usuari a l'espai: :name",
+    'user_created_ok'   => 'Usuari creat correctament.',
+    'user_updated_ok'   => 'Usuari actualitzat correctament.',
+    'user_deleted_ok'   => 'Usuari eliminat correctament.',
+    'roles_updated_ok'  => 'Rols actualitzats correctament.',
+
+    // Disposició de la notícia (layout)
+    'news_edit'          => 'Editar notícia',
+    'layout_label'       => 'Disposició de la imatge',
+    'layout_top'         => 'Foto a dalt',
+    'layout_bottom'      => 'Foto a baix',
+    'layout_left'        => 'Foto a l\'esquerra',
+    'layout_right'       => 'Foto a la dreta',
+    'layout_text'        => 'Només text',
+    'preview'            => 'Vista prèvia',
+    'preview_title_ph'   => 'Títol de la notícia',
+    'preview_content_ph' => 'Aquí apareixerà el contingut de la notícia...',
+
 ];

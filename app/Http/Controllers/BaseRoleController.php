@@ -134,7 +134,7 @@ class BaseRoleController extends Controller
         if ($role->nom === 'admin') {
             return redirect()
                 ->route('espai.usuaris.index')
-                ->with('error', 'No es pot eliminar el rol admin.');
+                ->with('error', __('messages.cannot_delete_admin_role'));
         }
 
         $role->permissions()->detach();
@@ -147,6 +147,6 @@ class BaseRoleController extends Controller
 
         return redirect()
             ->route('espai.usuaris.index')
-            ->with('ok', 'Rol eliminat correctament.');
+            ->with('ok', __('messages.role_deleted'));
     }
 }

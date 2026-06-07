@@ -25,7 +25,7 @@ class IncidenciaController extends Controller
         }
 
         abort_if($aulaEspaiId !== $espaiId, 403);
-        abort_if((int) $aulaHorari->usuari_espai_id !== $usuariEspaiId, 403, 'Aquesta hora no és teva.');
+        abort_if((int) $aulaHorari->usuari_espai_id !== $usuariEspaiId, 403, __('messages.hour_not_yours'));
 
         return [$espaiId, $usuariEspaiId];
     }
@@ -56,7 +56,7 @@ class IncidenciaController extends Controller
 
         if (!$aulaHorari->grup) {
             return redirect()->route('espai.guardies.index')
-                ->with('error_modal', 'Aquesta hora no té cap grup assignat.');
+                ->with('error_modal', __('messages.hour_no_group'));
         }
 
         $alumnes = $aulaHorari->grup->alumnes()->orderBy('cognoms')->orderBy('nom')->get();
@@ -105,7 +105,7 @@ class IncidenciaController extends Controller
                 ->where('alumnes.id', $payload['alumne_id'])
                 ->exists();
         }
-        abort_unless($perteany, 422, 'L\'alumne no pertany al grup d\'aquesta hora.');
+        abort_unless($perteany, 422, __('messages.student_not_in_group'));
 
         $data = Carbon::today()->toDateString();
         if (isset($payload['data'])) {
@@ -128,7 +128,7 @@ class IncidenciaController extends Controller
 
         return redirect()
             ->route('espai.incidencies.index', ['aulaHorari' => $aulaHorari->id, 'data' => $data])
-            ->with('ok', 'Incidència afegida.');
+            ->with('ok', __('messages.incident_added'));
     }
 
     public function destroy(Request $request, Incidencia $incidencia)
@@ -138,7 +138,7 @@ class IncidenciaController extends Controller
         abort_unless($espaiId && $usuariEspaiId, 403);
 
         abort_if((int) $incidencia->espai_id !== $espaiId, 403);
-        abort_if((int) $incidencia->usuari_espai_id !== $usuariEspaiId, 403, 'No pots eliminar incidències d\'altres professors.');
+        abort_if((int) $incidencia->usuari_espai_id !== $usuariEspaiId, 403, __('messages.incident_not_yours'));
 
         $aulaHorariId = $incidencia->aula_horari_id;
         $data = $incidencia->data->toDateString();
@@ -147,7 +147,7 @@ class IncidenciaController extends Controller
 
         return redirect()
             ->route('espai.incidencies.index', ['aulaHorari' => $aulaHorariId, 'data' => $data])
-            ->with('ok', 'Incidència eliminada.');
+            ->with('ok', __('messages.incident_deleted'));
     }
 
     public function saveBulk(Request $request, AulaHorario $aulaHorari)
@@ -156,7 +156,7 @@ class IncidenciaController extends Controller
 
         if (!$aulaHorari->grup) {
             return redirect()->route('espai.guardies.index')
-                ->with('error_modal', 'Aquesta hora no té cap grup assignat.');
+                ->with('error_modal', __('messages.hour_no_group'));
         }
 
         $payload = $request->validate([
@@ -234,7 +234,7 @@ class IncidenciaController extends Controller
 
         return redirect()
             ->route('espai.incidencies.index', ['aulaHorari' => $aulaHorari->id, 'data' => $data])
-            ->with('ok', 'Llista guardada correctament.');
+            ->with('ok', __('messages.list_saved'));
     }
 
     public function pdf(Request $request, AulaHorario $aulaHorari)
@@ -243,7 +243,7 @@ class IncidenciaController extends Controller
 
         if (!$aulaHorari->grup) {
             return redirect()->route('espai.guardies.index')
-                ->with('error_modal', 'Aquesta hora no té cap grup assignat.');
+                ->with('error_modal', __('messages.hour_no_group'));
         }
 
         $from = Carbon::today()->startOfWeek();
@@ -274,7 +274,7 @@ class IncidenciaController extends Controller
             'tipusLabels' => Incidencia::TIPUS_LABELS,
         ])->setPaper('a4', 'portrait');
 
-        $nomGrup = 'grup';
+        $nomGrup = __('messages.group_lower');
         if ($aulaHorari->grup->nom) $nomGrup = $aulaHorari->grup->nom;
 
         $nomFile = 'llista-' . $nomGrup . '-' . $from->format('Y-m-d') . '_' . $to->format('Y-m-d') . '.pdf';

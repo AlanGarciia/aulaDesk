@@ -50,7 +50,7 @@ class NotificacioController extends Controller
                     'missatge' => $n->missatge,
                     'url' => $n->url,
                     'llegida' => $n->llegida_el !== null,
-                    'creat' => optional($n->created_at)->diffForHumans(),
+                    'creat' => optional($n->created_at)->locale(app()->getLocale())->diffForHumans(),
                     'icona' => $this->iconaPerTipus((string) $n->tipus),
                 ];
             });

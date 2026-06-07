@@ -18,7 +18,7 @@ class AulaTicketController extends Controller
     {
 
         $espaiId = session('espai_id');
-        if (!$espaiId) abort(403, 'No hi ha cap espai actiu a la sessió.');
+        if (!$espaiId) abort(403, __('messages.no_active_space'));
         if ((int)$aula->espai_id !== (int)$espaiId) abort(403);
 
         $data = $request->validate([
@@ -28,7 +28,7 @@ class AulaTicketController extends Controller
         ]);
 
         $usuariEspaiId = session('usuari_espai_id');
-        if (!$usuariEspaiId) abort(403, 'No hi ha usuari d’espai a la sessió.');
+        if (!$usuariEspaiId) abort(403, __('messages.no_space_user'));
 
         Ticket::create([
             'espai_id' => $espaiId,
@@ -41,13 +41,13 @@ class AulaTicketController extends Controller
             'tancat_at' => null,
         ]);
 
-        return back()->with('ok', 'Ticket creat.');
+        return back()->with('ok', __('messages.ticket_created'));
     }
 
     public function update(Request $request, Aula $aula, Ticket $ticket)
     {
         $espaiId = session('espai_id');
-        if (!$espaiId) abort(403, 'No hi ha cap espai actiu a la sessió.');
+        if (!$espaiId) abort(403, __('messages.no_active_space'));
 
         if ((int)$aula->espai_id !== (int)$espaiId) abort(403);
         if ((int)$ticket->espai_id !== (int)$espaiId) abort(403);
@@ -79,13 +79,13 @@ class AulaTicketController extends Controller
 
         $ticket->save();
 
-        return back()->with('ok', 'Ticket actualitzat.');
+        return back()->with('ok', __('messages.ticket_updated'));
     }
 
     public function destroy(Request $request, Aula $aula, Ticket $ticket)
     {
         $espaiId = session('espai_id');
-        if (!$espaiId) abort(403, 'No hi ha cap espai actiu a la sessió.');
+        if (!$espaiId) abort(403, __('messages.no_active_space'));
 
         if ((int)$aula->espai_id !== (int)$espaiId) abort(403);
         if ((int)$ticket->espai_id !== (int)$espaiId) abort(403);
@@ -93,7 +93,7 @@ class AulaTicketController extends Controller
 
         $ticket->delete();
 
-        return back()->with('ok', 'Ticket eliminat.');
+        return back()->with('ok', __('messages.ticket_deleted'));
     }
 
     public function showAula(Aula $aula)

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumne;
 use App\Models\Espai;
-use App\Models\Grup;
 use Illuminate\Http\Request;
 
 class AlumneController extends Controller
@@ -15,7 +14,7 @@ class AlumneController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         return Espai::findOrFail($espaiId);
@@ -78,7 +77,7 @@ class AlumneController extends Controller
 
         if ($jaExisteix) {
             return back()
-                ->withErrors(['idalu' => 'Aquest IDALU ja existeix dins d’aquest espai.'])
+                ->withErrors(['idalu' => __('messages.idalu_exists')])
                 ->withInput();
         }
 
@@ -86,7 +85,7 @@ class AlumneController extends Controller
 
         return redirect()
             ->route('espai.alumnes.index')
-            ->with('ok', 'Alumne creat correctament.');
+            ->with('ok', __('messages.student_created'));
     }
 
     public function destroy(Request $request, Alumne $alumne)
@@ -101,7 +100,7 @@ class AlumneController extends Controller
 
         return redirect()
             ->route('espai.alumnes.index')
-            ->with('ok', 'Alumne eliminat correctament.');
+            ->with('ok', __('messages.student_deleted'));
     }
 
     public function edit(Request $request, Alumne $alumne)
@@ -141,7 +140,7 @@ class AlumneController extends Controller
 
         if ($idaluRepetit) {
             return back()
-                ->withErrors(['idalu' => 'Aquest IDALU ja existeix dins d’aquest espai.'])
+                ->withErrors(['idalu' => __('messages.idalu_exists')])
                 ->withInput();
         }
 
@@ -149,7 +148,7 @@ class AlumneController extends Controller
 
         return redirect()
             ->route('espai.alumnes.index')
-            ->with('ok', 'Alumne actualitzat correctament.');
+            ->with('ok', __('messages.student_updated'));
     }
 
    //CSV
@@ -165,7 +164,7 @@ class AlumneController extends Controller
 
      if (auth()->user()->plan !== 'premium') {
 
-        abort(403, 'Funció Premium');
+        abort(403, __('messages.premium_feature'));
     }
         $espai = $this->getEspai($request);
 
@@ -182,7 +181,6 @@ class AlumneController extends Controller
             $normalized[] = strtolower(trim($h));
         }
 
-        // Mapa de noms acceptats per cada camp
         $map = [
             'nom'      => ['nom', 'nombre', 'name', 'first name'],
             'cognoms'  => ['cognoms', 'apellidos', 'surname', 'last name'],
@@ -192,7 +190,6 @@ class AlumneController extends Controller
             'grup'     => ['grup', 'grupo', 'group', 'class'],
         ];
 
-        // Per cada camp busquem en quina columna del CSV està
         $index = [];
         foreach ($map as $campo => $posibles) {
             foreach ($posibles as $nombre) {
@@ -206,7 +203,6 @@ class AlumneController extends Controller
 
         while ($row = fgetcsv($file)) {
 
-            // Llegim cada camp comprovant si la columna existeix
             $nom = '';
             if (isset($index['nom']) && isset($row[$index['nom']])) {
                 $nom = $row[$index['nom']];
@@ -240,7 +236,6 @@ class AlumneController extends Controller
                 'telefon'  => $telefon,
             ]);
 
-            // Si hi ha grup, l'assignem (creant-lo si no existeix)
             $grupNom = null;
             if (isset($index['grup']) && isset($row[$index['grup']])) {
                 $grupNom = $row[$index['grup']];
@@ -258,14 +253,14 @@ class AlumneController extends Controller
         fclose($file);
 
         return redirect()->route('espai.alumnes.index')
-            ->with('ok', 'Alumnes importats correctament.');
+            ->with('ok', __('messages.students_imported'));
     }
 
     public function export(Request $request)
     {
         if (auth()->user()->plan !== 'premium') {
 
-        abort(403, 'Funció Premium');
+        abort(403, __('messages.premium_feature'));
     }
         $espai = $this->getEspai($request);
 
@@ -281,12 +276,10 @@ class AlumneController extends Controller
         $callback = function () use ($alumnes) {
             $output = fopen('php://output', 'w');
 
-            // Capçalera
             fputcsv($output, ['nom', 'cognoms', 'correu', 'idalu', 'telefon', 'grups']);
 
             foreach ($alumnes as $alumne) {
 
-                // Llista de noms de grups separats per coma
                 $nomsGrups = [];
                 foreach ($alumne->grups as $g) {
                     $nomsGrups[] = $g->nom;

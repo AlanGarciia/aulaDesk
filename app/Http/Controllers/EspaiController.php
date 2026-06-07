@@ -29,7 +29,6 @@ class EspaiController extends Controller
             ->orWhereIn('id', $idsCompartits)
             ->get()
             ->sortBy(function ($espai) use ($ordres) {
-                // Si tiene orden guardado, usa ese número; si no, lo manda al final
                 return $ordres[$espai->id] ?? PHP_INT_MAX;
             })
             ->values();
@@ -137,7 +136,7 @@ class EspaiController extends Controller
 
         return redirect()
             ->route('espais.index')
-            ->with('status', 'Espai actualitzat correctament.');
+            ->with('status', __('messages.space_updated'));
     }
 
     public function destroy(Request $request, Espai $espai)
@@ -171,7 +170,7 @@ class EspaiController extends Controller
 
         if (!$usuari || !Hash::check($data['contrasenya'], $usuari->contrasenya)) {
             return back()
-                ->withErrors(['nom' => 'Nom o contrasenya incorrectes.'])
+                ->withErrors(['nom' => __('messages.wrong_credentials')])
                 ->withInput();
         }
 
@@ -200,7 +199,7 @@ class EspaiController extends Controller
 
         if (!$usuari || !Hash::check($data['contrasenya'], $usuari->contrasenya)) {
             return back()
-                ->withErrors(['nom' => 'Nom o contrasenya incorrectes.'])
+                ->withErrors(['nom' => __('messages.wrong_credentials')])
                 ->withInput();
         }
 
@@ -225,7 +224,6 @@ class EspaiController extends Controller
             'ordre.*' => ['integer'],
         ]);
 
-        // IDs de espacios a los que el usuario tiene acceso (propios + compartidos)
         $idsCompartits = UsuariExternEspai::where('user_id', $userId)
             ->pluck('espai_id')
             ->toArray();
@@ -236,7 +234,6 @@ class EspaiController extends Controller
             ->toArray();
 
         foreach ($data['ordre'] as $posicio => $espaiId) {
-            // Solo guarda si el espacio es accesible por este usuario (seguridad)
             if (!in_array((int) $espaiId, $idsPermesos, true)) {
                 continue;
             }
