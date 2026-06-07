@@ -1,0 +1,97 @@
+/* resources/css/espai/noticies/noticiesShow.css */
+
+.page .container{
+    max-width: 1100px;
+}
+
+.show-body{
+    padding: 20px 22px 8px;
+}
+
+/* Disposición base */
+.show-layout{
+    display: grid;
+    gap: 22px;
+    align-items: start;
+}
+
+/* TÍTULO + TEXTO */
+.show-title{
+    font-family: var(--serif, Georgia, serif);
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0 0 12px;
+    line-height: 1.2;
+    color: var(--ink, #1a1a1a);
+}
+.show-content{
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+.show-content:first-letter{
+    float: none !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    padding: 0 !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+}
+
+/* IMAGEN */
+.show-media img{
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid var(--line, #d9d4ca);
+}
+
+/* ===== MODOS ===== */
+
+/* Foto arriba, texto abajo */
+.show-layout--top{
+    grid-template-columns: 1fr;
+}
+.show-layout--top .show-media{ order: 1; }
+.show-layout--top .show-text{ order: 2; }
+
+/* Foto abajo, texto arriba */
+.show-layout--bottom{
+    grid-template-columns: 1fr;
+}
+.show-layout--bottom .show-media{ order: 2; }
+.show-layout--bottom .show-text{ order: 1; }
+
+/* Foto izquierda, texto derecha */
+.show-layout--left{
+    grid-template-columns: 420px 1fr;
+}
+.show-layout--left .show-media{ order: 1; }
+.show-layout--left .show-text{ order: 2; }
+
+/* Foto derecha, texto izquierda */
+.show-layout--right{
+    grid-template-columns: 1fr 420px;
+}
+.show-layout--right .show-media{ order: 2; }
+.show-layout--right .show-text{ order: 1; }
+
+/* Solo texto */
+.show-layout--text{
+    grid-template-columns: 1fr;
+}
+.show-layout--text .show-media{ display: none; }
+
+/* Responsive: izquierda/derecha pasan a columna */
+@media (max-width: 820px){
+    .show-layout--left,
+    .show-layout--right{
+        grid-template-columns: 1fr;
+    }
+    .show-layout--left .show-media,
+    .show-layout--right .show-media{ order: 1; }
+    .show-layout--left .show-text,
+    .show-layout--right .show-text{ order: 2; }
+}

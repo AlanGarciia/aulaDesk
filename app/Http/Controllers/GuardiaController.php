@@ -15,6 +15,30 @@ use Illuminate\Support\Carbon;
 
 class GuardiaController extends Controller
 {
+    /** Días completos traducidos */
+    private function diesLabels(): array
+    {
+        return [
+            1 => __('messages.day_monday'),
+            2 => __('messages.day_tuesday'),
+            3 => __('messages.day_wednesday'),
+            4 => __('messages.day_thursday'),
+            5 => __('messages.day_friday'),
+        ];
+    }
+
+    /** Días abreviados traducidos */
+    private function diesAbbr(): array
+    {
+        return [
+            1 => __('messages.abbr_monday'),
+            2 => __('messages.abbr_tuesday'),
+            3 => __('messages.abbr_wednesday'),
+            4 => __('messages.abbr_thursday'),
+            5 => __('messages.abbr_friday'),
+        ];
+    }
+
     public function index(Request $request)
     {
         $espaiId = (int) session('espai_id');
@@ -30,7 +54,7 @@ class GuardiaController extends Controller
             ->orderBy('ordre')->orderBy('inici')->get();
 
         $dies = [1, 2, 3, 4, 5];
-        $diesLabels = [1 => 'Dl', 2 => 'Dt', 3 => 'Dc', 4 => 'Dj', 5 => 'Dv'];
+        $diesLabels = $this->diesAbbr();
 
         $horaris = AulaHorario::where('usuari_espai_id', $usuariEspaiId)
             ->whereIn('dia_setmana', $dies)
@@ -47,7 +71,7 @@ class GuardiaController extends Controller
 
             if (isset($slots[$dia][$franjaId])) continue;
 
-            $aulaNom = 'Aula';
+            $aulaNom = __('messages.classroom');
             $aulaId = null;
 
             if ($h->aula && $h->aula->nom) $aulaNom = (string) $h->aula->nom;
@@ -89,7 +113,7 @@ class GuardiaController extends Controller
     public function solicitaGuardia(Request $request)
     {
         if (auth()->user()->plan === 'free') {
-            return back()->with('error_modal', 'Les guàrdies són una funció Premium.');
+            return back()->with('error_modal', __('messages.guardia_premium'));
         }
 
         $espaiId = (int) session('espai_id');
@@ -101,19 +125,19 @@ class GuardiaController extends Controller
         $dia = (int) $request->query('dia');
         $franjaId = (int) $request->query('franja');
 
-        abort_if($dia < 1 || $dia > 5, 422, 'Dia invàlid.');
-        abort_if($franjaId <= 0, 422, 'Franja invàlida.');
+        abort_if($dia < 1 || $dia > 5, 422, __('messages.invalid_day'));
+        abort_if($franjaId <= 0, 422, __('messages.invalid_slot'));
 
         $usuariEspai = UsuariEspai::findOrFail($usuariEspaiId);
         $espai = Espai::findOrFail($espaiId);
 
-        $diesLabels = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
+        $diesLabels = $this->diesLabels();
         $diaLabel = $diesLabels[$dia] ?? '';
 
         $franja = FranjaHoraria::where('espai_id', $espaiId)
             ->where('id', $franjaId)
             ->first();
-        abort_unless($franja, 404, 'Franja no trobada.');
+        abort_unless($franja, 404, __('messages.slot_not_found'));
 
         $inici = substr((string) $franja->inici, 0, 5);
         $fi = substr((string) $franja->fi, 0, 5);
@@ -128,9 +152,9 @@ class GuardiaController extends Controller
             ->where('franja_horaria_id', $franjaId)
             ->with('aula')
             ->first();
-        abort_unless($horari, 422, 'No tens cap aula assignada en aquesta franja.');
+        abort_unless($horari, 422, __('messages.no_classroom_in_slot'));
 
-        $aulaNom = 'Aula';
+        $aulaNom = __('messages.classroom');
         $aulaId = null;
         if ($horari->aula && $horari->aula->nom) $aulaNom = $horari->aula->nom;
         if ($horari->aula && $horari->aula->id) $aulaId = (int) $horari->aula->id;
@@ -153,7 +177,7 @@ class GuardiaController extends Controller
     {
         // FREE BLOCK
         if (auth()->user()->plan === 'free') {
-            return back()->with('error_modal', 'Les guàrdies són una funció Premium.');
+            return back()->with('error_modal', __('messages.guardia_premium'));
         }
 
         $espaiId = (int) session('espai_id');
@@ -173,7 +197,7 @@ class GuardiaController extends Controller
         $franjaId = (int) $data['franja_id'];
 
         $franja = FranjaHoraria::where('espai_id', $espaiId)->where('id', $franjaId)->first();
-        abort_unless($franja, 404, 'Franja no trobada.');
+        abort_unless($franja, 404, __('messages.slot_not_found'));
 
         $inici = substr($franja->inici, 0, 5);
         $fi = substr($franja->fi, 0, 5);
@@ -185,7 +209,7 @@ class GuardiaController extends Controller
             ->where('dia_setmana', $dia)
             ->where('franja_horaria_id', $franjaId)
             ->first();
-        abort_unless($horari, 422, 'No tens cap aula assignada en aquesta franja.');
+        abort_unless($horari, 422, __('messages.no_classroom_in_slot'));
 
         $aulaId = null;
         if ($horari->aula_id) $aulaId = (int) $horari->aula_id;
@@ -218,18 +242,18 @@ class GuardiaController extends Controller
                 'estat' => 'pendent',
             ]);
 
-            $dies = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
-            $diaTxt = $dies[$dia] ?? ('Dia ' . $dia);
+            $dies = $this->diesLabels();
+            $diaTxt = $dies[$dia] ?? (__('messages.day') . ' ' . $dia);
 
-            $titol = 'Guàrdia pendent (' . $diaTxt . ')';
+            $titol = __('messages.guardia_pending_title', ['day' => $diaTxt]);
 
-            $cont = "S'ha solicitat una guàrdia.\n";
-            $cont .= "(Dia: " . $diaTxt . ") ";
-            $cont .= "(Franja: " . $franjaNom . ") ";
-            $cont .= "(Aula: " . $aulaNom . ") ";
-            if ($tipus) $cont .= "Tipus: " . $tipus . "\n";
-            if ($comentari) $cont .= "Comentari: " . $comentari . "\n";
-            $cont .= "\nUn altre professor pot acceptar-la des del tauló de notícies.";
+            $cont = __('messages.guardia_requested') . "\n";
+            $cont .= "(" . __('messages.day') . ": " . $diaTxt . ") ";
+            $cont .= "(" . __('messages.time_slot') . ": " . $franjaNom . ") ";
+            $cont .= "(" . __('messages.classroom') . ": " . $aulaNom . ") ";
+            if ($tipus) $cont .= __('messages.type') . ": " . $tipus . "\n";
+            if ($comentari) $cont .= __('messages.comment') . ": " . $comentari . "\n";
+            $cont .= "\n" . __('messages.guardia_can_accept');
 
             $noticia = Noticia::create([
                 'espai_id' => $espaiId,
@@ -245,14 +269,14 @@ class GuardiaController extends Controller
             $sol->save();
 
             $solicitant = UsuariEspai::find($usuariEspaiId);
-            $solicitantNom = ($solicitant && $solicitant->nom) ? $solicitant->nom : 'Un professor';
+            $solicitantNom = ($solicitant && $solicitant->nom) ? $solicitant->nom : __('messages.a_professor');
 
             Notificacio::notifyEspai(
                 (int) $espaiId,
                 'guardia_solicitada',
                 [
-                    'titol' => $solicitantNom . ' ha demanat una guàrdia (' . $diaTxt . ')',
-                    'missatge' => 'Aula ' . $aulaNom . ' · ' . $franjaNom,
+                    'titol' => __('messages.guardia_requested_notif', ['name' => $solicitantNom, 'day' => $diaTxt]),
+                    'missatge' => __('messages.classroom') . ' ' . $aulaNom . ' · ' . $franjaNom,
                     'url' => route('espai.noticies.index', ['tipus' => 'guardia']),
                     'related_type' => GuardiaSolicitud::class,
                     'related_id' => (int) $sol->id,
@@ -263,7 +287,7 @@ class GuardiaController extends Controller
         });
 
         return redirect()->route('espai.guardies.index')
-            ->with('ok', 'Sol·licitud de guàrdia enviada i publicada al tauló.');
+            ->with('ok', __('messages.guardia_sent'));
     }
 
     public function acceptar(Request $request, GuardiaSolicitud $solicitud)
@@ -272,7 +296,7 @@ class GuardiaController extends Controller
         if (auth()->user()->plan === 'free') {
             return redirect()
                 ->route('espai.guardies.index')
-                ->with('error_modal', 'Les guàrdies són una funció Premium.');
+                ->with('error_modal', __('messages.guardia_premium'));
         }
 
         $espaiId = (int) session('espai_id');
@@ -282,7 +306,7 @@ class GuardiaController extends Controller
         abort_unless($usuariEspaiId, 403);
 
         abort_if((int) $solicitud->espai_id !== $espaiId, 403);
-        abort_if((int) $solicitud->solicitant_usuari_espai_id === $usuariEspaiId, 422, 'No pots acceptar la teva pròpia guàrdia.');
+        abort_if((int) $solicitud->solicitant_usuari_espai_id === $usuariEspaiId, 422, __('messages.guardia_own'));
 
         $result = DB::transaction(function () use ($solicitud, $usuariEspaiId, $espaiId) {
 
@@ -290,7 +314,7 @@ class GuardiaController extends Controller
                 ->lockForUpdate()->firstOrFail();
 
             if ((string) $sol->estat !== 'pendent') {
-                return ['ok' => false, 'msg' => 'Aquesta guàrdia ja ha estat gestionada.'];
+                return ['ok' => false, 'msg' => __('messages.guardia_already_managed')];
             }
 
             $dia = (int) $sol->dia_setmana;
@@ -308,7 +332,7 @@ class GuardiaController extends Controller
             if ($ocupat) {
                 return [
                     'ok' => false,
-                    'msg' => 'Ja tens una aula assignada en aquesta franja. No pots cobrir aquesta guàrdia.',
+                    'msg' => __('messages.guardia_busy'),
                 ];
             }
 
@@ -343,7 +367,7 @@ class GuardiaController extends Controller
 
             return [
                 'ok' => true,
-                'msg' => 'Has acceptat la guàrdia i s’ha actualitzat l’horari.',
+                'msg' => __('messages.guardia_accepted'),
                 'sol' => $sol,
             ];
         });
@@ -353,20 +377,20 @@ class GuardiaController extends Controller
             $sol = $result['sol'];
 
             $cobridor = UsuariEspai::find($usuariEspaiId);
-            $cobridorNom = ($cobridor && $cobridor->nom) ? $cobridor->nom : 'Un professor';
+            $cobridorNom = ($cobridor && $cobridor->nom) ? $cobridor->nom : __('messages.a_professor');
 
             $solicitant = UsuariEspai::find((int) $sol->solicitant_usuari_espai_id);
-            $solicitantNom = ($solicitant && $solicitant->nom) ? $solicitant->nom : 'el professor';
+            $solicitantNom = ($solicitant && $solicitant->nom) ? $solicitant->nom : __('messages.the_professor');
 
-            $diesLabels = [1=>'Dilluns', 2=>'Dimarts', 3=>'Dimecres', 4=>'Dijous', 5=>'Divendres'];
-            $diaTxt = $diesLabels[(int) $sol->dia_setmana] ?? ('Dia ' . (int) $sol->dia_setmana);
+            $diesLabels = $this->diesLabels();
+            $diaTxt = $diesLabels[(int) $sol->dia_setmana] ?? (__('messages.day') . ' ' . (int) $sol->dia_setmana);
 
             Notificacio::notifyEspai(
                 (int) $espaiId,
                 'guardia_acceptada',
                 [
-                    'titol' => $cobridorNom . ' cobrirà la guàrdia de ' . $solicitantNom,
-                    'missatge' => $diaTxt . ' · suplència acceptada',
+                    'titol' => __('messages.guardia_will_cover', ['cover' => $cobridorNom, 'requester' => $solicitantNom]),
+                    'missatge' => $diaTxt . ' · ' . __('messages.guardia_substitution_accepted'),
                     'url' => route('espai.noticies.index', ['tipus' => 'guardia']),
                     'related_type' => GuardiaSolicitud::class,
                     'related_id' => (int) $sol->id,
@@ -381,7 +405,7 @@ class GuardiaController extends Controller
                 ->with('ok', $result['msg']);
         }
 
-        $msg = 'No s\'ha pogut acceptar la guàrdia.';
+        $msg = __('messages.guardia_accept_failed');
         if (isset($result['msg'])) $msg = $result['msg'];
 
         return redirect()->route('espai.noticies.index', ['tipus' => 'guardia'])

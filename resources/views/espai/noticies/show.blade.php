@@ -1,25 +1,33 @@
 <x-app-layout>
-    @vite(['resources/css/espai/noticies/noticiesIndex.css'])
-
-    <x-slot name="header">
-        <div class="page-header">
-            <div class="page-header__text">
-                <h2 class="page-title">{{ __('messages.news_single') }}</h2>
-            </div>
-
-            <div class="page-header__actions">
-                <a class="btn btn-secondary" href="{{ route('espai.noticies.index') }}">
-                    {{ __('messages.back_to_board') }}
-                </a>
-                <a class="btn btn-secondary" href="{{ route('espai.index') }}">
-                    {{ __('messages.back_to_space') }}
-                </a>
-            </div>
-        </div>
-    </x-slot>
+    @vite([
+        'resources/css/espai/noticies/noticiesIndex.css',
+        'resources/css/espai/noticies/noticiesShow.css',
+    ])
 
     <div class="page">
         <div class="container">
+            <div class="page-header" style="margin-bottom:24px;">
+                <div class="page-header__text">
+                    <h2 class="page-title">{{ __('messages.news_single') }}</h2>
+                </div>
+
+                <div class="page-header__actions">
+                    <a class="btn btn-secondary" href="{{ route('espai.noticies.index') }}">
+                        <i class="bi bi-arrow-left"></i> {{ __('messages.back_to_board') }}
+                    </a>
+                    <a class="btn btn-secondary" href="{{ route('espai.index') }}">
+                        <i class="bi bi-box-arrow-left"></i> {{ __('messages.back_to_space') }}
+                    </a>
+                </div>
+            </div>
+
+            @php
+                $layout = $noticia->layout ?? 'top';
+                $hasImg = !empty($noticia->imatge_path);
+                // si no hay imagen, forzamos modo solo texto
+                if (!$hasImg) $layout = 'text';
+            @endphp
+
             <article class="post">
                 <header class="post__header">
                     <div class="post__meta">
@@ -34,52 +42,15 @@
 
                         @if(!empty($noticia->usuari_espai_id))
                             <span class="dot">•</span>
-                            <span>{{ __('messages.author') }}: <strong>{{ $noticia->usuari_espai_id }}</strong></span>
+                            <span>{{ __('messages.author') }}: <strong>{{ $noticia->autor->nom ?? $noticia->usuari_espai_id }}</strong></span>
                         @endif
                     </div>
                 </header>
 
-                <style>
-                    /* ✅ només per aquesta vista */
-                    .show-grid{
-                        display: grid;
-                        grid-template-columns: 340px 1fr;
-                        gap: 18px;
-                        align-items: start;
-                    }
+                <div class="show-body">
+                    <div class="show-layout show-layout--{{ $layout }}">
 
-                    @media (max-width: 900px){
-                        .show-grid{
-                            grid-template-columns: 1fr;
-                        }
-                    }
-
-                    .show-media img{
-                        width: 100%;
-                        display: block;
-                        border: 2px solid #000;
-                    }
-
-                    /* ✅ lectura bona i respecta salts de línia */
-                    .show-content{
-                        white-space: pre-wrap;
-                        word-break: break-word;
-                        overflow-wrap: anywhere;
-                    }
-
-                    /* ✅ desactiva el dropcap del teu CSS només en show */
-                    .show-content:first-letter{
-                        float: none !important;
-                        font-size: inherit !important;
-                        line-height: inherit !important;
-                        padding: 0 !important;
-                        font-weight: inherit !important;
-                    }
-                </style>
-
-                <div style="padding:16px 18px;">
-                    <div class="show-grid">
-                        @if($noticia->imatge_path)
+                        @if($hasImg)
                             <div class="show-media">
                                 <img
                                     src="{{ asset('storage/'.$noticia->imatge_path) }}"
@@ -89,19 +60,16 @@
                             </div>
                         @endif
 
-                        <div>
-                            <h3 class="post__title" style="margin:0 0 10px 0;">
-                                {{ $noticia->titol }}
-                            </h3>
+                        <div class="show-text">
+                            <h3 class="show-title">{{ $noticia->titol }}</h3>
 
-                            <div class="post__content" style="padding:0;">
-                                @if($noticia->contingut)
-                                    <div class="show-content">{{ $noticia->contingut }}</div>
-                                @else
-                                    <div style="color:var(--muted);">{{ __('messages.no_content') }}</div>
-                                @endif
-                            </div>
+                            @if($noticia->contingut)
+                                <div class="show-content">{{ $noticia->contingut }}</div>
+                            @else
+                                <div style="color:var(--muted);">{{ __('messages.no_content') }}</div>
+                            @endif
                         </div>
+
                     </div>
                 </div>
 

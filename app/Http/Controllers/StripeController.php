@@ -86,7 +86,7 @@ class StripeController extends Controller
 
             ->with(
                 'error',
-                'Pagament cancel·lat'
+                __('messages.payment_cancelled')
             );
     }
 
@@ -128,7 +128,7 @@ class StripeController extends Controller
 
         return back()->with(
             'success',
-            'Subscripció cancel·lada'
+            __('messages.subscription_cancelled')
         );
     }
 }

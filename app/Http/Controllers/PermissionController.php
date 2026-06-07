@@ -84,7 +84,7 @@ class PermissionController extends Controller
         ]);
 
         return redirect()->route('espai.permissions.index')
-            ->with('status', 'Permís creat correctament.');
+            ->with('status', __('messages.permission_created'));
     }
 
     public function edit(Request $request, BasePermission $permission)
@@ -109,7 +109,7 @@ class PermissionController extends Controller
         $permission->update($data);
 
         return redirect()->route('espai.permissions.index')
-            ->with('status', 'Permís actualitzat correctament.');
+            ->with('status', __('messages.permission_updated'));
     }
 
     public function destroy(Request $request, BasePermission $permission)
@@ -120,6 +120,6 @@ class PermissionController extends Controller
 
         $permission->delete();
 
-        return back()->with('status', 'Permís eliminat.');
+        return back()->with('status', __('messages.permission_deleted'));
     }
 }

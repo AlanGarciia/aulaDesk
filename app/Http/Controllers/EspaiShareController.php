@@ -23,11 +23,11 @@ class EspaiShareController extends Controller
         $usuari = User::where('email', $request->email)->first();
 
         if (!$usuari) {
-            return back()->with('status', 'No existeix cap usuari amb aquest email.');
+            return back()->with('status', __('messages.share_no_user'));
         }
 
         if ((int) $usuari->id === (int) $espai->user_id) {
-            return back()->with('status', 'Aquest espai ja és teu.');
+            return back()->with('status', __('messages.share_already_yours'));
         }
 
         $ja = UsuariExternEspai::where('espai_id', $espai->id)
@@ -35,7 +35,7 @@ class EspaiShareController extends Controller
             ->exists();
 
         if ($ja) {
-            return back()->with('status', 'Aquest usuari ja té accés a l’espai.');
+            return back()->with('status', __('messages.share_already_has_access'));
         }
 
         UsuariExternEspai::create([
@@ -43,6 +43,6 @@ class EspaiShareController extends Controller
             'user_id' => $usuari->id,
         ]);
 
-        return back()->with('status', 'Espai compartit correctament.');
+        return back()->with('status', __('messages.share_success'));
     }
 }

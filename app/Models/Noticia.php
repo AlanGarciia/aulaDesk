@@ -17,6 +17,7 @@ class Noticia extends Model
         'contingut',
         'tipus',
         'imatge_path',
+        'layout',
         'publicat_el',
     ];
 

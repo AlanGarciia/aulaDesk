@@ -28,7 +28,7 @@ class AulaController extends Controller
     {
         $espaiId = $this->currentEspaiId();
         if (!$espaiId) {
-            abort(403, 'No hay espai actual seleccionado.');
+            abort(403, __('messages.no_space_selected'));
         }
 
         $query = Aula::where('espai_id', $espaiId);
@@ -56,45 +56,45 @@ class AulaController extends Controller
     public function create()
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
 
         return view('espai.aules.create');
     }
 
     public function store(Request $request)
-{
-    $espaiId = $this->currentEspaiId();
-    if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+    {
+        $espaiId = $this->currentEspaiId();
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
 
-    if (
-        auth()->user()->plan === 'free'
-        && Aula::where('espai_id', $espaiId)->count() >= 10
-    ) {
+        if (
+            auth()->user()->plan === 'free'
+            && Aula::where('espai_id', $espaiId)->count() >= 10
+        ) {
+            return redirect()
+                ->route('espai.aules.index')
+                ->with('showLimitModal', true);
+        }
+
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'codi' => ['nullable', 'string', 'max:50'],
+            'capacitat' => ['nullable', 'integer', 'min:0'],
+            'planta' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $data['espai_id'] = $espaiId;
+
+        Aula::create($data);
+
         return redirect()
             ->route('espai.aules.index')
-            ->with('showLimitModal', true);
+            ->with('ok', __('messages.classroom_created'));
     }
-
-    $data = $request->validate([
-        'nom' => ['required', 'string', 'max:255'],
-        'codi' => ['nullable', 'string', 'max:50'],
-        'capacitat' => ['nullable', 'integer', 'min:0'],
-        'planta' => ['nullable', 'string', 'max:50'],
-    ]);
-
-    $data['espai_id'] = $espaiId;
-
-    Aula::create($data);
-
-    return redirect()
-        ->route('espai.aules.index')
-        ->with('ok', 'Aula creada correctament.');
-}
 
     public function edit(Aula $aula)
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
         abort_if($aula->espai_id !== $espaiId, 403);
 
         return view('espai.aules.edit', compact('aula'));
@@ -104,7 +104,7 @@ class AulaController extends Controller
     public function update(Request $request, Aula $aula)
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
         abort_if($aula->espai_id !== $espaiId, 403);
 
         $data = $request->validate(
@@ -117,17 +117,17 @@ class AulaController extends Controller
         );
         $aula->update($data);
 
-        return redirect()->route('espai.aules.index')->with('ok', 'Aula actualizada.');
+        return redirect()->route('espai.aules.index')->with('ok', __('messages.classroom_updated'));
     }
 
     public function destroy(Aula $aula)
     {
         $espaiId = $this->currentEspaiId();
-        if (!$espaiId) abort(403, 'No hay espai actual seleccionado.');
+        if (!$espaiId) abort(403, __('messages.no_space_selected'));
         abort_if($aula->espai_id !== $espaiId, 403);
 
         $aula->delete();
 
-        return redirect()->route('espai.aules.index')->with('ok', 'Aula eliminada.');
+        return redirect()->route('espai.aules.index')->with('ok', __('messages.classroom_deleted'));
     }
 }

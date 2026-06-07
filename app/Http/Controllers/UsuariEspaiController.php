@@ -18,7 +18,7 @@ class UsuariEspaiController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         $espai = Espai::findOrFail($espaiId);
@@ -49,7 +49,7 @@ class UsuariEspaiController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         $espai = Espai::findOrFail($espaiId);
@@ -61,73 +61,73 @@ class UsuariEspaiController extends Controller
     }
 
     public function store(Request $request)
-{
-    $espaiId = $request->session()->get('espai_id');
+    {
+        $espaiId = $request->session()->get('espai_id');
 
-    if (!$espaiId) {
-        return redirect()->route('espais.index')
-            ->with('status', 'Selecciona un espai per continuar.');
+        if (!$espaiId) {
+            return redirect()->route('espais.index')
+                ->with('status', __('messages.select_space_first'));
+        }
+
+        $espai = Espai::findOrFail($espaiId);
+
+        // LIMIT PLAN FREE
+        if (
+            auth()->user()->plan === 'free'
+            &&
+            UsuariEspai::where('espai_id', $espai->id)->count() >= 3
+        ) {
+            return redirect()->route('espai.usuaris.index')->with('showPlanModal', true);
+        }
+
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'rol' => ['required', Rule::in(
+                BaseRole::where('espai_id', $espaiId)->pluck('nom')->toArray()
+            )],
+            'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
+        ]);
+
+        if ($espai->usuaris()->where('nom', $data['nom'])->exists()) {
+            return back()
+                ->withErrors(['nom' => __('messages.user_name_exists')])
+                ->withInput();
+        }
+
+        $usuari = $espai->usuaris()->create([
+            'nom' => $data['nom'],
+            'rol' => $data['rol'],
+            'contrasenya' => $data['contrasenya'],
+        ]);
+
+        $baseRole = BaseRole::where('espai_id', $espaiId)
+            ->where('nom', $data['rol'])
+            ->first();
+
+        if ($baseRole) {
+            $usuari->roles()->syncWithoutDetaching([$baseRole->id]);
+        }
+
+        $actorId = (int) $request->session()->get('usuari_espai_id');
+
+        Notificacio::notifyEspai(
+            (int) $espai->id,
+            'usuari_nou',
+            [
+                'titol' => __('messages.user_new_notif', ['name' => $usuari->nom]),
+                'missatge' => __('messages.role') . ': ' . $usuari->rol,
+                'url' => route('espai.usuaris.index'),
+                'related_type' => UsuariEspai::class,
+                'related_id' => (int) $usuari->id,
+            ],
+            $actorId ?: null,
+            true
+        );
+
+        return redirect()
+            ->route('espai.usuaris.index')
+            ->with('status', __('messages.user_created_ok'));
     }
-
-    $espai = Espai::findOrFail($espaiId);
-
-    // LIMIT PLAN FREE
-    if (
-        auth()->user()->plan === 'free'
-        &&
-        UsuariEspai::where('espai_id', $espai->id)->count() >= 3
-    ) {
-        return redirect()->route('espai.usuaris.index')->with('showPlanModal', true);
-    }
-
-    $data = $request->validate([
-        'nom' => ['required', 'string', 'max:255'],
-        'rol' => ['required', Rule::in(
-            BaseRole::where('espai_id', $espaiId)->pluck('nom')->toArray()
-        )],
-        'contrasenya' => ['required', 'string', 'min:6', 'max:255'],
-    ]);
-
-    if ($espai->usuaris()->where('nom', $data['nom'])->exists()) {
-        return back()
-            ->withErrors(['nom' => 'Aquest nom ja existeix dins d’aquest espai.'])
-            ->withInput();
-    }
-
-    $usuari = $espai->usuaris()->create([
-        'nom' => $data['nom'],
-        'rol' => $data['rol'],
-        'contrasenya' => $data['contrasenya'],
-    ]);
-
-    $baseRole = BaseRole::where('espai_id', $espaiId)
-        ->where('nom', $data['rol'])
-        ->first();
-
-    if ($baseRole) {
-        $usuari->roles()->syncWithoutDetaching([$baseRole->id]);
-    }
-
-    $actorId = (int) $request->session()->get('usuari_espai_id');
-
-    Notificacio::notifyEspai(
-        (int) $espai->id,
-        'usuari_nou',
-        [
-            'titol' => 'Nou usuari a l\'espai: ' . $usuari->nom,
-            'missatge' => 'Rol: ' . $usuari->rol,
-            'url' => route('espai.usuaris.index'),
-            'related_type' => UsuariEspai::class,
-            'related_id' => (int) $usuari->id,
-        ],
-        $actorId ?: null,
-        true
-    );
-
-    return redirect()
-        ->route('espai.usuaris.index')
-        ->with('status', 'Usuari creat correctament.');
-}
 
     public function edit(Request $request, UsuariEspai $usuariEspai)
     {
@@ -135,7 +135,7 @@ class UsuariEspaiController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
@@ -157,7 +157,7 @@ class UsuariEspaiController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
@@ -179,7 +179,7 @@ class UsuariEspaiController extends Controller
 
         if ($exists) {
             return back()
-                ->withErrors(['nom' => 'Aquest nom ja existeix dins d’aquest espai.'])
+                ->withErrors(['nom' => __('messages.user_name_exists')])
                 ->withInput();
         }
 
@@ -200,7 +200,7 @@ class UsuariEspaiController extends Controller
 
         return redirect()
             ->route('espai.usuaris.index')
-            ->with('status', 'Usuari actualitzat correctament.');
+            ->with('status', __('messages.user_updated_ok'));
     }
 
     public function destroy(Request $request, UsuariEspai $usuariEspai)
@@ -209,7 +209,7 @@ class UsuariEspaiController extends Controller
 
         if (!$espaiId) {
             return redirect()->route('espais.index')
-                ->with('status', 'Selecciona un espai per continuar.');
+                ->with('status', __('messages.select_space_first'));
         }
 
         if ((int) $usuariEspai->espai_id !== (int) $espaiId) {
@@ -222,7 +222,7 @@ class UsuariEspaiController extends Controller
 
         return redirect()
             ->route('espai.usuaris.index')
-            ->with('status', 'Usuari eliminat correctament.');
+            ->with('status', __('messages.user_deleted_ok'));
     }
 
     public function assignRolesForm(Request $request, UsuariEspai $usuariEspai)
@@ -253,6 +253,6 @@ class UsuariEspaiController extends Controller
 
         return redirect()
             ->route('espai.usuaris.index')
-            ->with('status', 'Rols actualitzats correctament.');
+            ->with('status', __('messages.roles_updated_ok'));
     }
 }
