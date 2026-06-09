@@ -618,4 +618,45 @@ return [
     'preview_title_ph'   => 'Títol de la notícia',
     'preview_content_ph' => 'Aquí apareixerà el contingut de la notícia...',
 
+    // Alumnes - camps i tutors
+    'student_data'     => 'Dades de l\'alumne',
+    'surname1'         => 'Primer cognom',
+    'surname2'         => 'Segon cognom',
+    'birth_date'       => 'Data de naixement',
+    'dni'              => 'DNI',
+    'family_tutors'    => 'Família / Tutors',
+    'tutor'            => 'Tutor',
+    'relationship'     => 'Parentiu',
+    'relationship_ph'  => 'Pare, mare, tutor legal...',
+    'add_tutor'        => 'Afegir un altre tutor',
+    'no_tutors'        => 'Aquest alumne no té tutors registrats.',
+    'format_updated'   => 'Format de nom actualitzat.',
+    'name_format'      => 'Format del nom',
+    'format_name_first'=> 'Nom Cognoms',
+    'format_surname_first' => 'Cognoms, Nom',
+
+    // Importació d'alumnes
+    'import_sub'             => 'Puja un fitxer CSV per afegir diversos alumnes de cop.',
+    'import_note'            => 'Columnes obligatòries: nom i idalu. La resta són opcionals. Es poden incloure fins a 2 tutors per alumne.',
+    'import_missing_columns' => 'El CSV no té les columnes obligatòries (nom i idalu). Revisa la capçalera.',
+    'import_result'          => 'Importació completada: :imported alumnes afegits, :ignored ignorats (duplicats o sense IDALU).',
+
+    'years_old'        => '(:age anys)',
+    'showing_total'    => 'Mostrant :total alumnes',
+    'showing_filtered' => 'Mostrant :shown de :total alumnes',
+    'download_template'=> 'Descarregar plantilla CSV',
+    'search_by_surname' => 'Cercar per cognoms',
+    'search_by_phone'   => 'Cercar per telèfon',
+    'all_groups'        => 'Tots els grups',
+    'selected'                 => 'seleccionats',
+    'delete_selected'          => 'Eliminar seleccionats',
+    'confirm_delete_selected'  => 'Segur que vols eliminar :count alumnes?',
+    'students_deleted_multiple'=> ':count alumnes eliminats correctament.',
+    'confirm_delete_title' => 'Confirmar eliminació',
+    'download_pdf' => 'Descarregar PDF',
+    'file_prefix' => 'fitxa',
+
+
+
+
 ];

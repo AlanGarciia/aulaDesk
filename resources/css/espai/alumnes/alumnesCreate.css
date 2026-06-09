@@ -1,0 +1,141 @@
+/* resources/css/espai/alumnes/alumnesCreate.css — dark sobri */
+
+:root{
+  --night-0:#0f1729; --night-1:#0b1120;
+  --panel:#1a2236; --panel-2:#151c2e;
+  --line:rgba(255,255,255,.08);
+  --text:#e7ebf3; --muted:#9aa6bd; --muted2:#6b7689;
+  --blue:#3b82f6; --blue-deep:#2563eb; --danger:#ef4444;
+}
+
+*{ box-sizing:border-box; }
+
+.page{
+  min-height:100vh;
+  background:linear-gradient(180deg,var(--night-0),var(--night-1));
+  color:var(--text);
+  padding:30px 0 70px;
+  position:relative;
+}
+.page::before{
+  content:""; position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:30px 30px; pointer-events:none; z-index:0;
+}
+
+.container{
+  max-width:760px; margin:0 auto; padding:0 20px;
+  position:relative; z-index:1;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:30px 32px;
+  box-shadow:0 14px 40px rgba(0,0,0,.30);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:""; position:absolute; top:0; left:0; right:0;
+  height:4px; background:var(--blue);
+}
+
+.inside-title{
+  margin:0 0 22px;
+  font-size:1.6rem; font-weight:700; color:#fff;
+}
+
+.section-title{
+  font-size:.82rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--muted);
+  margin:26px 0 14px; padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.section-title:first-of-type{ margin-top:0; }
+
+/* GRID 2 columnas */
+.grid-2{
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
+}
+@media (max-width:560px){ .grid-2{ grid-template-columns:1fr; } }
+
+.field{ margin-bottom:16px; }
+.label{
+  display:block; font-size:.86rem; font-weight:600;
+  color:var(--text); margin-bottom:7px;
+}
+.input{
+  width:100%; padding:11px 13px;
+  border-radius:10px; border:1.5px solid var(--line);
+  background:var(--panel-2); color:var(--text);
+  font-size:.95rem; font-family:inherit; outline:none;
+  transition:border-color .15s, box-shadow .15s;
+}
+.input::placeholder{ color:var(--muted2); }
+.input:focus{ border-color:var(--blue); box-shadow:0 0 0 4px rgba(59,130,246,.15); }
+.error{ color:#fca5a5; font-size:.82rem; margin-top:6px; }
+
+/* ALERTA */
+.alert-danger{
+  background:rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.30);
+  color:#fca5a5;
+  padding:12px 16px; border-radius:12px; margin-bottom:18px;
+  font-size:.92rem;
+}
+
+/* TUTORES */
+.tutor-row{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:14px;
+  background:var(--panel-2);
+}
+.tutor-row__head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px;
+}
+.tutor-row__title{
+  font-size:.8rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.04em; color:var(--muted);
+}
+.tutor-remove{
+  width:30px; height:30px; border-radius:8px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid rgba(239,68,68,.30);
+  background:rgba(239,68,68,.12); color:#fca5a5;
+  cursor:pointer; font-size:.85rem;
+  transition:background .15s;
+}
+.tutor-remove:hover{ background:rgba(239,68,68,.22); }
+
+/* BOTONES */
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:11px 18px; border-radius:11px;
+  border:1px solid var(--line); background:var(--panel);
+  color:var(--text); cursor:pointer; text-decoration:none;
+  font-size:.92rem; font-weight:600;
+  transition:transform .15s, background .15s, border-color .15s;
+}
+.btn:hover{ transform:translateY(-1px); background:#202a42; }
+.btn-primary{ background:var(--blue); border-color:transparent; color:#fff; box-shadow:0 8px 22px rgba(59,130,246,.30); }
+.btn-primary:hover{ background:var(--blue-deep); }
+.btn-secondary{ background:var(--panel); }
+.btn-ghost{
+  background:transparent; border:1.5px dashed var(--line-strong, rgba(255,255,255,.18));
+  color:var(--muted);
+}
+.btn-ghost:hover{ background:rgba(255,255,255,.04); color:var(--text); }
+
+.actions{
+  display:flex; gap:12px; margin-top:26px;
+  padding-top:20px; border-top:1px solid var(--line);
+}
+.label{ /* ya existe */ }
+.label::after{ /* no, mejor no global */ }

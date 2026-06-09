@@ -618,4 +618,44 @@ return [
     'preview_title_ph'   => 'Título de la noticia',
     'preview_content_ph' => 'Aquí aparecerá el contenido de la noticia...',
 
+    // Alumnos - campos y tutores
+    'student_data'     => 'Datos del alumno',
+    'surname1'         => 'Primer apellido',
+    'surname2'         => 'Segundo apellido',
+    'birth_date'       => 'Fecha de nacimiento',
+    'dni'              => 'DNI',
+    'family_tutors'    => 'Familia / Tutores',
+    'tutor'            => 'Tutor',
+    'relationship'     => 'Parentesco',
+    'relationship_ph'  => 'Padre, madre, tutor legal...',
+    'add_tutor'        => 'Añadir otro tutor',
+    'no_tutors'        => 'Este alumno no tiene tutores registrados.',
+    'format_updated'   => 'Formato de nombre actualizado.',
+    'name_format'      => 'Formato del nombre',
+    'format_name_first'=> 'Nombre Apellidos',
+    'format_surname_first' => 'Apellidos, Nombre',
+
+    // Importación de alumnos
+    'import_sub'             => 'Sube un archivo CSV para añadir varios alumnos de golpe.',
+    'import_note'            => 'Columnas obligatorias: nom e idalu. El resto son opcionales. Se pueden incluir hasta 2 tutores por alumno.',
+    'import_missing_columns' => 'El CSV no tiene las columnas obligatorias (nom e idalu). Revisa la cabecera.',
+    'import_result'          => 'Importación completada: :imported alumnos añadidos, :ignored ignorados (duplicados o sin IDALU).',
+    'years_old'        => '(:age años)',
+
+    'showing_total'    => 'Mostrando :total alumnos',
+    'showing_filtered' => 'Mostrando :shown de :total alumnos',
+    'download_template'=> 'Descargar plantilla CSV',
+    'search_by_surname' => 'Buscar por apellidos',
+    'search_by_phone'   => 'Buscar por teléfono',
+    'all_groups'        => 'Todos los grupos',
+    'selected'                 => 'seleccionados',
+    'delete_selected'          => 'Eliminar seleccionados',
+    'confirm_delete_selected'  => '¿Seguro que quieres eliminar :count alumnos?',
+    'students_deleted_multiple'=> ':count alumnos eliminados correctamente.',
+    'confirm_delete_title' => 'Confirmar eliminación',
+    'download_pdf' => 'Descargar PDF',
+    'file_prefix' => 'ficha',
+
+
+
 ];
