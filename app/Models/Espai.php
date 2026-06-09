@@ -11,6 +11,7 @@ class Espai extends Model
         'user_id',
         'nom',
         'descripcio',
+        'format_nom',
     ];
 
     public function usuaris(): HasMany

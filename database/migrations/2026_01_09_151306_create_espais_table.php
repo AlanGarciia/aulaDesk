@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('nom');
             $table->text('descripcio')->nullable();
+            $table->string('format_nom', 20)->default('nom_cognoms');
             $table->timestamps();
         });
     }

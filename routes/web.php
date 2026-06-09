@@ -210,6 +210,22 @@ Route::middleware('espai.session')->group(function () {
         ->name('espai.alumnes.store')
         ->middleware('canEspai:students.create');
 
+    Route::post('/espai/alumnes/destroy-multiple', [AlumneController::class, 'destroyMultiple'])
+        ->name('espai.alumnes.destroyMultiple')
+        ->middleware('canEspai:students.delete');
+
+    Route::get('/espai/alumnes/plantilla', [AlumneController::class, 'plantilla'])
+        ->name('espai.alumnes.plantilla')
+        ->middleware('canEspai:students.import');
+
+    Route::post('/espai/alumnes/format', [AlumneController::class, 'updateFormat'])
+        ->name('espai.alumnes.format')
+        ->middleware('canEspai:students.view');
+
+    Route::get('/espai/alumnes/{alumne}/pdf', [AlumneController::class, 'pdf'])
+        ->name('espai.alumnes.pdf')
+        ->middleware('canEspai:students.view');
+
     Route::delete('/espai/alumnes/{alumne}', [AlumneController::class, 'destroy'])
         ->name('espai.alumnes.destroy')
         ->middleware('canEspai:students.delete');
